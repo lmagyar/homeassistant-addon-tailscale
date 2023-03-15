@@ -12,7 +12,7 @@
 > This fork:
 >   - Enables Tailscale's Proxy feature
 >   - Advertises all supported interfaces as Subnets
->   - Bumps Tailscale to 1.36.2
+>   - Bumps Tailscale to 1.38.1
 >   - Bumps base image to 13.1.2
 >
 > For more details, please see the Documentation below.
