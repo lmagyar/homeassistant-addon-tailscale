@@ -1,9 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "baseBranches": ["dev"],
   "rebaseWhen": "behind-base-branch",
-  "dependencyDashboard": true,
-  "labels": ["dependencies", "no-stale"],
-  "commitMessagePrefix": "⬆️",
+  "dependencyDashboard": false,
+  "labels": ["dependencies"],
+  "commitMessagePrefix": "",
   "commitMessageTopic": "{{depName}}",
   "regexManagers": [
     {
