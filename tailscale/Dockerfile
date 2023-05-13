@@ -10,7 +10,7 @@ ARG BUILD_ARCH=amd64
 ARG TAILSCALE_VERSION="v1.40.1"
 RUN \
     apk add --no-cache \
-        ip6tables=1.8.8-r2 \
+        ip6tables=1.8.9-r2 \
         ipcalc=1.0.2-r0 \
         iproute2=6.0.0-r1 \
         iptables=1.8.8-r2 \
