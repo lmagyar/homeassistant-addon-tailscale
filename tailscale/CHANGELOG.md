@@ -1,5 +1,7 @@
 # Changelog
 
+- Add HEALTHCHECK support
+
 ## 0.17.0.2 (forked)
 
 - Merge unreleased changes from community add-on
