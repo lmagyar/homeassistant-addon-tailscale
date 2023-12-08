@@ -16,7 +16,7 @@ RUN \
         iptables=1.8.10-r1 \
         nginx=1.24.0-r7 \
         coreutils=9.4-r1 \
-        networkmanager-common=1.42.8-r0 \
+        networkmanager-common=1.44.2-r1 \
         inotify-tools=3.22.6.0-r2 \
     \
     && ln -sf /sbin/xtables-nft-multi /sbin/ip6tables \
