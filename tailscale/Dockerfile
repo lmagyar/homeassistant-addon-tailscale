@@ -12,7 +12,7 @@ RUN \
     apk add --no-cache \
         ip6tables=1.8.9-r2 \
         ipcalc=1.0.3-r0 \
-        iproute2=6.3.0-r0 \
+        iproute2=6.6.0-r0 \
         iptables=1.8.10-r1 \
         nginx=1.24.0-r7 \
         coreutils=9.4-r1 \
