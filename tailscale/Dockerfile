@@ -11,7 +11,7 @@ ARG TAILSCALE_VERSION="v1.54.1"
 RUN \
     apk add --no-cache \
         ip6tables=1.8.9-r2 \
-        ipcalc=1.0.2-r0 \
+        ipcalc=1.0.3-r0 \
         iproute2=6.3.0-r0 \
         iptables=1.8.9-r2 \
         nginx=1.24.0-r7 \
