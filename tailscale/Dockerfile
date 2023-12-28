@@ -12,7 +12,7 @@ RUN \
     apk add --no-cache \
         ipcalc=1.0.3-r0 \
         iproute2=6.6.0-r0 \
-        iptables=1.8.10-r1 \
+        iptables=1.8.10-r3 \
         nginx=1.24.0-r14 \
         coreutils=9.4-r1 \
         networkmanager-common=1.44.2-r1 \
