@@ -14,7 +14,7 @@ RUN \
         iproute2=6.6.0-r0 \
         iptables=1.8.10-r3 \
         nginx=1.24.0-r14 \
-        coreutils=9.4-r1 \
+        coreutils=9.4-r2 \
         networkmanager-common=1.44.2-r1 \
         inotify-tools=4.23.9.0-r0 \
     \
