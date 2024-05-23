@@ -13,7 +13,7 @@ RUN \
         ipcalc=1.0.3-r0 \
         iproute2=6.9.0-r0 \
         iptables=1.8.10-r3 \
-        nginx=1.24.0-r16 \
+        nginx=1.26.0-r1 \
         coreutils=9.5-r1 \
         networkmanager-common=1.44.4-r0 \
         inotify-tools=4.23.9.0-r0 \
