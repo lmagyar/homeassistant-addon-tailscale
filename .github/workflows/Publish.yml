@@ -24,7 +24,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - name: Publish
-      uses: home-assistant/builder@2024.08.1
+      uses: home-assistant/builder@2024.08.2
       with:
         args: |
           --${{ matrix.arch }} \
