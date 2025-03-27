@@ -7,7 +7,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Setup base
 ARG BUILD_ARCH=amd64
-ARG TAILSCALE_VERSION="v1.80.3"
+ARG TAILSCALE_VERSION="v1.82.0"
 RUN \
     apk add --no-cache \
         bind-tools=9.18.35-r0 \
