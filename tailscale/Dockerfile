@@ -14,7 +14,7 @@ RUN \
         dnsmasq=2.91-r0 \
         ethtool=6.14.1-r0 \
         ipcalc=1.0.3-r0 \
-        iproute2=6.11.0-r0 \
+        iproute2=6.15.0-r0 \
         iptables=1.8.11-r1 \
         nginx=1.26.3-r0 \
         coreutils=9.7-r1 \
