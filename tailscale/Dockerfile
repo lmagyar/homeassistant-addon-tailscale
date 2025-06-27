@@ -12,7 +12,7 @@ RUN \
     apk add --no-cache \
         bind-tools=9.20.10-r0 \
         dnsmasq=2.91-r0 \
-        ethtool=6.11-r0 \
+        ethtool=6.14.1-r0 \
         ipcalc=1.0.3-r0 \
         iproute2=6.11.0-r0 \
         iptables=1.8.11-r1 \
