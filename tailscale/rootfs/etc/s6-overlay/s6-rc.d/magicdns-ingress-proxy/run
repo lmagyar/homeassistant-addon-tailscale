@@ -6,8 +6,6 @@ export LOG_FD
 # Runs the MagicDNS ingress proxy
 # ==============================================================================
 
-source /usr/lib/trace.sh
-
 readonly MAGIC_DNS_IPV4="100.100.100.100"
 
 readonly DNSMASQ_INGRESS_PORT=53
@@ -56,7 +54,7 @@ for domain in "${black_list[@]}"; do
   options+=(--server=/${domain}/)
 done
 
-if bashio_custom::trace; then
+if bashio::trace; then
   options+=(--log-queries)
   options+=(--log-debug)
 fi
