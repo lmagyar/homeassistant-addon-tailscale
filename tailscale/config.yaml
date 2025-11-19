@@ -42,6 +42,7 @@ schema:
   login_server: url?
   share_homeassistant: list(disabled|serve|funnel)?
   share_on_port: match(^(443|8443|10000)$)?
+  funnel_protection: bool?
   snat_subnet_routes: bool?
   stateful_filtering: bool?
   tags:
