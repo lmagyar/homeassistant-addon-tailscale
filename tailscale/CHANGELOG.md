@@ -1,5 +1,6 @@
 # Changelog
 
+- Drop support for armv7 architecture
 - Update Add-on base image to v19 (drop armv7 support)
 
 ## 0.26.1.5 (forked)
