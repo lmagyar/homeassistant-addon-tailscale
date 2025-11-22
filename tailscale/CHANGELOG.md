@@ -1,5 +1,7 @@
 # Changelog
 
+- Update Add-on base image to v19 (drop armv7 support)
+
 ## 0.26.1.5 (forked)
 
 - Release unreleased changes from community add-on
