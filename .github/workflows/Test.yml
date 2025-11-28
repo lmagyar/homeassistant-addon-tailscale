@@ -14,7 +14,7 @@ jobs:
     - name: Checkout the repository
       uses: actions/checkout@v6
     - name: Test build
-      uses: home-assistant/builder@2025.09.0
+      uses: home-assistant/builder@2025.11.0
       with:
         args: |
           --test \
