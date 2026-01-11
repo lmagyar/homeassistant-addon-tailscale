@@ -8,6 +8,7 @@ export LOG_FD
 
 declare options
 declare proxy funnel proxy_and_funnel_port
+declare tags
 
 # This is to execute potentially failing supervisor api functions within conditions,
 # where set -e is not propagated inside the function and bashio relies on set -e for api error handling
@@ -57,6 +58,14 @@ fi
 if bashio::var.has_value "${proxy_and_funnel_port}"; then
     bashio::log.info 'Removing deprecated proxy_and_funnel_port option'
     bashio::addon.option 'proxy_and_funnel_port'
+fi
+
+# Rename changed options
+tags=$(bashio::jq "${options}" '.tags | select(.!=null)')
+if bashio::var.has_value "${tags}"; then
+    bashio::log.info 'Renaming tags option to advertise_tags'
+    bashio::addon.option 'tags'
+    bashio::addon.option 'advertise_tags' "^${tags}"
 fi
 
 # MagicDNS related service dependencies:

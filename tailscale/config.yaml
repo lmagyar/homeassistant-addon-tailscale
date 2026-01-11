@@ -47,6 +47,7 @@ options:
   advertise_exit_node: false
   advertise_routes:
     - local_subnets
+  advertise_tags: []
   always_use_derp: false
   log_level: info
   login_server: "https://controlplane.tailscale.com"
@@ -54,7 +55,6 @@ options:
   share_on_port: 443
   snat_subnet_routes: true
   stateful_filtering: false
-  tags: []
   taildrive:
     addons: false
     addon_configs: false
@@ -72,6 +72,8 @@ schema:
   advertise_exit_node: bool
   advertise_routes:
     - "match(^(?:local_subnets|(?:(?:25[0-5]|(?:2[0-4]|1\\d|[1-9]?)\\d)\\.){3}(?:25[0-5]|(?:2[0-4]|1\\d|[1-9]?)\\d)\\/(?:3[0-2]|[12]?\\d)|[a-fA-F\\d.:]+:[a-fA-F\\d.:]+\\/(?:12[0-8]|(?:1[01]|[1-9]?)\\d))$)"
+  advertise_tags:
+    - "match(^tag:[a-zA-Z][a-zA-Z0-9-]*$)"
   always_use_derp: bool
   exit_node: "match(^(?:(?:(?:25[0-5]|(?:2[0-4]|1\\d|[1-9]?)\\d)\\.){3}(?:25[0-5]|(?:2[0-4]|1\\d|[1-9]?)\\d)|[a-fA-F\\d.:]+:[a-fA-F\\d.:]+|[a-fA-F\\d]{8}(?:-[a-fA-F\\d]{4}){3}-[a-fA-F\\d]{12}|auto:any)$)?"
   log_level: list(trace|debug|info|notice|warning|error|fatal)
@@ -81,8 +83,6 @@ schema:
   share_service_name: "match(^svc:(?:[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])$)?"
   snat_subnet_routes: bool
   stateful_filtering: bool
-  tags:
-    - "match(^tag:[a-zA-Z][a-zA-Z0-9-]*$)"
   taildrive:
     addons: bool
     addon_configs: bool
