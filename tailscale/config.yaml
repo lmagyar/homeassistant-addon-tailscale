@@ -43,8 +43,8 @@ ports:
 options:
   accept_dns: true
   accept_routes: false
-  advertise_exit_node: true
-  advertise_connector: true
+  advertise_connector: false
+  advertise_exit_node: false
   advertise_routes:
     - local_subnets
   always_use_derp: false
@@ -63,13 +63,13 @@ options:
     media: false
     share: false
     ssl: false
-  taildrop: true
+  taildrop: false
   userspace_networking: true
 schema:
   accept_dns: bool
   accept_routes: bool
-  advertise_exit_node: bool
   advertise_connector: bool
+  advertise_exit_node: bool
   advertise_routes:
     - "match(^(?:local_subnets|(?:(?:25[0-5]|(?:2[0-4]|1\\d|[1-9]?)\\d)\\.){3}(?:25[0-5]|(?:2[0-4]|1\\d|[1-9]?)\\d)\\/(?:3[0-2]|[12]?\\d)|[a-fA-F\\d.:]+:[a-fA-F\\d.:]+\\/(?:12[0-8]|(?:1[01]|[1-9]?)\\d))$)"
   always_use_derp: bool
