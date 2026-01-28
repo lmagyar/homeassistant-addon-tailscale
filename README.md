@@ -9,13 +9,16 @@ Zero config VPN for building secure networks.
 >
 > Changes:
 > - Release unreleased changes from community add-on
->   - Update tailscale/tailscale to v1.90.9
+>   - Update tailscale/tailscale to v1.92.5
 >   - Make exit-node configurable
 > - Release pending changes from community add-on
 >   - Make all config options mandatory, fill in the default values for previously optional config options
->   - Make accept_routes default disabled to align with stock Tailscale's platform-specific behavior
+>   - Make accept_routes, advertise_connector, advertise_exit_node, advertise_routes, taildrop and userspace_networking options default disabled to align with stock Tailscale's platform-specific behavior
+>   - Rename tags option to advertise_tags to align with stock Tailscale's naming convention - ***config is automatically updated***
 >   - Add support for Taildrive
 >   - Fix MagicDNS incompatibility with Home Assistant
+>   - Make always use derp option configurable
+>   - Create persistent notification also (not just log warning) when key expiration is detected
 > - Withhold changes from community add-on (will be released here later)
 >   - Drop support for armv7 architecture
 >   - Update Add-on base image to v19 (drop armv7 support)
@@ -24,6 +27,28 @@ Zero config VPN for building secure networks.
 >   - Optionally copy Tailscale Serve's certificate files to /ssl folder
 >   - Make DSCP configurable on tailscaled's network traffic
 >   - Configure log format for the add-on to be compatible with Tailscale's format
+
+> One-click migration from the community add-on to this fork:
+> - Install the **Advanced SSH & Web Terminal** add-on and disable it's protection mode
+> - From the cli execute: `curl -s -o /tmp/migrate_from_community_add_on https://raw.githubusercontent.com/lmagyar/homeassistant-addon-tailscale/refs/heads/main/scripts/migrate_from_community_add_on && bashio /tmp/migrate_from_community_add_on`
+>
+> **Note:**
+> - This will install the forked version (if not already installed), backup and
+>   stop the community version, copy and update the configuration, and (this is
+>   the big thing) will also copy the internal state of the add-on, then start
+>   the forked version.
+> - With copying the add-on internal state, the new forked add-on will start up
+>   with the exact same state, ie. with the same tailnet authentication also. So
+>   **do not** remove the current device from Tailscale's admin page, the forked
+>   add-on will jump into it's place.
+> - And even if you executed previously some tailscale configuration inside the
+>   add-ons container, those settings will be also migrated with the internal
+>   state.
+> - **But copying the add-on's internal state requires executing bash and python
+>   scripts inside the Supervisor's container! Executing python scripts requires
+>   installing gdb and pyrasite inside the Supervisor's container (they will be
+>   uninstalled by the script also). So please create a complete system backup
+>   before executing this script!**
 
 ![Warning][warning_stripe]
 
@@ -80,7 +105,7 @@ For more details, please see the add-on's [Documentation][Documentation] pages.
 [installations-shield]: https://img.shields.io/badge/dynamic/json?label=reported%20installations&query=$[%2709716aab_tailscale%27].total&url=https%3A%2F%2Fanalytics.home-assistant.io%2Faddons.json
 [license-shield]: https://img.shields.io/github/license/lmagyar/homeassistant-addon-tailscale.svg
 [licence]: https://github.com/lmagyar/homeassistant-addon-tailscale/blob/main/LICENSE
-[maintenance-shield]: https://img.shields.io/maintenance/yes/2025.svg
+[maintenance-shield]: https://img.shields.io/maintenance/yes/2026.svg
 [project-stage-shield]: https://img.shields.io/badge/project%20stage-beta-orange.svg
 [releases-shield]: https://img.shields.io/github/tag/lmagyar/homeassistant-addon-tailscale.svg?label=release
 [releases]: https://github.com/lmagyar/homeassistant-addon-tailscale/tags

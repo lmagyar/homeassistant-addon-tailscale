@@ -1,7 +1,36 @@
 # Changelog
 
 - Drop support for armv7 architecture
-- Update Add-on base image to v19 (drop armv7 support)
+- Update Add-on base image to v20 (drop armv7 support)
+
+## 0.26.1.10 (forked)
+
+- Bugfix for previous MagicDNS incompatibility fix (prevent logging SERVFAIL lines when accept_dns is disabled)
+- Bugfix for Taildrive (prevent logging anything when no share is configured)
+- Release pending changes from community add-on
+  - Create persistent notification also (not just log warning) when key expiration is detected
+  - Make advertise_connector, advertise_exit_node, advertise_routes, taildrop and userspace_networking options default disabled to align with stock Tailscale's platform-specific behavior
+  - Rename tags option to advertise_tags to align with stock Tailscale's naming convention - ***config is automatically updated***
+
+## 0.26.1.9 (forked)
+
+- Release unreleased changes from community add-on
+  - Update tailscale/tailscale to v1.92.5
+
+## 0.26.1.8 (forked)
+
+- Release unreleased changes from community add-on
+  - Update tailscale/tailscale to v1.92.3
+
+## 0.26.1.7 (forked)
+
+- Release unreleased changes from community add-on
+  - Update tailscale/tailscale to v1.92.1
+
+## 0.26.1.6 (forked)
+
+- Release pending changes from community add-on
+  - Make always use derp option configurable (fixes [569](https://github.com/hassio-addons/addon-tailscale/issues/569))
 
 ## 0.26.1.5 (forked)
 
@@ -21,7 +50,8 @@
 
 ## 0.26.1.3 (forked)
 
-- ***CRITICAL*** Workaround for add-on base image and bashio bug that causes add-ons to crash when debug level logging is enabled
+- Release pending changes from community add-on
+  - ***CRITICAL*** Workaround for add-on base image and bashio bug that causes add-ons to crash when debug level logging is enabled
 
 ## 0.26.1.2 (forked)
 

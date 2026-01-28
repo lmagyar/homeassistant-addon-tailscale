@@ -11,6 +11,7 @@ declare proxy funnel proxy_and_funnel_port
 declare healthcheck_offline_timeout healthcheck_restart_timeout
 declare forward_to_host
 declare advertise_routes
+declare tags
 
 # This is to execute potentially failing supervisor api functions within conditions,
 # where set -e is not propagated inside the function and bashio relies on set -e for api error handling
@@ -89,13 +90,36 @@ then
     bashio::addon.option 'advertise_routes' "^${advertise_routes}"
 fi
 
-# Disable MagicDNS proxy services when userspace-networking is enabled or accepting dns is disabled
+# Rename changed options
+tags=$(bashio::jq "${options}" '.tags | select(.!=null)')
+if bashio::var.has_value "${tags}"; then
+    try bashio::addon.option 'advertise_tags' "^${tags}"
+    if ((TRY_ERROR)); then
+        bashio::log.warning "The tags option value is invalid, tags option is dropped, using default no advertise_tags."
+        bashio::log.warning "The invalid tags option value is: '${tags}'"
+    else
+        bashio::log.info "Successfully renamed tags option to advertise_tags"
+    fi
+    bashio::addon.option 'tags'
+fi
+
+# Disable MagicDNS egress proxy service when userspace-networking is enabled or accepting dns is disabled
 if bashio::config.true "userspace_networking" || \
     bashio::config.false "accept_dns";
 then
+    # Either this or init-magicdns-proxies-upstream-list/dependencies.d/post-tailscaled below has to be removed
+    # When accepting dns is disabled init-magicdns-proxies-upstream-list depends on post-tailscaled
     rm /etc/s6-overlay/s6-rc.d/tailscaled/dependencies.d/magicdns-egress-proxy
+else
+    # Either this or tailscaled/dependencies.d/magicdns-egress-proxy above has to be removed
+    # When accepting dns is enabled init-magicdns-proxies-upstream-list doesn't depend on post-tailscaled
+    rm /etc/s6-overlay/s6-rc.d/init-magicdns-proxies-upstream-list/dependencies.d/post-tailscaled
+fi
+# Disable MagicDNS ingress proxy service when userspace-networking is enabled
+if bashio::config.true "userspace_networking"; then
     rm /etc/s6-overlay/s6-rc.d/forwarding/dependencies.d/magicdns-ingress-proxy
     rm /etc/s6-overlay/s6-rc.d/user/contents.d/magicdns-ingress-proxy
+    rm /etc/s6-overlay/s6-rc.d/tailscaled/dependencies.d/init-magicdns-ingress-proxy
 fi
 
 # Disable protect-subnets service when userspace-networking is enabled or accepting routes is disabled
@@ -106,8 +130,7 @@ then
 fi
 
 # If local subnets are not configured in advertise_routes, do not wait for the local network to be ready to collect subnet information
-if ! bashio::config "advertise_routes" | grep -Eq "^local_subnets$";
-then
+if ! bashio::config "advertise_routes" | grep -Fxq "local_subnets"; then
     rm /etc/s6-overlay/s6-rc.d/post-tailscaled/dependencies.d/local-network
 fi
 
