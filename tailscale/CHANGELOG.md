@@ -1,5 +1,8 @@
 # Changelog
 
+- Drop support for armv7 architecture
+- Update Add-on base image to v20 (drop armv7 support)
+
 ## 0.26.1.10 (forked)
 
 - Bugfix for previous MagicDNS incompatibility fix (prevent logging SERVFAIL lines when accept_dns is disabled)

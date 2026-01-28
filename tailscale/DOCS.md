@@ -18,7 +18,7 @@
 >   - Create persistent notification also (not just log warning) when key expiration is detected
 > - Withhold changes from community add-on (will be released here later)
 >   - Drop support for armv7 architecture
->   - Update Add-on base image to v19 (drop armv7 support)
+>   - Update Add-on base image to v20 (drop armv7 support)
 > - Release unmerged changes from community add-on
 >   - Make Tailscale SSH configurable
 >   - Optionally copy Tailscale Serve's certificate files to /ssl folder
