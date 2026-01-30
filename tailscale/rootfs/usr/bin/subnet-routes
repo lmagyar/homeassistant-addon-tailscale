@@ -1,5 +1,6 @@
 #!/usr/bin/env bashio
 # shellcheck shell=bash
+export LOG_FD
 # ==============================================================================
 # Print possible subnet routes to stdout
 # ==============================================================================
@@ -54,7 +55,7 @@ else
         [[ $(</proc/sys/net/ipv4/ip_forward) -eq 0 ]] && continue
       fi
 
-      ipinfo="$(/usr/bin/ipcalc --json "${address}")"
+      ipinfo="$(/bin/ipcalc --json "${address}")"
       routes+=("$(bashio::jq "${ipinfo}" '.NETWORK + "/" + .PREFIX')")
     fi
   done
@@ -72,7 +73,7 @@ if (( 0 == ${#routes[@]} )) && \
 then
   bashio::log.warning \
     "There are no local subnets to advertise!" \
-    "Restart of the add-on is required after the issue is fixed!"
+    "Restart of the app is required after the issue is fixed!"
 fi
 
 printf "%s" "${response}"
