@@ -23,7 +23,7 @@ function log.error_or_warning() {
 #   -s "Silent" Supress error message in case of a 404 Not found HTTP status code
 #   -w "Warning only" Log only warnings instead of errors
 # ------------------------------------------------------------------------------
-function core.api() {
+function api.core() {
     local method="${1}"; shift
     local resource="/core/api/${1}"; shift
     local data='{}'
@@ -116,7 +116,8 @@ function core.api() {
 
     if bashio::var.has_value "${filter}"; then
         bashio::log.debug "Filtering response using: ${filter}"
-        response=$(bashio::jq "${response}" "${filter}")
+        response=$(bashio::jq "${response}" "${filter}") \
+            || return "${__BASHIO_EXIT_NOK}"
     fi
 
     echo "${response}"

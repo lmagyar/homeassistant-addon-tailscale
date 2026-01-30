@@ -6,7 +6,7 @@ export LOG_FD
 # Runs after the machine has been logged in into the Tailscale network
 # ==============================================================================
 
-source /usr/lib/core.sh
+source /usr/lib/api.core.sh
 
 declare interface
 declare -a options
@@ -158,7 +158,7 @@ if keyexpiry=$(/opt/tailscale status --self=true --peers=false --json | jq -rce 
           "Consider disabling key expiry to avoid losing connection to your Home Assistant device." \
           "You can use the [Machines page](https://login.tailscale.com/admin/machines) of Tailscale's admin console to disable key expiry." \
           "Please check your configuration based on the app's documentation under the \"Configuration\" section.")")
-    if core.api POST services/persistent_notification/create "${attributes}" -w > /dev/null; then
+    if api.core POST services/persistent_notification/create "${attributes}" -w > /dev/null; then
       touch "/data/key_expiry_notification_is_done"
     fi
   fi
