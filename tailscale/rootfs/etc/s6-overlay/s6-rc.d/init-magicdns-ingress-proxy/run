@@ -2,7 +2,7 @@
 # shellcheck shell=bash
 export LOG_FD
 # ==============================================================================
-# Home Assistant Community Add-on: Tailscale
+# Home Assistant Community App: Tailscale
 # Runs the dnsmasq proxies initialization
 # ==============================================================================
 
@@ -31,7 +31,7 @@ if bashio::var.true "${invalid_dns_config}"; then
     "Home Assistant, and in your own DNS you configured MagicDNS's IP address for your tailnet" \
     "domain as upstream DNS server."
   bashio::log.notice \
-    "Please check your configuration based on the add-on's documentation under the \"DNS\" section"
+    "Please check your configuration based on the app's documentation under the \"DNS\" section"
 fi
 invalid_dns_config="false"
 for dns in $(bashio::dns.locals); do
