@@ -75,11 +75,6 @@ however, it is nice to know where you need to go later on.
 
 ## Configuration
 
-The add-on by default exposes "Exit Node" capabilities that you can enable from
-your Tailscale account. Additionally, if the Supervisor managed your network
-(which is the default), the add-on will also advertise routes to your subnets on
-all supported interfaces to Tailscale.
-
 Consider disabling key expiry to avoid losing connection to your Home Assistant
 device. See [Key expiry][tailscale_info_key_expiry] for more information.
 
@@ -87,16 +82,6 @@ Logging in to Tailscale, you can configure your Tailscale network right from
 their interface.
 
 <https://login.tailscale.com/>
-
-1. Navigate to the [Machines page][tailscale_machines] of the admin console, and
-   find your Home Assistant instance.
-
-1. Click on the **&hellip;** icon at the right side and select the "Edit route
-   settings..." option. The "Exit node" and "Subnet routes" functions can be
-   enabled here.
-
-1. Click on the **&hellip;** icon at the right side and select the "Disable key
-   expiry" option.
 
 ## Add-on configuration
 
@@ -212,6 +197,16 @@ subnets on all supported interfaces.
 
 More information: [Subnet routers][tailscale_info_subnets]
 
+**Note:** After you add subnets to this option, you also has to enable them on
+Tailscale's admin console.
+
+1. Navigate to the [Machines page][tailscale_machines] of the admin console, and
+   find your Home Assistant instance.
+
+1. Click on the **&hellip;** icon at the right side and select the "Edit route
+   settings..." option. The "Exit node" and "Subnet routes" functions can be
+   enabled here.
+
 ### Option: `advertise_tags`
 
 This option allows you to specify specific tags for this Tailscale instance.
@@ -263,6 +258,16 @@ section of this documentation.
 
 **Note:** The `exit-node-allow-lan-access` option is always enabled when an exit
 node is specified. This is required by the Home Assistant environment.
+
+**Note:** After you enable this option, you also has to enable it on Tailscale's
+admin console.
+
+1. Navigate to the [Machines page][tailscale_machines] of the admin console, and
+   find your Home Assistant instance.
+
+1. Click on the **&hellip;** icon at the right side and select the "Edit route
+   settings..." option. The "Exit node" and "Subnet routes" functions can be
+   enabled here.
 
 ### _Note on the `lets_encrypt` options below_
 
