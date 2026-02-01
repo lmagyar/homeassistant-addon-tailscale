@@ -25,7 +25,7 @@ however, it is nice to know where you need to go later on.
 1. Click the Home Assistant My button below to open the app on your Home
    Assistant instance.
 
-   [![Open this app in your Home Assistant instance.][addon-badge]][addon]
+   [![Open this app in your Home Assistant instance.][app-badge]][app]
 
 1. Click the "Install" button to install the app.
 1. Start the "Tailscale" app.
@@ -483,8 +483,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-[addon-badge]: https://my.home-assistant.io/badges/supervisor_addon.svg
-[addon]: https://my.home-assistant.io/redirect/supervisor_addon/?addon=a0d7b954_tailscale&repository_url=https%3A%2F%2Fgithub.com%2Fhassio-addons%2Frepository
+[app-badge]: https://my.home-assistant.io/badges/supervisor_addon.svg
+[app]: https://my.home-assistant.io/redirect/supervisor_addon/?addon=a0d7b954_tailscale&repository_url=https%3A%2F%2Fgithub.com%2Fhassio-addons%2Frepository
 [contributors]: https://github.com/hassio-addons/app-tailscale/graphs/contributors
 [discord-ha]: https://discord.gg/c5DvZ4e
 [discord]: https://discord.me/hassioaddons
