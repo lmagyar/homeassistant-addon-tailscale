@@ -49,6 +49,10 @@ Zero config VPN for building secure networks.
 >   uninstalled by the script also). So please create a complete system backup
 >   before executing this script!**
 
+| <img width="75%" title="Migration log" src="https://github.com/lmagyar/homeassistant-addon-tailscale/raw/main/images/migration_log.png"> |
+| :---: |
+| _Migration log (from the community app to this fork)_ |
+
 ![Warning][warning_stripe]
 
 [![GitHub Release][releases-shield]][releases]
