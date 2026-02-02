@@ -116,8 +116,11 @@ function api.core() {
 
     if bashio::var.has_value "${filter}"; then
         bashio::log.debug "Filtering response using: ${filter}"
-        response=$(bashio::jq "${response}" "${filter}") \
-            || return "${__BASHIO_EXIT_NOK}"
+        response=$(bashio::jq "${response}" "${filter}")
+        if [ "$?" -ne "${__BASHIO_EXIT_OK}" ]; then
+            bashio::log.error "Failed to execute the jq filter"
+            return "${__BASHIO_EXIT_NOK}"
+        fi
     fi
 
     echo "${response}"
