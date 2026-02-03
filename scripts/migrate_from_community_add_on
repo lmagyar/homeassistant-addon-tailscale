@@ -13,7 +13,7 @@ readonly from_max_version="0.27.1"
 readonly to="09716aab_tailscale" # forked
 readonly to_repository="https://github.com/lmagyar/homeassistant-addon-tailscale"
 
-readonly from_defaults=$(jq -rcM <<"EOFROMDEFAULTS"
+readonly from_defaults="$(jq -rcM <<"EOFROMDEFAULTS"
   {
     "accept_dns": true,
     "accept_routes": true,
@@ -31,7 +31,7 @@ readonly from_defaults=$(jq -rcM <<"EOFROMDEFAULTS"
     "userspace_networking": true
   }
 EOFROMDEFAULTS
-)
+)"
 
 # rename tags to advertise_tags
 readonly from_patch='.advertise_tags = .tags | del(.tags)'
