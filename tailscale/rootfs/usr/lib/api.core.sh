@@ -17,28 +17,20 @@ function log.error_or_warning() {
 #   $1 HTTP Method (GET/POST)
 #   $2 API Resource requested
 #   $3 In case of a POST method, this parameter is the JSON to POST (optional)
-#   $4 jq filter command (optional)
 #
-# Options (after arguments):
-#   -s "Silent" Supress error message in case of a 404 Not found HTTP status code
-#   -w "Warning only" Log only warnings instead of errors
+# Options (BEFORE arguments):
+#   -f <filter> jq filter command
+#   -s          "Silent" Supress error message in case of a 404 Not found HTTP status code
+#   -w          "Warning only" Log only warnings instead of errors
 # ------------------------------------------------------------------------------
 function api.core() {
-    local method="${1}"; shift
-    local resource="/core/api/${1}"; shift
-    local data='{}'
-    if [[ "${method}" = "POST" ]]; then
-        data="${1}"; shift
-    fi
-    local filter=
-    if [[ -n "${1:-}" && "${1::1}" != "-" ]]; then
-        filter="${1}"; shift
-    fi
-
-    local o
+    # read options
+    local OPTIND o
     local silent=
     local warning_only=
-    while getopts "sw" o; do
+    local filter=
+
+    while getopts ":swf:" o; do
         case "${o}" in
             s)
                 silent=1
@@ -46,10 +38,27 @@ function api.core() {
             w)
                 warning_only=1
                 ;;
+            f)
+                filter="$OPTARG"
+                ;;
+            \?)
+                bashio::log.error "Invalid option: -${OPTARG}"
+                return "${__BASHIO_EXIT_NOK}"
+                ;;
+            :)
+                bashio::log.error "Option -${OPTARG} requires an argument."
+                return "${__BASHIO_EXIT_NOK}"
+                ;;
             *)
                 ;;
         esac
     done
+    shift $((OPTIND-1))
+
+    # read arguments
+    local method="${1}"
+    local resource="/core/api/${2}"
+    local data="${3:-{\}}"
 
     local auth_header='Authorization: Bearer'
     local response
