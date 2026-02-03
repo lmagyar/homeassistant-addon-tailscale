@@ -14,32 +14,40 @@ function log.error_or_warning() {
 # Makes a call to the Home Assistant REST API.
 #
 # Arguments:
-#   $1 HTTP Method (GET/POST)
-#   $2 API Resource requested
-#   $3 In case of a POST method, this parameter is the JSON to POST (optional)
+#   $1   HTTP Method (GET/POST)
+#   $2   API Resource requested
+#   $3   In case of a POST method, this parameter is the JSON to POST (optional)
+#        In case of a GET method, this parameter is not present
+#   $3/4 jq filter command (optional)
 #
-# Options (BEFORE arguments):
-#   -f <filter> jq filter command
-#   -s          "Silent" Supress error message in case of a 404 Not found HTTP status code
-#   -w          "Warning only" Log only warnings instead of errors
+# Options (after arguments):
+#   -s   "Silent" Supress error message in case of a 404 Not found HTTP status code
+#   -w   "Warning only" Log only warnings instead of errors
 # ------------------------------------------------------------------------------
 function api.core() {
+    # read arguments
+    local method="${1}"; shift
+    local resource="/core/api/${1}"; shift
+    local data="{}"
+    if [[ "${method}" = "POST" && -n "${1++}" && "${1::1}" != "-" ]]; then
+        data="${1}"; shift
+    fi
+    local filter=
+    if [[ -n "${1++}" && "${1::1}" != "-" ]]; then
+        filter="${1}"; shift
+    fi
+
     # read options
     local OPTIND o
     local silent=
     local warning_only=
-    local filter=
-
-    while getopts ":swf:" o; do
+    while getopts ":sw" o; do
         case "${o}" in
             s)
                 silent=1
                 ;;
             w)
                 warning_only=1
-                ;;
-            f)
-                filter="$OPTARG"
                 ;;
             \?)
                 bashio::log.error "Invalid option: -${OPTARG}"
@@ -54,11 +62,6 @@ function api.core() {
         esac
     done
     shift $((OPTIND-1))
-
-    # read arguments
-    local method="${1}"
-    local resource="/core/api/${2}"
-    local data="${3:-{\}}"
 
     local auth_header='Authorization: Bearer'
     local response
