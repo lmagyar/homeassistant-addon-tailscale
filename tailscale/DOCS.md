@@ -259,7 +259,7 @@ section of this documentation.
 **Note:** The `exit-node-allow-lan-access` option is always enabled when an exit
 node is specified. This is required by the Home Assistant environment.
 
-**Note:** After you enable this option, you also has to enable it on Tailscale's
+**Note:** After you enable this option, you also have to enable it on Tailscale's
 admin console.
 
 1. Navigate to the [Machines page][tailscale_machines] of the admin console, and
