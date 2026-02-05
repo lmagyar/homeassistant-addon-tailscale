@@ -197,7 +197,7 @@ subnets on all supported interfaces.
 
 More information: [Subnet routers][tailscale_info_subnets]
 
-**Note:** After you add subnets to this option, you also has to enable them on
+**Note:** After you add subnets to this option, you also have to enable them on
 Tailscale's admin console.
 
 1. Navigate to the [Machines page][tailscale_machines] of the admin console, and
