@@ -407,7 +407,7 @@ but also by their tailnet name, see the "DNS" section of this documentation.
 
 If you want to access other clients on your tailnet even from your local subnet,
 follow steps in the [Site-to-site networking][tailscale_info_site_to_site] guide
-(Note: The add-on already handles "IP address forwarding" and "Clamp the MSS to
+(Note: The app already handles "IP address forwarding" and "Clamp the MSS to
 the MTU" for you). See also the "Option: `snat_subnet_routes`" section of this
 documentation.
 
