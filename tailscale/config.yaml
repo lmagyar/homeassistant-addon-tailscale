@@ -23,7 +23,21 @@ privileged:
 devices:
   - /dev/net/tun
 map:
-  - share:rw
+  - type: addons
+    read_only: false
+  - type: all_addon_configs
+    read_only: false
+  - type: backup
+    read_only: false
+  - type: homeassistant_config
+    read_only: false
+    path: /config
+  - type: media
+    read_only: false
+  - type: share
+    read_only: false
+  - type: ssl
+    read_only: false
 ports:
   41641/udp: null
 options:
@@ -41,6 +55,14 @@ options:
   snat_subnet_routes: true
   stateful_filtering: false
   tags: []
+  taildrive:
+    addons: false
+    addon_configs: false
+    backup: false
+    config: false
+    media: false
+    share: false
+    ssl: false
   taildrop: true
   userspace_networking: true
 schema:
@@ -60,5 +82,13 @@ schema:
   stateful_filtering: bool
   tags:
     - "match(^tag:[a-zA-Z][a-zA-Z0-9-]*$)"
+  taildrive:
+    addons: bool
+    addon_configs: bool
+    backup: bool
+    config: bool
+    media: bool
+    share: bool
+    ssl: bool
   taildrop: bool
   userspace_networking: bool
