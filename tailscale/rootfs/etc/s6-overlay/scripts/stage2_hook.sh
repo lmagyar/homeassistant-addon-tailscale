@@ -161,3 +161,29 @@ if bashio::config.equals 'share_homeassistant' 'disabled' || \
 then
     rm /etc/s6-overlay/s6-rc.d/user/contents.d/certificate
 fi
+
+#!/command/with-contenv bashio
+# Install user-configured packages
+if bashio::config.has_value 'packages'; then
+  apk update \
+    || bashio::exit.nok 'Failed updating Alpine packages repository indexes'
+
+  for package in $(bashio::config 'packages'); do
+    apk add --no-cache "$package" \
+      || bashio::exit.nok "Failed installing package ${package}"
+  done
+fi
+
+# Execute user-configured commands on startup
+if bashio::config.has_value 'init_commands'; then
+  length=$(bashio::config 'init_commands | length') \
+    || bashio::exit.nok 'Failed to get init_commands array length'
+
+  for (( i=0; i<length; i++ )); do
+    cmd=$(bashio::config "init_commands[${i}]") \
+      || bashio::exit.nok "Failed to get init command at index ${i}"
+
+    eval "${cmd}" \
+      || bashio::exit.nok "Failed executing init command: ${cmd}"
+  done
+fi
