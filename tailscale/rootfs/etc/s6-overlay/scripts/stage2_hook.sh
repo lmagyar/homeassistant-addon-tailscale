@@ -103,6 +103,11 @@ if bashio::var.has_value "${tags}"; then
     bashio::addon.option 'tags'
 fi
 
+# Disable init-packages service when ssh is false (packages/init only apply when ssh is true)
+if bashio::config.false 'ssh'; then
+  rm -f /etc/s6-overlay/s6-rc.d/tailscaled/dependencies.d/init-packages
+fi
+
 # Disable MagicDNS egress proxy service when userspace-networking is enabled or accepting dns is disabled
 if bashio::config.true "userspace_networking" || \
     bashio::config.false "accept_dns";

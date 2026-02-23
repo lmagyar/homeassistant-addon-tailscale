@@ -1,26 +1,47 @@
 #!/command/with-contenv bashio
 # shellcheck shell=bash
-# Install user-configured packages
-if bashio::config.has_value 'packages'; then
-  apk update \
-    || bashio::exit.nok 'Failed updating Alpine packages repository indexes'
+export LOG_FD
+# ==============================================================================
+# Home Assistant Community Add-on: Tailscale
+# Install SSH packages and run init commands (only runs when ssh is true)
+# ==============================================================================
 
-  for package in $(bashio::config 'packages'); do
-    apk add --no-cache "$package" \
-      || bashio::exit.nok "Failed installing package ${package}"
-  done
+# Safety guard: only run when ssh is enabled (stage2_hook also removes this service from chain when ssh is false)
+if ! bashio::config.true 'ssh'; then
+  exit 0
 fi
 
-# Execute user-configured commands on startup
-if bashio::config.has_value 'init_commands'; then
-  length=$(bashio::config 'init_commands | length') \
-    || bashio::exit.nok 'Failed to get init_commands array length'
-
-  for (( i=0; i<length; i++ )); do
-    cmd=$(bashio::config "init_commands[${i}]") \
-      || bashio::exit.nok "Failed to get init command at index ${i}"
-
-    eval "${cmd}" \
-      || bashio::exit.nok "Failed executing init command: ${cmd}"
-  done
+# If nothing to do, exit OK
+if ! bashio::config.has_value 'ssh_packages' && ! bashio::config.has_value 'ssh_init_commands'; then
+  exit 0
 fi
+
+# Packages: try install, warn and continue on failure
+if bashio::config.has_value 'ssh_packages'; then
+  if ! apk update; then
+    bashio::log.warning "Failed updating Alpine packages repository indexes"
+  else
+    for package in $(bashio::config 'ssh_packages'); do
+      if ! apk add --no-cache "$package"; then
+        bashio::log.warning "Failed installing package ${package}"
+      fi
+    done
+  fi
+fi
+
+# Execute ssh_init_commands: try each, warn and continue on failure
+if bashio::config.has_value 'ssh_init_commands'; then
+  length=$(bashio::config 'ssh_init_commands | length') || true
+  if bashio::var.has_value "${length}" && [[ "${length}" -gt 0 ]]; then
+    for ((i = 0; i < length; i++)); do
+      cmd=$(bashio::config "ssh_init_commands[${i}]")
+      if bashio::var.has_value "${cmd}"; then
+        if ! eval "${cmd}"; then
+          bashio::log.warning "Init command failed: ${cmd}"
+        fi
+      fi
+    done
+  fi
+fi
+
+exit 0

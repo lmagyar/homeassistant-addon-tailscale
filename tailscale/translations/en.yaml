@@ -113,6 +113,16 @@ configuration:
       This option allows you to expose SSH capabilities that you can enable from your
       Tailscale account.
       This option is disabled by default.
+  ssh_packages:
+    name: SSH packages
+    description: >-
+      Alpine packages to install on startup to preconfigure your Tailscale SSH shell.
+      Only applies when SSH is enabled. Requires network access.
+  ssh_init_commands:
+    name: SSH init commands
+    description: >-
+      Custom commands to run on startup to preconfigure your Tailscale SSH shell.
+      Only applies when SSH is enabled.
   stateful_filtering:
     name: Stateful packet filtering
     description: >-
