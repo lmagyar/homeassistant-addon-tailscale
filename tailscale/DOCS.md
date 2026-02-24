@@ -107,9 +107,10 @@ login_server: "https://controlplane.tailscale.com"
 share_homeassistant: disabled
 share_on_port: 443
 snat_subnet_routes: true
-ssh: false
-ssh_packages: []
-ssh_init_commands: []
+ssh:
+  enabled: false
+  packages: []
+  init_commands: []
 stateful_filtering: false
 taildrive:
   addons: false
@@ -468,55 +469,46 @@ your use case.
 
 ### Option: `ssh`
 
-This option allows you to expose SSH capabilities that you can enable from your
-Tailscale account.
+This option configures Tailscale SSH and its shell environment.
+
+#### `ssh.enabled`
+
+Enables SSH capabilities that you can manage from your Tailscale account. This
+option is disabled by default.
 
 More information: [Tailscale SSH][tailscale_info_ssh]
-
-This option is disabled by default.
 
 **Note**: Using Tailscale SSH you will access only this add-on's command line,
 **_not_** eg. the Advanced SSH add-on's command line!
 
-### Option: `ssh_packages`
+#### `ssh.packages`
 
-This option allows you to install Alpine packages on add-on startup to
-preconfigure your Tailscale SSH shell environment. **Only applies when `ssh` is
-enabled.**
+Alpine packages to install on add-on startup to preconfigure your Tailscale SSH
+shell. **Only applies when `ssh.enabled` is true.** Default is empty list.
 
-This option is disabled by default (empty list).
+Requires network access. Failures (e.g. Alpine repositories unreachable) are
+non-blocking: the add-on logs a warning and continues so that Tailscale can
+start.
 
-Requires network access for package installation. Failures (e.g. Alpine
-repositories unreachable) are non-blocking: the add-on logs a warning and
-continues so that Tailscale can start.
+#### `ssh.init_commands`
 
-**Example:**
+Custom commands to run on startup to preconfigure your Tailscale SSH shell
+(e.g. set npm prefix, create symlinks). **Only applies when `ssh.enabled` is
+true.** Default is empty list.
 
-```yaml
-ssh: true
-ssh_packages:
-  - nodejs
-  - npm
-```
-
-### Option: `ssh_init_commands`
-
-This option allows you to run custom commands on add-on startup to preconfigure
-your Tailscale SSH shell (e.g. set npm prefix, create symlinks). **Only applies
-when `ssh` is enabled.**
-
-This option is disabled by default (empty list).
-
-Each command is executed with `eval` in the shell. Failures are non-blocking:
-the add-on logs a warning and continues so that Tailscale can start.
+Each command is executed with `eval` in the shell. Failures are non-blocking.
 
 **Example:**
 
 ```yaml
-ssh: true
-ssh_init_commands:
-  - npm config set prefix /data/npm
-  - mkdir -p /data/npm/bin
+ssh:
+  enabled: true
+  packages:
+    - nodejs
+    - npm
+  init_commands:
+    - npm config set prefix /data/npm
+    - mkdir -p /data/npm/bin
 ```
 
 ### Option: `stateful_filtering`

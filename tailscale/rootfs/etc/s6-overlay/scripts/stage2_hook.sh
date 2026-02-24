@@ -12,6 +12,7 @@ declare healthcheck_offline_timeout healthcheck_restart_timeout
 declare forward_to_host
 declare advertise_routes
 declare tags
+declare ssh
 
 # This is to execute potentially failing supervisor api functions within conditions,
 # where set -e is not propagated inside the function and bashio relies on set -e for api error handling
@@ -103,8 +104,22 @@ if bashio::var.has_value "${tags}"; then
     bashio::addon.option 'tags'
 fi
 
-# Disable init-packages service when ssh is false (packages/init only apply when ssh is true)
-if bashio::config.false 'ssh'; then
+# Migrate ssh (bool) to nested ssh object
+ssh=$(bashio::jq "${options}" '.ssh | select(.!=null)')
+if bashio::var.has_value "${ssh}" && [ "$(echo "${options}" | jq -r '.ssh | type')" = "boolean" ]; then
+  new_ssh=$(echo "${options}" | jq -c '{enabled: .ssh, packages: (.ssh_packages // []), init_commands: (.ssh_init_commands // [])}')
+  try bashio::addon.option 'ssh' "^${new_ssh}"
+  if ((TRY_ERROR)); then
+    bashio::log.warning "The ssh option migration failed, ssh option is dropped, using default disabled."
+  else
+    bashio::log.info "Successfully migrated ssh option to nested ssh (enabled, packages, init_commands)"
+    bashio::addon.option 'ssh_packages'
+    bashio::addon.option 'ssh_init_commands'
+  fi
+fi
+
+# Disable init-packages service when ssh.enabled is false
+if bashio::config.false 'ssh.enabled'; then
   rm -f /etc/s6-overlay/s6-rc.d/tailscaled/dependencies.d/init-packages
 fi
 

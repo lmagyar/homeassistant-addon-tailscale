@@ -6,22 +6,22 @@ export LOG_FD
 # Install SSH packages and run init commands (only runs when ssh is true)
 # ==============================================================================
 
-# Safety guard: only run when ssh is enabled (stage2_hook also removes this service from chain when ssh is false)
-if ! bashio::config.true 'ssh'; then
+# Safety guard: only run when ssh.enabled is true (stage2_hook also removes this service from chain when false)
+if ! bashio::config.true 'ssh.enabled'; then
   exit 0
 fi
 
 # If nothing to do, exit OK
-if ! bashio::config.has_value 'ssh_packages' && ! bashio::config.has_value 'ssh_init_commands'; then
+if ! bashio::config.has_value 'ssh.packages' && ! bashio::config.has_value 'ssh.init_commands'; then
   exit 0
 fi
 
 # Packages: try install, warn and continue on failure
-if bashio::config.has_value 'ssh_packages'; then
+if bashio::config.has_value 'ssh.packages'; then
   if ! apk update; then
     bashio::log.warning "Failed updating Alpine packages repository indexes"
   else
-    for package in $(bashio::config 'ssh_packages'); do
+    for package in $(bashio::config 'ssh.packages'); do
       if ! apk add --no-cache "$package"; then
         bashio::log.warning "Failed installing package ${package}"
       fi
@@ -29,12 +29,12 @@ if bashio::config.has_value 'ssh_packages'; then
   fi
 fi
 
-# Execute ssh_init_commands: try each, warn and continue on failure
-if bashio::config.has_value 'ssh_init_commands'; then
-  length=$(bashio::config 'ssh_init_commands | length') || true
+# Execute ssh.init_commands: try each, warn and continue on failure
+if bashio::config.has_value 'ssh.init_commands'; then
+  length=$(bashio::config 'ssh.init_commands | length') || true
   if bashio::var.has_value "${length}" && [[ "${length}" -gt 0 ]]; then
     for ((i = 0; i < length; i++)); do
-      cmd=$(bashio::config "ssh_init_commands[${i}]")
+      cmd=$(bashio::config "ssh.init_commands[${i}]")
       if bashio::var.has_value "${cmd}"; then
         if ! eval "${cmd}"; then
           bashio::log.warning "Init command failed: ${cmd}"

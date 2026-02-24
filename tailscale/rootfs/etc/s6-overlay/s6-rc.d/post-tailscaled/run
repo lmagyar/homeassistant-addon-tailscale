@@ -71,7 +71,7 @@ login_server=$(bashio::config "login_server")
 options+=(--login-server="${login_server}")
 
 # Enable ssh when explicitly enabled
-if bashio::config.true "ssh"; then
+if bashio::config.true "ssh.enabled"; then
   options+=(--ssh)
 else
   options+=(--ssh=false)

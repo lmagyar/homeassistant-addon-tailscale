@@ -110,15 +110,18 @@ configuration:
   ssh:
     name: Tailscale SSH
     description: >-
-      This option allows you to expose SSH capabilities that you can enable from your
-      Tailscale account.
-      This option is disabled by default.
-  ssh_packages:
+      Configure Tailscale SSH and its shell environment (packages, init commands).
+      SSH is disabled by default.
+  ssh.enabled:
+    name: SSH enabled
+    description: >-
+      Expose SSH capabilities that you can enable from your Tailscale account.
+  ssh.packages:
     name: SSH packages
     description: >-
       Alpine packages to install on startup to preconfigure your Tailscale SSH shell.
       Only applies when SSH is enabled. Requires network access.
-  ssh_init_commands:
+  ssh.init_commands:
     name: SSH init commands
     description: >-
       Custom commands to run on startup to preconfigure your Tailscale SSH shell.
