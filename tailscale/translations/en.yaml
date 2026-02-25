@@ -107,25 +107,26 @@ configuration:
       To support advanced Site-to-site networking (eg. to traverse multiple
       networks), you can disable this functionality.
       This option is enabled by default.
-  ssh:
+  tailscale_ssh:
     name: Tailscale SSH
     description: >-
       Configure Tailscale SSH and its shell environment (packages, init commands).
       SSH is disabled by default.
-  ssh.enabled:
-    name: SSH enabled
-    description: >-
-      Expose SSH capabilities that you can enable from your Tailscale account.
-  ssh.packages:
-    name: SSH packages
-    description: >-
-      Alpine packages to install on startup to preconfigure your Tailscale SSH shell.
-      Only applies when SSH is enabled. Requires network access.
-  ssh.init_commands:
-    name: SSH init commands
-    description: >-
-      Custom commands to run on startup to preconfigure your Tailscale SSH shell.
-      Only applies when SSH is enabled.
+    fields:
+      enabled:
+        name: SSH enabled
+        description: >-
+          Expose SSH capabilities that you can enable from your Tailscale account.
+      packages:
+        name: SSH packages
+        description: >-
+          Alpine packages to install on startup to preconfigure your Tailscale SSH shell.
+          Only applies when SSH is enabled. Requires network access.
+      init_commands:
+        name: SSH init commands
+        description: >-
+          Custom commands to run on startup to preconfigure your Tailscale SSH shell.
+          Only applies when SSH is enabled.
   stateful_filtering:
     name: Stateful packet filtering
     description: >-

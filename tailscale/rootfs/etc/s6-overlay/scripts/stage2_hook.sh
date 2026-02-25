@@ -108,7 +108,7 @@ fi
 ssh=$(bashio::jq "${options}" '.ssh | select(.!=null)')
 if bashio::var.has_value "${ssh}" && [ "$(echo "${options}" | jq -r '.ssh | type')" = "boolean" ]; then
   new_ssh=$(echo "${options}" | jq -c '{enabled: .ssh, packages: (.ssh_packages // []), init_commands: (.ssh_init_commands // [])}')
-  try bashio::addon.option 'ssh' "^${new_ssh}"
+  try bashio::addon.option 'tailscale_ssh' "^${new_ssh}"
   if ((TRY_ERROR)); then
     bashio::log.warning "The ssh option migration failed, ssh option is dropped, using default disabled."
   else
@@ -119,7 +119,7 @@ if bashio::var.has_value "${ssh}" && [ "$(echo "${options}" | jq -r '.ssh | type
 fi
 
 # Disable init-packages service when ssh.enabled is false
-if bashio::config.false 'ssh.enabled'; then
+if bashio::config.false 'tailscale_ssh.enabled'; then
   rm -f /etc/s6-overlay/s6-rc.d/tailscaled/dependencies.d/init-packages
 fi
 

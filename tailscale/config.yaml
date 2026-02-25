@@ -47,7 +47,7 @@ options:
   share_homeassistant: disabled
   share_on_port: 443
   snat_subnet_routes: true
-  ssh:
+  tailscale_ssh:
     enabled: false
     packages: []
     init_commands: []
@@ -81,7 +81,7 @@ schema:
   share_homeassistant: list(disabled|serve|funnel)
   share_on_port: match(^(?:443|8443|10000)$)
   snat_subnet_routes: bool
-  ssh:
+  tailscale_ssh:
     enabled: bool
     packages: [str]
     init_commands: [str]
