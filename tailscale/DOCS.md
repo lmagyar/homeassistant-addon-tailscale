@@ -107,10 +107,6 @@ login_server: "https://controlplane.tailscale.com"
 share_homeassistant: disabled
 share_on_port: 443
 snat_subnet_routes: true
-tailscale_ssh:
-  enabled: false
-  packages: []
-  init_commands: []
 stateful_filtering: false
 taildrive:
   addons: false
@@ -121,6 +117,14 @@ taildrive:
   share: false
   ssl: false
 taildrop: false
+tailscale_ssh:
+  enabled: false
+  packages:
+    - nodejs
+    - npm
+  init_commands:
+    - npm config set prefix /data/npm
+    - mkdir -p /data/npm/bin
 userspace_networking: false
 ```
 
@@ -467,50 +471,6 @@ MTU" for you).
 Keep it enabled if preserving the real source IP address is not critical for
 your use case.
 
-### Option: `tailscale_ssh`
-
-This option configures Tailscale SSH and its shell environment.
-
-#### `tailscale_ssh.enabled`
-
-Enables SSH capabilities that you can manage from your Tailscale account. This
-option is disabled by default.
-
-More information: [Tailscale SSH][tailscale_info_ssh]
-
-**Note**: Using Tailscale SSH you will access only this add-on's command line,
-**_not_** eg. the Advanced SSH add-on's command line!
-
-#### `tailscale_ssh.packages`
-
-Alpine packages to install on add-on startup to preconfigure your Tailscale SSH
-shell. **Only applies when `tailscale_ssh.enabled` is true.** Default is empty list.
-
-Requires network access. Failures (e.g. Alpine repositories unreachable) are
-non-blocking: the add-on logs a warning and continues so that Tailscale can
-start.
-
-#### `tailscale_ssh.init_commands`
-
-Custom commands to run on startup to preconfigure your Tailscale SSH shell
-(e.g. set npm prefix, create symlinks). **Only applies when `tailscale_ssh.enabled` is
-true.** Default is empty list.
-
-Each command is executed with `eval` in the shell. Failures are non-blocking.
-
-**Example:**
-
-```yaml
-tailscale_ssh:
-  enabled: true
-  packages:
-    - nodejs
-    - npm
-  init_commands:
-    - npm config set prefix /data/npm
-    - mkdir -p /data/npm/bin
-```
-
 ### Option: `stateful_filtering`
 
 This option enables stateful packet filtering on packet-forwarding nodes (exit
@@ -540,6 +500,47 @@ Tailscale devices.
 This option is disabled by default.
 
 Received files are stored in the `/share/taildrop` directory.
+
+### Option group `tailscale_ssh`
+
+This option configures Tailscale SSH and its shell environment.
+
+#### Option: `tailscale_ssh.enabled`
+
+Enables SSH capabilities that you can manage from your Tailscale account.
+
+This option is disabled by default.
+
+More information: [Tailscale SSH][tailscale_info_ssh]
+
+**Note**: Using Tailscale SSH you will access only this app's command line,
+**_not_** eg. the Advanced SSH app's command line!
+
+#### Option: `tailscale_ssh.packages`
+
+[Alpine packages][alpine-packages] to install on app startup to preconfigure
+your Tailscale SSH shell.
+
+Requires local network access. Failures (e.g. Alpine repositories are
+unreachable) are non-blocking: the app logs a warning and continues so that
+Tailscale can start.
+
+**Note**: Only applies when `tailscale_ssh.enabled` is true.
+
+**Note**: Package installation runs before Tailscale is started, ie. it bypasses
+exit node if configured.
+
+**Note**: Adding many packages will result in a longer startup time for the app.
+
+#### Option: `tailscale_ssh.init_commands`
+
+Custom commands to run on app startup to preconfigure your Tailscale SSH shell
+(e.g. set npm prefix, create symlinks).
+
+Each command is executed with `eval` in the shell. Failures are non-blocking:
+the app logs a warning and continues so that Tailscale can start.
+
+**Note**: Only applies when `tailscale_ssh.enabled` is true.
 
 ### Option: `userspace_networking`
 
@@ -728,6 +729,7 @@ You could also [open an issue here][issue] on GitHub.
 [reddit]: https://reddit.com/r/homeassistant
 [warning_stripe]: https://github.com/lmagyar/homeassistant-addon-tailscale/raw/main/images/warning_stripe_wide.png
 [community_addon]: https://github.com/hassio-addons/addon-tailscale
+[alpine-packages]: https://pkgs.alpinelinux.org/packages
 [tailscale_acls]: https://login.tailscale.com/admin/acls
 [tailscale_dns]: https://login.tailscale.com/admin/dns
 [tailscale_info_dns]: https://tailscale.com/kb/1054/dns

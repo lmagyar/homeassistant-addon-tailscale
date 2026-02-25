@@ -47,10 +47,6 @@ options:
   share_homeassistant: disabled
   share_on_port: 443
   snat_subnet_routes: true
-  tailscale_ssh:
-    enabled: false
-    packages: []
-    init_commands: []
   stateful_filtering: false
   taildrive:
     addons: false
@@ -61,6 +57,10 @@ options:
     share: false
     ssl: false
   taildrop: false
+  tailscale_ssh:
+    enabled: false
+    packages: []
+    init_commands: []
   userspace_networking: false
 schema:
   accept_dns: bool
@@ -81,10 +81,6 @@ schema:
   share_homeassistant: list(disabled|serve|funnel)
   share_on_port: match(^(?:443|8443|10000)$)
   snat_subnet_routes: bool
-  tailscale_ssh:
-    enabled: bool
-    packages: [str]
-    init_commands: [str]
   stateful_filtering: bool
   taildrive:
     addons: bool
@@ -95,5 +91,9 @@ schema:
     share: bool
     ssl: bool
   taildrop: bool
+  tailscale_ssh:
+    enabled: bool
+    packages: [str]
+    init_commands: [str]
   userspace_networking: bool
 image: ghcr.io/lmagyar/{arch}-addon-tailscale

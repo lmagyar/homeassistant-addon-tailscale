@@ -104,23 +104,25 @@ if bashio::var.has_value "${tags}"; then
     bashio::addon.option 'tags'
 fi
 
-# Migrate ssh (bool) to nested ssh object
+# Migrate ssh to tailscale_ssh.enabled
 ssh=$(bashio::jq "${options}" '.ssh | select(.!=null)')
-if bashio::var.has_value "${ssh}" && [ "$(echo "${options}" | jq -r '.ssh | type')" = "boolean" ]; then
-  new_ssh=$(echo "${options}" | jq -c '{enabled: .ssh, packages: (.ssh_packages // []), init_commands: (.ssh_init_commands // [])}')
-  try bashio::addon.option 'tailscale_ssh' "^${new_ssh}"
-  if ((TRY_ERROR)); then
-    bashio::log.warning "The ssh option migration failed, ssh option is dropped, using default disabled."
-  else
-    bashio::log.info "Successfully migrated ssh option to nested ssh (enabled, packages, init_commands)"
-    bashio::addon.option 'ssh_packages'
-    bashio::addon.option 'ssh_init_commands'
-  fi
+if bashio::var.has_value "${ssh}"; then
+    try bashio::addon.option 'tailscale_ssh.enabled' "^${ssh}"
+    if ((TRY_ERROR)); then
+        bashio::log.warning "The ssh option migration failed, ssh option '${ssh}' is dropped, using default disabled."
+    else
+        bashio::log.info "Successfully migrated ssh option to tailscale_ssh.enabled"
+    fi
+    bashio::addon.option 'ssh'
 fi
 
-# Disable init-packages service when ssh.enabled is false
-if bashio::config.false 'tailscale_ssh.enabled'; then
-  rm -f /etc/s6-overlay/s6-rc.d/tailscaled/dependencies.d/init-packages
+# Disable init-packages service when tailscale_ssh.enabled is false
+# or no packages and no init_commands are defined
+if bashio::config.false 'tailscale_ssh.enabled' || \
+    (! bashio::config.has_value 'tailscale_ssh.packages' && \
+    ! bashio::config.has_value 'tailscale_ssh.init_commands')
+then
+    rm /etc/s6-overlay/s6-rc.d/tailscaled/dependencies.d/init-packages
 fi
 
 # Disable MagicDNS egress proxy service when userspace-networking is enabled or accepting dns is disabled

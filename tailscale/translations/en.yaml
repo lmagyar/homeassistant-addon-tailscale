@@ -107,26 +107,6 @@ configuration:
       To support advanced Site-to-site networking (eg. to traverse multiple
       networks), you can disable this functionality.
       This option is enabled by default.
-  tailscale_ssh:
-    name: Tailscale SSH
-    description: >-
-      Configure Tailscale SSH and its shell environment (packages, init commands).
-      SSH is disabled by default.
-    fields:
-      enabled:
-        name: SSH enabled
-        description: >-
-          Expose SSH capabilities that you can enable from your Tailscale account.
-      packages:
-        name: SSH packages
-        description: >-
-          Alpine packages to install on startup to preconfigure your Tailscale SSH shell.
-          Only applies when SSH is enabled. Requires network access.
-      init_commands:
-        name: SSH init commands
-        description: >-
-          Custom commands to run on startup to preconfigure your Tailscale SSH shell.
-          Only applies when SSH is enabled.
   stateful_filtering:
     name: Stateful packet filtering
     description: >-
@@ -147,6 +127,27 @@ configuration:
       This option allows you to enable Taildrop, a file sharing service
       that allows you to share files with other Tailscale nodes.
       This option is disabled by default.
+  tailscale_ssh:
+    name: Tailscale SSH
+    description: >-
+      This option configures Tailscale SSH and its shell environment.
+    fields:
+      enabled:
+        name: SSH enabled
+        description: >-
+          Enables SSH capabilities that you can manage from your Tailscale account.
+          This option is disabled by default.
+      packages:
+        name: Alpine packages
+        description: >-
+          Alpine packages to install on app startup to preconfigure your Tailscale SSH
+          shell.
+          Only applies when SSH is enabled.
+      init_commands:
+        name: Init commands
+        description: >-
+          Custom commands to run on app startup to preconfigure your Tailscale SSH shell.
+          Only applies when SSH is enabled.
   userspace_networking:
     name: Userspace networking mode
     description: >-

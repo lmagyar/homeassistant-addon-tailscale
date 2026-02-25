@@ -6,42 +6,35 @@ export LOG_FD
 # Install SSH packages and run init commands (only runs when ssh is true)
 # ==============================================================================
 
-# Safety guard: only run when ssh.enabled is true (stage2_hook also removes this service from chain when false)
-if ! bashio::config.true 'tailscale_ssh.enabled'; then
-  exit 0
-fi
-
-# If nothing to do, exit OK
-if ! bashio::config.has_value 'tailscale_ssh.packages' && ! bashio::config.has_value 'tailscale_ssh.init_commands'; then
-  exit 0
-fi
-
-# Packages: try install, warn and continue on failure
+# Packages: try install, warn and continue startup on failure
 if bashio::config.has_value 'tailscale_ssh.packages'; then
   if ! apk update; then
     bashio::log.warning "Failed updating Alpine packages repository indexes"
-  else
-    for package in $(bashio::config 'tailscale_ssh.packages'); do
-      if ! apk add --no-cache "$package"; then
-        bashio::log.warning "Failed installing package ${package}"
-      fi
-    done
+    bashio::exit.ok
   fi
+  for package in $(bashio::config 'tailscale_ssh.packages'); do
+    if ! apk add --no-cache "$package"; then
+      bashio::log.warning "Failed installing package ${package}"
+      bashio::exit.ok
+    fi
+  done
 fi
 
-# Execute ssh.init_commands: try each, warn and continue on failure
+# Execute tailscale_ssh.init_commands: try each, warn and continue startup on failure
 if bashio::config.has_value 'tailscale_ssh.init_commands'; then
-  length=$(bashio::config 'tailscale_ssh.init_commands | length') || true
-  if bashio::var.has_value "${length}" && [[ "${length}" -gt 0 ]]; then
-    for ((i = 0; i < length; i++)); do
-      cmd=$(bashio::config "tailscale_ssh.init_commands[${i}]")
-      if bashio::var.has_value "${cmd}"; then
-        if ! eval "${cmd}"; then
-          bashio::log.warning "Init command failed: ${cmd}"
-        fi
-      fi
-    done
+  # Use bashio::config to properly iterate over the array, preserving multi-line commands
+  if ! length=$(bashio::config 'tailscale_ssh.init_commands | length'); then
+      bashio::log.warning 'Failed to get tailscale_ssh.init_commands array length'
+      bashio::exit.ok
   fi
+  for ((i = 0; i < length; i++)); do
+    if ! cmd=$(bashio::config "tailscale_ssh.init_commands[${i}]"); then
+      bashio::log.warning "Failed to get init command at index ${i}"
+      bashio::exit.ok
+    fi
+    if ! eval "${cmd}"; then
+      bashio::log.warning "Init command failed: ${cmd}"
+      bashio::exit.ok
+    fi
+  done
 fi
-
-exit 0
