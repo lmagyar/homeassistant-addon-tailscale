@@ -76,7 +76,7 @@ function remove_forwarding() {
 function dig_hassio_host() {
   local host="${1}"
   local type="${2}"
-  dig "${host}. local.hass.io" "${type}" +short | { grep -Ev '^;|\.$|^$' || true ;} | head -n 1
+  dig "${host}.local.hass.io" "${type}" +short | { grep -Ev '^;|\.$|^$' || true ;} | head -n 1
 }
 
 # Hassio DNS's IP addresses
