@@ -1,6 +1,6 @@
 # Changelog
 
-## vNext (forked)
+## 0.27.1.1 (forked)
 
 - Add new options for Tailscale SSH: packages and init_commands ([@sim-san](https://github.com/sim-san))
 - Release unreleased changes from community app
