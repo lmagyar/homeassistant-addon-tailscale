@@ -12,6 +12,8 @@ readonly DNSMASQ_INGRESS_PORT=53
 
 declare hassio_dns_ipv4
 declare hassio_dns_ipv6
+declare hassio_supervisor_ipv4
+declare hassio_supervisor_ipv6
 
 declare tailscale_address_ipv4
 declare tailscale_address_ipv6
@@ -69,6 +71,11 @@ function dig_hassio_dns() {
   dig dns.local.hass.io "${type}" +short | { grep -Ev '^;|\.$|^$' || true ;} | head -n 1
 }
 
+function dig_hassio_supervisor() {
+  local type="${1}"
+  dig supervisor.local.hass.io "${type}" +short | { grep -Ev '^;|\.$|^$' || true ;} | head -n 1
+}
+
 # This is useful when stopping services and dig fails but we already added this value to iptables
 function get_hassio_dns_from_iptables() {
   local cmd="${1}"
@@ -94,6 +101,19 @@ then
     bashio::exit.nok "Failed to resolve Home Assistant's DNS address"
   fi
 fi
+# Supervisor's IP addresses
+# For the status of IPv6 support see https://github.com/home-assistant/supervisor/issues/2133
+if ! hassio_supervisor_ipv4=$(dig_hassio_supervisor A) || \
+  ! hassio_supervisor_ipv6=$(dig_hassio_supervisor AAAA) || \
+  bashio::var.is_empty "${hassio_supervisor_ipv4-}" && bashio::var.is_empty "${hassio_supervisor_ipv6-}"
+then
+  if ! hassio_supervisor_ipv4=$(get_hassio_dns_from_iptables "iptables" "32" "${MAGIC_DNS_IPV4}") || \
+    ! hassio_supervisor_ipv6=$(get_hassio_dns_from_iptables "ip6tables" "128" "${MAGIC_DNS_IPV6}") || \
+    bashio::var.is_empty "${hassio_supervisor_ipv4-}" && bashio::var.is_empty "${hassio_supervisor_ipv6-}"
+  then
+    bashio::exit.nok "Failed to resolve Home Assistant's DNS address"
+  fi
+fi
 # Tailscale's local IP addresses
 if bashio::var.equals "${2-}" "forwarding"; then
   if ! tailscale_address_ipv4=$(/opt/tailscale ip -4) || \
@@ -106,6 +126,11 @@ if bashio::var.equals "${2-}" "forwarding"; then
     (bashio::var.has_value "${hassio_dns_ipv6-}" && bashio::var.is_empty "${tailscale_address_ipv6-}")
   then
     bashio::exit.nok "Failed to retrieve Tailscale's local address with matching IP version (v4 or v6) to Home Assistant's DNS address"
+  fi
+  if (bashio::var.has_value "${hassio_supervisor_ipv4-}" && bashio::var.is_empty "${tailscale_address_ipv4-}") || \
+    (bashio::var.has_value "${hassio_supervisor_ipv6-}" && bashio::var.is_empty "${tailscale_address_ipv6-}")
+  then
+    bashio::exit.nok "Failed to retrieve Tailscale's local address with matching IP version (v4 or v6) to Home Assistant's Supervisor address"
   fi
 fi
 
@@ -122,6 +147,14 @@ case "${1-}-${2-}" in
       setup_forwarding "ip6tables" "I" "udp" "IPv6" "128" "${hassio_dns_ipv6}" "${MAGIC_DNS_IPV6}" "[::1]" "0" "${2}"
       setup_forwarding "ip6tables" "I" "tcp" "IPv6" "128" "${hassio_dns_ipv6}" "${MAGIC_DNS_IPV6}" "[::1]" "0" "${2}"
     fi
+    if bashio::var.has_value "${hassio_supervisor_ipv4-}"; then
+      setup_forwarding "iptables" "I" "udp" "IPv4" "32" "${hassio_supervisor_ipv4}" "${MAGIC_DNS_IPV4}" "127.0.0.1" "0" "${2}"
+      setup_forwarding "iptables" "I" "tcp" "IPv4" "32" "${hassio_supervisor_ipv4}" "${MAGIC_DNS_IPV4}" "127.0.0.1" "0" "${2}"
+    fi
+    if bashio::var.has_value "${hassio_supervisor_ipv6-}"; then
+      setup_forwarding "ip6tables" "I" "udp" "IPv6" "128" "${hassio_supervisor_ipv6}" "${MAGIC_DNS_IPV6}" "[::1]" "0" "${2}"
+      setup_forwarding "ip6tables" "I" "tcp" "IPv6" "128" "${hassio_supervisor_ipv6}" "${MAGIC_DNS_IPV6}" "[::1]" "0" "${2}"
+    fi
     ;;
   setup-forwarding)
     if bashio::var.has_value "${hassio_dns_ipv4-}"; then
@@ -132,6 +165,14 @@ case "${1-}-${2-}" in
       setup_forwarding "ip6tables" "A" "udp" "IPv6" "128" "${hassio_dns_ipv6}" "${MAGIC_DNS_IPV6}" "[${tailscale_address_ipv6}]" "${DNSMASQ_INGRESS_PORT}" "${2}"
       setup_forwarding "ip6tables" "A" "tcp" "IPv6" "128" "${hassio_dns_ipv6}" "${MAGIC_DNS_IPV6}" "[${tailscale_address_ipv6}]" "${DNSMASQ_INGRESS_PORT}" "${2}"
     fi
+    if bashio::var.has_value "${hassio_supervisor_ipv4-}"; then
+      setup_forwarding "iptables" "A" "udp" "IPv4" "32" "${hassio_supervisor_ipv4}" "${MAGIC_DNS_IPV4}" "${tailscale_address_ipv4}" "${DNSMASQ_INGRESS_PORT}" "${2}"
+      setup_forwarding "iptables" "A" "tcp" "IPv4" "32" "${hassio_supervisor_ipv4}" "${MAGIC_DNS_IPV4}" "${tailscale_address_ipv4}" "${DNSMASQ_INGRESS_PORT}" "${2}"
+    fi
+    if bashio::var.has_value "${hassio_supervisor_ipv6-}"; then
+      setup_forwarding "ip6tables" "A" "udp" "IPv6" "128" "${hassio_supervisor_ipv6}" "${MAGIC_DNS_IPV6}" "[${tailscale_address_ipv6}]" "${DNSMASQ_INGRESS_PORT}" "${2}"
+      setup_forwarding "ip6tables" "A" "tcp" "IPv6" "128" "${hassio_supervisor_ipv6}" "${MAGIC_DNS_IPV6}" "[${tailscale_address_ipv6}]" "${DNSMASQ_INGRESS_PORT}" "${2}"
+    fi
     ;;
   remove-drop)
     if bashio::var.has_value "${hassio_dns_ipv4-}"; then
@@ -140,6 +181,12 @@ case "${1-}-${2-}" in
     if bashio::var.has_value "${hassio_dns_ipv6-}"; then
       remove_forwarding "ip6tables" "IPv6" "128" "${hassio_dns_ipv6}" "${MAGIC_DNS_IPV6}" "[::1]" "0" "${2}"
     fi
+    if bashio::var.has_value "${hassio_supervisor_ipv4-}"; then
+      remove_forwarding "iptables" "IPv4" "32" "${hassio_supervisor_ipv4}" "${MAGIC_DNS_IPV4}" "127.0.0.1" "0" "${2}"
+    fi
+    if bashio::var.has_value "${hassio_supervisor_ipv6-}"; then
+      remove_forwarding "ip6tables" "IPv6" "128" "${hassio_supervisor_ipv6}" "${MAGIC_DNS_IPV6}" "[::1]" "0" "${2}"
+    fi
     ;;
   remove-forwarding)
     if bashio::var.has_value "${hassio_dns_ipv4-}"; then
@@ -147,6 +194,12 @@ case "${1-}-${2-}" in
     fi
     if bashio::var.has_value "${hassio_dns_ipv6-}"; then
       remove_forwarding "ip6tables" "IPv6" "128" "${hassio_dns_ipv6}" "${MAGIC_DNS_IPV6}" "[${tailscale_address_ipv6}]" "${DNSMASQ_INGRESS_PORT}" "${2}"
+    fi
+    if bashio::var.has_value "${hassio_supervisor_ipv4-}"; then
+      remove_forwarding "iptables" "IPv4" "32" "${hassio_supervisor_ipv4}" "${MAGIC_DNS_IPV4}" "${tailscale_address_ipv4}" "${DNSMASQ_INGRESS_PORT}" "${2}"
+    fi
+    if bashio::var.has_value "${hassio_supervisor_ipv6-}"; then
+      remove_forwarding "ip6tables" "IPv6" "128" "${hassio_supervisor_ipv6}" "${MAGIC_DNS_IPV6}" "[${tailscale_address_ipv6}]" "${DNSMASQ_INGRESS_PORT}" "${2}"
     fi
     ;;
   *)
