@@ -2,7 +2,7 @@
 
 ## vNext (forked)
 
-- Add new options for Tailscale SSH: packages and init_commands
+- Add new options for Tailscale SSH: packages and init_commands ([@sim-san](https://github.com/sim-san))
 - Release unreleased changes from community app
   - Update tailscale/tailscale to v1.94.2
   - Make service name option configurable for Share Home Assistant option
