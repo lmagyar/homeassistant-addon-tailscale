@@ -1,5 +1,8 @@
 # Changelog
 
+- Drop support for armv7 architecture
+- Update Add-on base image to v20 (drop armv7 support)
+
 ## 0.27.1.1 (forked)
 
 - Add new options for Tailscale SSH: packages and init_commands ([@sim-san](https://github.com/sim-san))

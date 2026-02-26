@@ -13,7 +13,7 @@ jobs:
       id-token: write
     strategy:
       matrix:
-        arch: ["aarch64", "amd64", "armv7"]
+        arch: ["aarch64", "amd64"]
     steps:
     - name: Checkout the repository
       uses: actions/checkout@v6
@@ -24,7 +24,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - name: Publish
-      uses: home-assistant/builder@2025.09.0
+      uses: home-assistant/builder@2026.02.1
       with:
         args: |
           --${{ matrix.arch }} \

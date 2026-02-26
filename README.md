@@ -99,7 +99,7 @@ For more details, please see the app's [Documentation][Documentation] pages.
 [aarch64-shield]: https://img.shields.io/badge/aarch64-yes-green.svg
 [amd64-shield]: https://img.shields.io/badge/amd64-yes-green.svg
 [armhf-shield]: https://img.shields.io/badge/armhf-no-red.svg
-[armv7-shield]: https://img.shields.io/badge/armv7-yes-green.svg
+[armv7-shield]: https://img.shields.io/badge/armv7-no-red.svg
 [commits-shield]: https://img.shields.io/github/commit-activity/y/lmagyar/homeassistant-addon-tailscale.svg
 [commits]: https://github.com/lmagyar/homeassistant-addon-tailscale/commits/main
 [Documentation]: https://github.com/lmagyar/homeassistant-addon-tailscale/blob/main/tailscale/DOCS.md
