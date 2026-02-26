@@ -2,13 +2,13 @@
 # shellcheck shell=bash
 export LOG_FD
 # ==============================================================================
-# Home Assistant Community Add-on: Tailscale
+# Home Assistant Community App: Tailscale
 # Runs tailscale
 # ==============================================================================
 readonly TAILSCALED_GID=51893
 
-readonly TAILSCALED_LOGLEVEL_NOTICE="Tailscale logs will be suppressed after 200 lines, set add-on's configuration option 'log_level' to 'debug' to see further logs"
-readonly TAILSCALED_LOGLEVEL_MESSAGE="[further tailscaled logs suppressed, set add-on's configuration option 'log_level' to 'debug' to see further tailscaled logs]"
+readonly TAILSCALED_LOGLEVEL_NOTICE="Tailscale logs will be suppressed after 200 lines, set app's configuration option 'log_level' to 'debug' to see further logs"
+readonly TAILSCALED_LOGLEVEL_MESSAGE="[further tailscaled logs suppressed, set app's configuration option 'log_level' to 'debug' to see further tailscaled logs]"
 
 declare -a options
 declare udp_port

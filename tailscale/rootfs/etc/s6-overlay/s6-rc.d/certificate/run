@@ -2,7 +2,7 @@
 # shellcheck shell=bash
 export LOG_FD
 # ==============================================================================
-# Home Assistant Community Add-on: Tailscale
+# Home Assistant Community App: Tailscale
 # Copies Tailscale Serve certificates to /ssl folder
 # ==============================================================================
 
@@ -45,7 +45,7 @@ inotifywait --monitor "${CERTS_FOLDER}" --include='^.*?\.(crt|key)$' \
 do
   # Currently if the machine name is changed, tailscale changes the json status,
   # but the proxy isn't restarted and do not change to the new domain, and won't create new certs for the new domain,
-  # restart of the add-on is required, and a restart will "update" the $domain variable
+  # restart of the app is required, and a restart will "update" the $domain variable
   # # Check if domain has changed
   # domain=$(/opt/tailscale status --self=true --peers=false --json | jq -rc ".CertDomains[0]")
 
@@ -61,7 +61,7 @@ do
       then
         bashio::log.error "Unable to copy certificate file '${CERTS_FOLDER}/${domain}.crt' to '/ssl/${certfile}'"
         bashio::log.error "${cp_log}"
-        bashio::log.error "Check configuration and restart add-on"
+        bashio::log.error "Check configuration and restart app"
       elif (( ${#cp_log} != 0 )) && [[ "${cp_log:0:7}" != "skipped" ]]; then
         bashio::log.info "Updated certificate file '${domain}.crt' to '/ssl/${certfile}'"
       fi
@@ -72,7 +72,7 @@ do
       then
         bashio::log.error "Unable to copy key file '${CERTS_FOLDER}/${domain}.key' to '/ssl/${keyfile}'"
         bashio::log.error "${cp_log}"
-        bashio::log.error "Check configuration and restart add-on"
+        bashio::log.error "Check configuration and restart app"
       elif (( ${#cp_log} != 0 )) && [[ "${cp_log:0:7}" != "skipped" ]]; then
         bashio::log.info "Updated key file '${domain}.key' to '/ssl/${keyfile}'"
       fi

@@ -2,11 +2,11 @@
 # shellcheck shell=bash
 export LOG_FD
 # ==============================================================================
-# Home Assistant Community Add-on: Tailscale
+# Home Assistant Community App: Tailscale
 # Runs after the machine has been logged in into the Tailscale network
 # ==============================================================================
 
-source /usr/lib/core.sh
+source /usr/lib/api.core.sh
 
 declare interface
 declare -a options
@@ -142,7 +142,7 @@ then
 fi
 
 # Delete previously created persistent tailscale serve configuration ONCE
-# After the add-on's share-homeassistant (serve and funnel) service is a longrun service, we do not modify the serve state permanently
+# After the app's share-homeassistant (serve and funnel) service is a longrun service, we do not modify the serve state permanently
 # This step can be removed in a later version with the file in the data folder also
 if ! bashio::fs.file_exists "/data/final_serve_reset_is_done"; then
   if ! /opt/tailscale serve reset; then
@@ -157,18 +157,18 @@ if keyexpiry=$(/opt/tailscale status --self=true --peers=false --json | jq -rce 
 
   bashio::log.warning "The connection's key will expire on: ${keyexpiry}"
   bashio::log.warning "Consider disabling key expiry to avoid losing connection to your Home Assistant device."
-  bashio::log.warning "Please check your configuration based on the add-on's documentation under the \"Configuration\" section."
+  bashio::log.warning "Please check your configuration based on the app's documentation under the \"Configuration\" section."
 
   # Create persistent notification also, but only once
   if ! bashio::fs.file_exists "/data/key_expiry_notification_is_done"; then
     attributes=$(bashio::var.json \
-        title "Tailscale Add-on" \
+        title "Tailscale App" \
         message "$(printf "%s\n\n" \
           "**The connection's key will expire on: ${keyexpiry}!**" \
           "Consider disabling key expiry to avoid losing connection to your Home Assistant device." \
           "You can use the [Machines page](https://login.tailscale.com/admin/machines) of Tailscale's admin console to disable key expiry." \
-          "Please check your configuration based on the add-on's documentation under the \"Configuration\" section.")")
-    if core.api POST services/persistent_notification/create "${attributes}" -w > /dev/null; then
+          "Please check your configuration based on the app's documentation under the \"Configuration\" section.")")
+    if api.core POST services/persistent_notification/create "${attributes}" -w > /dev/null; then
       touch "/data/key_expiry_notification_is_done"
     fi
   fi
@@ -209,10 +209,10 @@ fi
 # Notify about userspace networking
 if bashio::config.true "userspace_networking"; then
   bashio::log.notice \
-    "The add-on uses userspace networking mode."
+    "The app uses userspace networking mode."
   bashio::log.notice \
     "If you need to access other clients on your tailnet from your Home Assistant instance," \
     "disable userspace networking mode, that will create a \"tailscale0\" network interface on your host."
   bashio::log.notice \
-    "Please check your configuration based on the add-on's documentation under \"Option: userspace_networking\""
+    "Please check your configuration based on the app's documentation under \"Option: userspace_networking\""
 fi

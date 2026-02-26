@@ -2,7 +2,7 @@
 # shellcheck shell=bash
 export LOG_FD
 # ==============================================================================
-# Home Assistant Community Add-on: Tailscale
+# Home Assistant Community App: Tailscale
 # S6 Overlay stage2 hook to customize services
 # ==============================================================================
 
@@ -23,7 +23,7 @@ function try {
     set -e
 }
 
-# Load add-on options, even deprecated one to upgrade
+# Load app options, even deprecated one to upgrade
 options=$(bashio::addon.options)
 
 # Upgrade configuration from 'proxy', 'funnel' and 'proxy_and_funnel_port' to 'share_homeassistant' and 'share_on_port'
@@ -125,6 +125,22 @@ then
     rm /etc/s6-overlay/s6-rc.d/tailscaled/dependencies.d/init-packages
 fi
 
+# MagicDNS related service dependencies:
+#
+#                                    +-------- magicdns-ingress-proxy
+#                                    |          |                 |
+#                                    |          |                 |
+#                                    ˅    !!    ˅                 |
+#   init-magicdns-proxies-upstream-list -----> post-tailscaled    |
+#                                    ˄          |                 |
+#                                    |          |                 |
+#                                    |    !!    ˅                 |
+#                 magicdns-egress-proxy <----- tailscaled         |
+#                                               |                 |
+#                                               |                 |
+#                                               ˅                 ˅
+#                                              init-magicdns-ingress-proxy
+#
 # Disable MagicDNS egress proxy service when userspace-networking is enabled or accepting dns is disabled
 if bashio::config.true "userspace_networking" || \
     bashio::config.false "accept_dns";

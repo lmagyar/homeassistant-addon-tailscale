@@ -32,7 +32,7 @@ configuration:
     description: >-
       This option allows you to advertise routes to subnets (accessible on the network
       your device is connected to) to other clients on your tailnet.
-      By adding `local_subnets` to the list, the add-on will advertise routes to your
+      By adding `local_subnets` to the list, the app will advertise routes to your
       subnets on all supported interfaces.
   advertise_tags:
     name: Advertise tags
@@ -76,8 +76,8 @@ configuration:
   log_level:
     name: Log level
     description: >-
-      Controls the level of log details the add-on provides.
-      This only applies to the add-on itself, not Tailscale.
+      Controls the level of log details the app provides.
+      This only applies to the app itself, not Tailscale.
   login_server:
     name: Login server
     description: >-
@@ -99,6 +99,12 @@ configuration:
       internet.
       Only ports 443, 8443, and 10000 are allowed by Tailscale.
       Port 443 is used by default.
+  share_service_name:
+    name: Share service name
+    description: >-
+      This option lets you specify the service name the Tailscale Serve feature will
+      use to present your Home Assistant instance on the tailnet. It needs to start
+      with `svc:`.
   snat_subnet_routes:
     name: Source NAT subnet routes
     description: >-

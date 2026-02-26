@@ -1,87 +1,96 @@
 # Changelog
 
+## 0.27.1.1 (forked)
+
+- Add new options for Tailscale SSH: packages and init_commands ([@sim-san](https://github.com/sim-san))
+- Release unreleased changes from community app
+  - Update tailscale/tailscale to v1.94.2
+  - Make service name option configurable for Share Home Assistant option
+- Merge released changes from community app
+  - Refactoring and renaming add-ons to apps
+
 ## 0.26.1.11 (forked)
 
-- Release unreleased changes from community add-on
+- Release unreleased changes from community app
   - Update tailscale/tailscale to v1.94.1
 
 ## 0.26.1.10 (forked)
 
 - Bugfix for previous MagicDNS incompatibility fix (prevent logging SERVFAIL lines when accept_dns is disabled)
 - Bugfix for Taildrive (prevent logging anything when no share is configured)
-- Release pending changes from community add-on
+- Release pending changes from community app
   - Create persistent notification also (not just log warning) when key expiration is detected
   - Make advertise_connector, advertise_exit_node, advertise_routes, taildrop and userspace_networking options default disabled to align with stock Tailscale's platform-specific behavior
   - Rename tags option to advertise_tags to align with stock Tailscale's naming convention - ***config is automatically updated***
 
 ## 0.26.1.9 (forked)
 
-- Release unreleased changes from community add-on
+- Release unreleased changes from community app
   - Update tailscale/tailscale to v1.92.5
 
 ## 0.26.1.8 (forked)
 
-- Release unreleased changes from community add-on
+- Release unreleased changes from community app
   - Update tailscale/tailscale to v1.92.3
 
 ## 0.26.1.7 (forked)
 
-- Release unreleased changes from community add-on
+- Release unreleased changes from community app
   - Update tailscale/tailscale to v1.92.1
 
 ## 0.26.1.6 (forked)
 
-- Release pending changes from community add-on
-  - Make always use derp option configurable (fixes [569](https://github.com/hassio-addons/addon-tailscale/issues/569))
+- Release pending changes from community app
+  - Make always use derp option configurable (fixes [569](https://github.com/hassio-addons/app-tailscale/issues/569))
 
 ## 0.26.1.5 (forked)
 
-- Release unreleased changes from community add-on
+- Release unreleased changes from community app
   - Update tailscale/tailscale to v1.90.9
 
 ## 0.26.1.4 (forked)
 
-- Release unreleased changes from community add-on
+- Release unreleased changes from community app
   - Update tailscale/tailscale to v1.90.8
   - Remove deprecated codenotary fields
-- Release pending changes from community add-on
+- Release pending changes from community app
   - Make accept_routes default disabled to align with stock Tailscale's platform-specific behavior
-- Withhold changes from community add-on (will be released here later)
+- Withhold changes from community app (will be released here later)
   - Drop support for armv7 architecture
-  - Update Add-on base image to v19 (drop armv7 support)
+  - Update App base image to v19 (drop armv7 support)
 
 ## 0.26.1.3 (forked)
 
-- Release pending changes from community add-on
-  - ***CRITICAL*** Workaround for add-on base image and bashio bug that causes add-ons to crash when debug level logging is enabled
+- Release pending changes from community app
+  - ***CRITICAL*** Workaround for app base image and bashio bug that causes apps to crash when debug level logging is enabled
 
 ## 0.26.1.2 (forked)
 
-- Release unreleased changes from community add-on
+- Release unreleased changes from community app
   - Update tailscale/tailscale to v1.90.6
-  - Update Add-on base image to v18.2.1
+  - Update App base image to v18.2.1
 
 ## 0.26.1.1 (forked)
 
-- Release unreleased changes from community add-on
+- Release unreleased changes from community app
   - Update tailscale/tailscale to v1.88.3
 
 ## 0.26.0.1 (forked)
 
-- Release unreleased changes from community add-on
+- Release unreleased changes from community app
   - Update tailscale/tailscale to v1.88.1
-- Merge released changes from community add-on
-  - Update Add-on base image to v18.1.1
+- Merge released changes from community app
+  - Update App base image to v18.1.1
 
 ## 0.25.0.12 (forked)
 
 - Fix: create certificate file directories for lets_encrypt_certfile and lets_encrypt_keyfile if they don't exists already
-- Release unreleased changes from community add-on
-  - Update Add-on base image to v18.1.0
+- Release unreleased changes from community app
+  - Update App base image to v18.1.0
 
 ## 0.25.0.11 (forked)
 
-- Release unreleased changes from community add-on
+- Release unreleased changes from community app
   - Update tailscale/tailscale to v1.86.2
 
 ## 0.25.0.10 (forked)
@@ -117,28 +126,28 @@
   This is required for the Supervisor to not lose name resolution and network connectivity.
 
 Nonbreaking changes:
-- Release unreleased changes from community add-on
+- Release unreleased changes from community app
   - Update tailscale/tailscale to v1.86.0
-  - Update Add-on base image to v18.0.3 (Update Alpine base image to v3.22.0)
-- Release pending changes from community add-on:
+  - Update App base image to v18.0.3 (Update Alpine base image to v3.22.0)
+- Release pending changes from community app:
   - Merge proxy and funnel options into share_homeassistant, rename proxy_and_funnel_port to share_on_port - ***config is automatically updated***
   - Make all config options mandatory, fill in the default values for previously optional config options
-  - Add support for Taildrive (from PR [#509](https://github.com/hassio-addons/addon-tailscale/pull/509) by [@ananthb](https://github.com/ananthb))
+  - Add support for Taildrive (from PR [#509](https://github.com/hassio-addons/app-tailscale/pull/509) by [@ananthb](https://github.com/ananthb))
   - Make exit-node configurable
 
 ## 0.25.0.6 (forked)
 
 - Fix: letsencrypt's api dns resolution for serve certificate generation (bugfix in the solution for MagicDNS incompatibility with Home Assistant)
-- Release unreleased changes from community add-on
+- Release unreleased changes from community app
   - Update tailscale/tailscale to v1.84.0
 
 ## 0.25.0.5 (forked)
 
 - Fix: Skip DHCP lease renewal if nothing has changed (subnet protection)
 - Fix: Do not fail if local network is down on startup (healthcheck)
-- Release unreleased changes from community add-on
-  - Update Add-on base image to v17.2.5
-- Release pending changes from community add-on:
+- Release unreleased changes from community app
+  - Update App base image to v17.2.5
+- Release pending changes from community app:
   - Wait for local network on startup
   - Remove duplicated service dependencies
 
@@ -149,39 +158,39 @@ Nonbreaking changes:
 ## 0.25.0.3 (forked)
 
 ***BREAKING CHANGES:***
-- Remove healthcheck_offline_timeout and healthcheck_restart_timeout options, hardwire 5 minutes and 1 hour (because they are removed during review in the official add-on)
-- Remove forward_to_host option, always enabled from now on (because this is removed during review in the official add-on)
+- Remove healthcheck_offline_timeout and healthcheck_restart_timeout options, hardwire 5 minutes and 1 hour (because they are removed during review in the official app)
+- Remove forward_to_host option, always enabled from now on (because this is removed during review in the official app)
 
 Nonbreaking changes:
-- Release unreleased changes from community add-on
+- Release unreleased changes from community app
   - Update tailscale/tailscale to v1.82.5
-  - Update Add-on base image to v17.2.4
+  - Update App base image to v17.2.4
 
 ## 0.25.0.2 (forked)
 
-- Release unreleased changes from community add-on
+- Release unreleased changes from community app
   - Update tailscale/tailscale to v1.82.0
-  - Update Add-on base image to v17.2.2
+  - Update App base image to v17.2.2
 
 ## 0.25.0.1 (forked)
 
-- Release unreleased changes from community add-on
+- Release unreleased changes from community app
   - Update tailscale/tailscale to v1.80.3
-- Merge released changes from community add-on
-  - Update Add-on base image to v17.2.1
+- Merge released changes from community app
+  - Update App base image to v17.2.1
 
 ## 0.24.0.3 (forked)
 
 - Fix: Warn when there's no default interface on the host to forward incoming tailnet connections to
 - Fix: Properly remove DSCP setting from iptables
-- Merge unreleased changes from community add-on
+- Merge unreleased changes from community app
   - Update tailscale/tailscale to v1.80.2
-  - Update Add-on base image to v17.1.5
+  - Update App base image to v17.1.5
 
 ## 0.24.0.2 (forked)
 
 - Bugfix previous MagicDNS incompatibility fix (for Headscale users)
-- Merge unreleased changes from community add-on
+- Merge unreleased changes from community app
   - Update tailscale/tailscale to v1.80.0
 
 ## 0.24.0.1 (forked)
@@ -189,12 +198,12 @@ Nonbreaking changes:
 - Fix MagicDNS incompatibility with Home Assistant
 - Forward incoming tailnet connections to the host's primary interface
 - Fix MSS clamping for site-to-site networking
-- Merge unreleased changes from community add-on
-  - Update Add-on base image to v17.1.0 (Update Alpine base image to v3.21)
+- Merge unreleased changes from community app
+  - Update App base image to v17.1.0 (Update Alpine base image to v3.21)
 
 ## 0.23.3.1 (forked)
 
-- Merge unreleased changes from community add-on
+- Merge unreleased changes from community app
   - Update tailscale/tailscale to v1.78.1
 
 ## 0.23.2.1 (forked)
@@ -205,46 +214,46 @@ Nonbreaking changes:
 Nonbreaking changes:
 - Experimental
   - Make HEALTHCHECK restart timeout configurable
-- Merge released changes from community add-on
+- Merge released changes from community app
   - Update tailscale/tailscale to v1.76.6
-- Merge unreleased changes from community add-on
-  - Update Add-on base image to v16.3.6
-- Release unmerged changes from community add-on
-  - Configure log format for the add-on to be compatible with Tailscale's format
+- Merge unreleased changes from community app
+  - Update App base image to v16.3.6
+- Release unmerged changes from community app
+  - Configure log format for the app to be compatible with Tailscale's format
 
 ## 0.23.1.1 (forked)
 
 - Experimental
   - Make HEALTHCHECK offline timeout configurable
   - Make DSCP configurable on tailscaled's network traffic
-- Merge unreleased changes from community add-on
+- Merge unreleased changes from community app
   - Fix subnet protection when connectivity state is not 'full'
-  - Update Add-on base image to v16.3.4
-- Merge released changes from community add-on
+  - Update App base image to v16.3.4
+- Merge released changes from community app
   - Update tailscale/tailscale to v1.76.1
 
 ## 0.22.1.1 (forked)
 
-- Merge unreleased changes from community add-on
+- Merge unreleased changes from community app
   - Update tailscale/tailscale to v1.76.0
 
 ## 0.22.1.0 (forked)
 
-- Merge released changes from community add-on
-  - Update Add-on base image to v16.3.2
+- Merge released changes from community app
+  - Update App base image to v16.3.2
 
 ## 0.21.0.3 (forked)
 
-- Merge unreleased changes from community add-on
+- Merge unreleased changes from community app
   - Update tailscale/tailscale to v1.74.1
 
 ## 0.21.0.2 (forked)
 
 - Experimental
   - Add HEALTHCHECK support
-- Merge unreleased changes from community add-on
+- Merge unreleased changes from community app
   - Update tailscale/tailscale to v1.74.0
-  - Update Add-on base image to v16.3.1
+  - Update App base image to v16.3.1
 
 ## 0.21.0.1 (forked)
 
@@ -252,60 +261,60 @@ Nonbreaking changes:
 - Refactor UDP port into Network config option
 
 Nonbreaking changes:
-- Merge unreleased changes from community add-on
+- Merge unreleased changes from community app
   - Update tailscale/tailscale to v1.72.1
-  - Update Add-on base image to v16.2.1
+  - Update App base image to v16.2.1
 
 ## 0.20.0.3 (forked)
 
 - Make UDP port configurable
-- Merge unreleased changes from community add-on
+- Merge unreleased changes from community app
   - Update tailscale/tailscale to v1.70.0
-  - Update Add-on base image to v16.1.3
+  - Update App base image to v16.1.3
 
 ## 0.20.0.2 (forked)
 
-- Merge unreleased changes from community add-on
+- Merge unreleased changes from community app
   - Update tailscale/tailscale to v1.68.2
-  - Update Add-on base image to v16.1.2
+  - Update App base image to v16.1.2
 
 ## 0.20.0.1 (forked)
 
-- Merge unreleased changes from community add-on
+- Merge unreleased changes from community app
   - Update tailscale/tailscale to v1.68.1
 
 ## 0.20.0.0 (forked)
 
-- Merge released changes from community add-on
-  - Update Add-on base image to v16.0.1
+- Merge released changes from community app
+  - Update App base image to v16.0.1
 
 ## 0.19.1.2 (forked)
 
-- Merge unreleased changes from community add-on
+- Merge unreleased changes from community app
   - Failsafe enabling of UDP GRO for forwarding
-  - Update Add-on base image to v16.0.0 (Update Alpine base image to v3.20.0)
+  - Update App base image to v16.0.0 (Update Alpine base image to v3.20.0)
 
 ## 0.19.1.1 (forked)
 
-- Merge unreleased changes from community add-on
+- Merge unreleased changes from community app
   - Revert "Linux optimizations for subnet routers and exit nodes"
 
 ## 0.19.0.1 (forked)
 
-- Merge unreleased changes from community add-on
+- Merge unreleased changes from community app
   - Update tailscale/tailscale to v1.66.4
   - Stateful filtering is now off by default
   - Skip default networks without a gateway to enable UDP GRO for forwarding
-  - Update Add-on base image to v15.0.9
+  - Update App base image to v15.0.9
 
 ## 0.18.0.6 (forked)
 
-- Merge unreleased changes from community add-on
+- Merge unreleased changes from community app
   - Allow Linux optimizations (UDP GRO for forwarding) on multiple interfaces and IPv6
 
 ## 0.18.0.5 (forked)
 
-- Merge unreleased changes from community add-on
+- Merge unreleased changes from community app
   - Add app connector option
   - Fix Linux optimizations
 
@@ -315,97 +324,97 @@ Nonbreaking changes:
 
 ## 0.18.0.3 (forked)
 
-- Merge unreleased changes from community add-on
+- Merge unreleased changes from community app
   - Update tailscale/tailscale to v1.66.3
 
 ## 0.18.0.2 (forked)
 
-- Merge unreleased changes from community add-on
+- Merge unreleased changes from community app
   - Update tailscale/tailscale to v1.66.1
 
 ## 0.18.0.1 (forked)
 
-- Merge unreleased changes from community add-on
+- Merge unreleased changes from community app
   - Update tailscale/tailscale to v1.66.0
   - Linux optimizations for subnet routers and exit nodes ([details](https://tailscale.com/kb/1320/performance-best-practices#linux-optimizations-for-subnet-routers-and-exit-nodes))
 
 ## 0.17.0.2 (forked)
 
-- Merge unreleased changes from community add-on
+- Merge unreleased changes from community app
   - Update tailscale/tailscale to v1.64.0
 
 ## 0.17.0.1 (forked)
 
-- Merge unreleased changes from community add-on
+- Merge unreleased changes from community app
   - Fix tag name validation regex
-  - Update Add-on base image to v15.0.8
+  - Update App base image to v15.0.8
 
 ## 0.17.0.0 (forked)
 
-- Merge released changes from community add-on
+- Merge released changes from community app
   - Update tailscale/tailscale to v1.62.1
 
 ## 0.16.1.1 (forked)
 
-- Merge unreleased changes from community add-on
+- Merge unreleased changes from community app
   - Update tailscale/tailscale to v1.62.0
 
 ## 0.16.0.1 (forked)
 
-- Merge unreleased changes from community add-on
+- Merge unreleased changes from community app
   - Update tailscale/tailscale to v1.60.1
 
 ## 0.16.0.0 (forked)
 
-- Merge released changes from community add-on
+- Merge released changes from community app
   - Update tailscale/tailscale to v1.60.0
   - Use readonly webui mode in v1.60.0
-  - Update Add-on base image to v15.0.7
+  - Update App base image to v15.0.7
 
 ## 0.15.0.1 (forked)
 
-- Drop kernel configuration access (really fixes [#325](https://github.com/hassio-addons/addon-tailscale/issues/325))
+- Drop kernel configuration access (really fixes [#325](https://github.com/hassio-addons/app-tailscale/issues/325))
 
 ## 0.14.0.1 (forked)
 
-***Note: Do not use the Tailscale web UI to modify `advertise_exit_node` and `advertise_routes` settings, the next restart of the add-on will overwrite those changes. Soon a locked read-only web UI option will be released by Tailscale to address this issue (see [#10999](https://github.com/tailscale/tailscale/pull/10999)).***
+***Note: Do not use the Tailscale web UI to modify `advertise_exit_node` and `advertise_routes` settings, the next restart of the app will overwrite those changes. Soon a locked read-only web UI option will be released by Tailscale to address this issue (see [#10999](https://github.com/tailscale/tailscale/pull/10999)).***
 
-- Merge unreleased changes from community add-on
-  - Fix kernel configuration access for Debian Supervised installations (fixes [#325](https://github.com/hassio-addons/addon-tailscale/issues/325))
+- Merge unreleased changes from community app
+  - Fix kernel configuration access for Debian Supervised installations (fixes [#325](https://github.com/hassio-addons/app-tailscale/issues/325))
   - Update tailscale/tailscale to v1.58.2
-  - Update Add-on base image to v15.0.6
+  - Update App base image to v15.0.6
 
 ## 0.14.0.0 (forked)
 
-This version is basically equivalent with the 0.14.0 community add-on version. Only remaining additional functionality:
+This version is basically equivalent with the 0.14.0 community app version. Only remaining additional functionality:
 - Optionally copy Tailscale Proxy's certificate files to /ssl folder
 
 ***BREAKING CHANGES:***
-- Configuring Tailscale Proxy and Funnel port from now on is done by the `proxy_and_funnel_port` add-on config option and not by the networking host port configuration section. This is the accepted and merged solution for this issue.
+- Configuring Tailscale Proxy and Funnel port from now on is done by the `proxy_and_funnel_port` app config option and not by the networking host port configuration section. This is the accepted and merged solution for this issue.
 
 Nonbreaking changes:
-- Merge released changes from original add-on
+- Merge released changes from original app
   - Increase wait time for Supervisor
   - Wait for HA to be available during startup
-  - Update Add-on base image to v15.0.3
+  - Update App base image to v15.0.3
 
 ## 0.13.1.7 (forked)
 
 ***BREAKING CHANGES:***
-- Remove: Advanced Tailscale Proxy and Funnel configuration - ie. advanced_config option (after the add-on doesn't reset serve config, manual configuration will not interfere with it)
+- Remove: Advanced Tailscale Proxy and Funnel configuration - ie. advanced_config option (after the app doesn't reset serve config, manual configuration will not interfere with it)
 
 Nonbreaking changes:
 - Merge funnel and proxy services into longrun serve service, drop internal serve config reset
-- Merge unreleased changes from original add-on
+- Merge unreleased changes from original app
   - Update tailscale/tailscale to v1.56.1
 
 ## 0.13.1.6 (forked)
 
 - Fix: Clamping the MSS for IPv6 also
 - Fix: Certificate export log message
-- Merge unreleased changes from original add-on
+- Merge unreleased changes from original app
   - Update tailscale/tailscale to v1.56.0
-  - Update Add-on base image to v15.0.1 (Update Alpine base image to v3.19.0)
+  - Update App base image to v15.0.1 (Update Alpine base image to v3.19.0)
 
 ## 0.13.1.5 (forked)
 
@@ -414,14 +423,14 @@ Nonbreaking changes:
 
 Nonbreaking changes:
 - Fix certificate copy on first startup
-- Merge unreleased changes from original add-on
+- Merge unreleased changes from original app
   - Update tailscale/tailscale to v1.54.1
 
 ## 0.13.1.4 (forked)
 
-- Merge unreleased changes from original add-on
+- Merge unreleased changes from original app
   - Update tailscale/tailscale to v1.54.0
-  - Update Add-on base image to v14.3.2
+  - Update App base image to v14.3.2
 
 ## 0.13.1.3 (forked)
 
@@ -431,35 +440,35 @@ Nonbreaking changes:
 
 ## 0.13.1.2 (forked)
 
-- Merge unreleased changes from original add-on
+- Merge unreleased changes from original app
   - Update tailscale/tailscale to v1.52.1
 
 ## 0.13.1.1 (forked)
 
 - Use modified tailscale cli arguments for serve and funnel
-- Merge unreleased changes from original add-on
+- Merge unreleased changes from original app
   - Update tailscale/tailscale to v1.52.0
 
 ## 0.13.1.0 (forked)
 
-- Merge changes from original add-on
-  - Update Add-on base image to v14.3.1
+- Merge changes from original app
+  - Update App base image to v14.3.1
 
 ## 0.13.0.1 (forked)
 
 ***BREAKING CHANGES:***
-- Drop support for armhf & i386, because this is dropped from the original add-on repo also
+- Drop support for armhf & i386, because this is dropped from the original app repo also
 
 Nonbreaking changes:
-- Bugfix: Test Home Assistant's HTTP reverse proxy configuration on add-on start _only when Home Assistant is running_
-- Merge changes from original add-on
+- Bugfix: Test Home Assistant's HTTP reverse proxy configuration on app start _only when Home Assistant is running_
+- Merge changes from original app
   - Sync all details of the merged and unmerged PRs
-  - Update Add-on base image to v14.3.0
+  - Update App base image to v14.3.0
 
 ## 0.12.0.1 (forked)
 
 ***BREAKING CHANGES:***
-- Proxy and Funnel is disabled by default, because this got to be the default in the original add-on.
+- Proxy and Funnel is disabled by default, because this got to be the default in the original app.
   **If you previously used the default settings, enable them explicitly before installing this update:**
   ```
   funnel: true
@@ -472,57 +481,57 @@ Nonbreaking changes:
 - New: Optionally copy Tailscale Proxy's certificate files to /ssl folder
 - Bugfix: Really disable Tailscale Proxy and Funnel when they are disabled
 - Bugfix: Always protect the _local_ subnets (not the configurable _advertised_ subnets) from collision
-- Merge changes from original add-on
+- Merge changes from original app
   - Sync all details of the merged and unmerged PRs
-  - Update Add-on base image to v14.2.2
+  - Update App base image to v14.2.2
 
 ## 0.11.1.26 (forked)
 
 - Warn when userspace networking is used to turn it off to access other clients on the tailnet
-- Merge (unreleased) changes from original add-on
+- Merge (unreleased) changes from original app
   - Update tailscale/tailscale to v1.50.1
-  - Update Add-on base image to v14.2.0
+  - Update App base image to v14.2.0
 
 ## 0.11.1.25 (forked)
 
 - Use new v1.50.0 .Self.CapMap in status json for https proxy and funnel support check
-- Merge (unreleased) changes from original add-on
+- Merge (unreleased) changes from original app
   - Update tailscale/tailscale to v1.50.0
 
 ## 0.11.1.24 (forked)
 
 - Detect kernel support for MSS clamping and skip it if not supported (workaround for HA OS Odroid N2)
-- Merge (unreleased) changes from original add-on
-  - Update Add-on base image to v14.1.1
+- Merge (unreleased) changes from original app
+  - Update App base image to v14.1.1
 
 ## 0.11.1.23 (forked)
 
-- Merge (unreleased) changes from original add-on
+- Merge (unreleased) changes from original app
   - Update tailscale/tailscale to v1.48.2
 
 ## 0.11.1.22 (forked)
 
-- Warn about key expiration on add-on startup
+- Warn about key expiration on app startup
 
 ## 0.11.1.21 (forked)
 
 - Properly test Home Assistant's HTTP reverse proxy configuration (especially test `use_x_forwarded_for` settings)
 
-  ***IMPORTANT: Read proxy documentation before updating, this update can cause the add-on to not start, it can be a breaking change! If you don't use proxy functinality, disable it before installing this update!***
+  ***IMPORTANT: Read proxy documentation before updating, this update can cause the app to not start, it can be a breaking change! If you don't use proxy functinality, disable it before installing this update!***
 
 ## 0.11.1.20 (forked)
 
-- Make accepting subnet routes configurable (from PR [#252](https://github.com/hassio-addons/addon-tailscale/pull/252) by [@willnorris](https://github.com/willnorris))
+- Make accepting subnet routes configurable (from PR [#252](https://github.com/hassio-addons/app-tailscale/pull/252) by [@willnorris](https://github.com/willnorris))
 
 ## 0.11.1.19 (forked)
 
-- Merge (unreleased) changes from original add-on
+- Merge (unreleased) changes from original app
   - Update tailscale/tailscale to v1.48.1
 
 ## 0.11.1.18 (forked)
 
-- Handle previous non-graceful stop of add-on
-- Merge (unreleased) changes from original add-on
+- Handle previous non-graceful stop of app
+- Merge (unreleased) changes from original app
   - Update tailscale/tailscale to v1.48.0
 
 ## 0.11.1.17 (forked)
@@ -546,13 +555,13 @@ Nonbreaking changes:
 
 - Test HTTPS proxy configuration on startup
 - Protect against "System is not ready with state: setup" supervisor errors
-- Merge (unreleased) changes from original add-on
-  - Update Add-on base image to v14.1.0 (Update Alpine base image to v3.18.3)
+- Merge (unreleased) changes from original app
+  - Update App base image to v14.1.0 (Update Alpine base image to v3.18.3)
 
 ## 0.11.1.12 (forked)
 
-- Merge (unreleased) changes from original add-on
-  - Update Add-on base image to v14.0.7
+- Merge (unreleased) changes from original app
+  - Update App base image to v14.0.7
 
 ## 0.11.1.11 (forked)
 
@@ -560,9 +569,9 @@ Nonbreaking changes:
 - Fix issue [#43](https://github.com/lmagyar/homeassistant-addon-tailscale/issues/43) (HA OS VM IPv6 multiple routing tables are not enabled)
 - Allow proxy connection to HTTPS Home Assistant instance with insecure HTTPS proxying
 - Reset proxy configuration on startup
-- Merge (unreleased) changes from original add-on
+- Merge (unreleased) changes from original app
   - Update tailscale/tailscale to v1.46.1
-  - Update Add-on base image to v14.0.6
+  - Update App base image to v14.0.6
 
 ## 0.11.1.10 (forked)
 
@@ -572,31 +581,31 @@ Nonbreaking changes:
 
 ## 0.11.1.9 (forked)
 
-- Sign add-on with Sigstore Cosign
-- Merge (unreleased) changes from original add-on
+- Sign app with Sigstore Cosign
+- Merge (unreleased) changes from original app
   - Update tailscale/tailscale to v1.44.0
-  - Update Add-on base image to v14.0.2
+  - Update App base image to v14.0.2
 
 ## 0.11.1.8 (forked)
 
-- Do not opt out of client log upload in debug log level (fixes [#211](https://github.com/hassio-addons/addon-tailscale/issues/211))
-- Create fallback page for iOS browsers failing to open Tailscale login page (from PR [#198](https://github.com/hassio-addons/addon-tailscale/pull/198) by [@bitfliq](https://github.com/bitfliq))
+- Do not opt out of client log upload in debug log level (fixes [#211](https://github.com/hassio-addons/app-tailscale/issues/211))
+- Create fallback page for iOS browsers failing to open Tailscale login page (from PR [#198](https://github.com/hassio-addons/app-tailscale/pull/198) by [@bitfliq](https://github.com/bitfliq))
 
 ## 0.11.1.7 (forked)
 
 - Fix ip rule manipulation for IPv6 (in case of non-userspace networking and colliding subnets)
-- Merge (unreleased) changes from original add-on
+- Merge (unreleased) changes from original app
   - Update tailscale/tailscale to v1.42.0
 
 ## 0.11.1.6 (forked)
 
 - Notify about colliding subnet routes
-- Merge (unreleased) changes from original add-on
-  - Update Add-on base image to v14 (Update Alpine base image to v3.18.0)
+- Merge (unreleased) changes from original app
+  - Update App base image to v14 (Update Alpine base image to v3.18.0)
 
 ## 0.11.1.5 (forked)
 
-- Merge (unreleased) changes from original add-on
+- Merge (unreleased) changes from original app
   - Update tailscale/tailscale to v1.40.1
 
 ## 0.11.1.4 (forked)
@@ -609,7 +618,7 @@ Nonbreaking changes:
 
 ## 0.11.1.2 (forked)
 
-- Merge (unreleased) changes from original add-on
+- Merge (unreleased) changes from original app
   - Enable Tailscale's builtin inbound HTTPS proxy
   - Drop userspace networking
   - Make accepting magicDNS optional
@@ -618,16 +627,16 @@ Nonbreaking changes:
 
 - Make Proxy and Funnel configurable
 - Remove Tailscale's SOCKS5 and HTTP outbound proxy (not needed after userspace networking is dropped)
-- Merge (unreleased) changes from original add-on
+- Merge (unreleased) changes from original app
   - Update tailscale/tailscale to v1.40.0
   - Make Taildrop configurable
   - Make exit node advertisement configurable
   - Add custom control server support
-  - Update Add-on base image to v13.2.2
+  - Update App base image to v13.2.2
 
 ## 0.10.1.3 (forked)
 
-- Put local UI webserver on to different port than original add-on's
+- Put local UI webserver on to different port than original app's
 
 ## 0.10.1.2 (forked)
 
@@ -635,19 +644,19 @@ Nonbreaking changes:
 
 ## 0.10.1.1 (forked)
 
-- Allow customizing the login server (from PR [#175](https://github.com/hassio-addons/addon-tailscale/pull/175) by [@reey](https://github.com/reey))
-- Merge changes from original add-on
+- Allow customizing the login server (from PR [#175](https://github.com/hassio-addons/app-tailscale/pull/175) by [@reey](https://github.com/reey))
+- Merge changes from original app
   - Update tailscale/tailscale to v1.38.4
 
 ## 0.10.0.1 (forked)
 
 - Remove ACL tagging recommendation from Funnel documentation, finally `autogroup:members` works
-- Merge changes from original add-on
+- Merge changes from original app
   - Add support for Taildrop
 
 ## 0.9.0.6 (forked)
 
-- Use the default add-on network config UI for SOCKS5 and HTTP outbound proxy port configuration
+- Use the default app network config UI for SOCKS5 and HTTP outbound proxy port configuration
 
 ## 0.9.0.5 (forked)
 
@@ -655,7 +664,7 @@ Nonbreaking changes:
 
 ## 0.9.0.4 (forked)
 
-- Remove unneeded add-on privileges
+- Remove unneeded app privileges
 
 ## 0.9.0.3 (forked)
 
@@ -668,7 +677,7 @@ Nonbreaking changes:
 ## 0.9.0.1 (forked)
 
 - Move Tailscale Proxy functionality into standalone oneshot S6 service
-- Merge changes from original add-on
+- Merge changes from original app
   - Advertise all supported interfaces as Tailscale Subnets
   - Suppress tailscaled logs after 200 lines
   - Bump Tailscale to 1.38.3
@@ -677,7 +686,7 @@ Nonbreaking changes:
 ## 0.8.0.1 (forked)
 
 - Merge PR modifications
-- Merge changes from original add-on
+- Merge changes from original app
   - Migrate old-style S6 scripts to s6-rc.d
   - Bump base image to 13.1.4
 
@@ -721,7 +730,7 @@ _This version number is skipped, just to be in sync with the [Funnel version rep
 
 ## 0.7.0.5 (forked)
 
-- Only optionally enable tailscaled debug messages in the add-on's log
+- Only optionally enable tailscaled debug messages in the app's log
 
 ## 0.7.0.4 (forked)
 
@@ -745,4 +754,4 @@ _This version number is skipped, just to be in sync with the [Funnel version rep
 
 - Fork of the original v0.7.0
 
-For previous changelog see the original add-on's [release history](https://github.com/hassio-addons/addon-tailscale/releases).
+For previous changelog see the original app's [release history](https://github.com/hassio-addons/app-tailscale/releases).

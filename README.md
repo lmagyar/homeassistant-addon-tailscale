@@ -1,50 +1,50 @@
 
-# Home Assistant Custom Add-on: Tailscale with features
+# Home Assistant Custom App: Tailscale with features
 
 Zero config VPN for building secure networks.
 
 ![Warning][warning_stripe]
 
-> This is a **fork** of the [community add-on][community_addon]!
+> This is a **fork** of the [community app][community_app]!
 >
 > Changes:
-> - Release unreleased changes from community add-on
->   - Update tailscale/tailscale to v1.94.1
->   - Make exit-node configurable
-> - Release pending changes from community add-on
+> - Release unreleased changes from community app
+>   - Update tailscale/tailscale to v1.94.2
+>   - Fix MagicDNS incompatibility with Home Assistant
 >   - Make all config options mandatory, fill in the default values for previously optional config options
+>   - Add support for Taildrive
+>   - Make always use derp option configurable
+>   - Make service name option configurable for Share Home Assistant option
+> - Release pending changes from community app
 >   - Make accept_routes, advertise_connector, advertise_exit_node, advertise_routes, taildrop and userspace_networking options default disabled to align with stock Tailscale's platform-specific behavior
 >   - Rename tags option to advertise_tags to align with stock Tailscale's naming convention - ***config is automatically updated***
->   - Add support for Taildrive
->   - Fix MagicDNS incompatibility with Home Assistant
->   - Make always use derp option configurable
->   - Create persistent notification also (not just log warning) when key expiration is detected
-> - Withhold changes from community add-on (will be released here later)
+> - Withhold changes from community app (will be released here later)
 >   - Drop support for armv7 architecture
->   - Update Add-on base image to v19 (drop armv7 support)
-> - Release unmerged changes from community add-on
+>   - Update App base image to v20 (drop armv7 support)
+> - Release unmerged changes from community app
 >   - Make Tailscale SSH configurable
+>   - Create persistent notification also (not just log warning) when key expiration is detected
 >   - Optionally copy Tailscale Serve's certificate files to /ssl folder
 >   - Make DSCP configurable on tailscaled's network traffic
->   - Configure log format for the add-on to be compatible with Tailscale's format
+>   - Configure log format for the app to be compatible with Tailscale's format
 
-> One-click migration from the community add-on to this fork:
-> - Install the **Advanced SSH & Web Terminal** add-on and disable it's protection mode
+> One-click migration from the community app to this fork:
+> - Install the **Advanced SSH & Web Terminal** app and disable it's protection mode
 > - From the cli execute: `curl -s -o /tmp/migrate_from_community_add_on https://raw.githubusercontent.com/lmagyar/homeassistant-addon-tailscale/refs/heads/main/scripts/migrate_from_community_add_on && bashio /tmp/migrate_from_community_add_on`
 >
 > **Note:**
 > - This will install the forked version (if not already installed), backup and
 >   stop the community version, copy and update the configuration, and (this is
->   the big thing) will also copy the internal state of the add-on, then start
+>   the big thing) will also copy the internal state of the app, then start
 >   the forked version.
-> - With copying the add-on internal state, the new forked add-on will start up
+> - With copying the app internal state, the new forked app will start up
 >   with the exact same state, ie. with the same tailnet authentication also. So
 >   **do not** remove the current device from Tailscale's admin page, the forked
->   add-on will jump into it's place.
+>   app will jump into it's place.
 > - And even if you executed previously some tailscale configuration inside the
->   add-ons container, those settings will be also migrated with the internal
+>   apps container, those settings will be also migrated with the internal
 >   state.
-> - **But copying the add-on's internal state requires executing bash and python
+> - **But copying the app's internal state requires executing bash and python
 >   scripts inside the Supervisor's container! Executing python scripts requires
 >   installing gdb and pyrasite inside the Supervisor's container (they will be
 >   uninstalled by the script also). So please create a complete system backup
@@ -83,18 +83,18 @@ manages firewall rules for you, and works from anywhere you are.
 
 ## Installation
 
-1. Navigate in your Home Assistant frontend to **Settings** -> **Add-ons** ->
-   **Add-on Store**.
+1. Navigate in your Home Assistant frontend to **Settings** -> **Apps** ->
+   **App Store**.
 1. In the **...** menu at the top right corner click **Repositories**, add
    `https://github.com/lmagyar/homeassistant-addon-tailscale` as repository.
-1. Find the "Tailscale with features" add-on and click it. If it doesn't show
-   up, wait until HA refreshes the information about the add-on, or click
+1. Find the "Tailscale with features" app and click it. If it doesn't show
+   up, wait until HA refreshes the information about the app, or click
    **Check for updates** in the **...** menu at the top right corner.
 1. Click the "INSTALL" button.
 
 ## Documentation
 
-For more details, please see the add-on's [Documentation][Documentation] pages.
+For more details, please see the app's [Documentation][Documentation] pages.
 
 [aarch64-shield]: https://img.shields.io/badge/aarch64-yes-green.svg
 [amd64-shield]: https://img.shields.io/badge/amd64-yes-green.svg
@@ -116,4 +116,4 @@ For more details, please see the add-on's [Documentation][Documentation] pages.
 [updated-shield]: https://img.shields.io/github/last-commit/lmagyar/homeassistant-addon-tailscale/main?label=updated
 [updated]: https://github.com/lmagyar/homeassistant-addon-tailscale/commits/main
 [warning_stripe]: https://github.com/lmagyar/homeassistant-addon-tailscale/raw/main/images/warning_stripe_wide.png
-[community_addon]: https://github.com/hassio-addons/addon-tailscale
+[community_app]: https://github.com/hassio-addons/app-tailscale

@@ -14,31 +14,34 @@ function log.error_or_warning() {
 # Makes a call to the Home Assistant REST API.
 #
 # Arguments:
-#   $1 HTTP Method (GET/POST)
-#   $2 API Resource requested
-#   $3 In case of a POST method, this parameter is the JSON to POST (optional)
-#   $4 jq filter command (optional)
+#   $1   HTTP Method (GET/POST)
+#   $2   API Resource requested
+#   $3   In case of a POST method, this parameter is the JSON to POST (optional)
+#        In case of a GET method, this parameter is not present
+#   $3/4 jq filter command (optional)
 #
 # Options (after arguments):
-#   -s "Silent" Supress error message in case of a 404 Not found HTTP status code
-#   -w "Warning only" Log only warnings instead of errors
+#   -s   "Silent" Supress error message in case of a 404 Not found HTTP status code
+#   -w   "Warning only" Log only warnings instead of errors
 # ------------------------------------------------------------------------------
-function core.api() {
+function api.core() {
+    # read arguments
     local method="${1}"; shift
     local resource="/core/api/${1}"; shift
-    local data='{}'
-    if [[ "${method}" = "POST" ]]; then
+    local data="{}"
+    if [[ "${method}" = "POST" && -n "${1++}" && "${1::1}" != "-" ]]; then
         data="${1}"; shift
     fi
     local filter=
-    if [[ -n "${1:-}" && "${1::1}" != "-" ]]; then
+    if [[ -n "${1++}" && "${1::1}" != "-" ]]; then
         filter="${1}"; shift
     fi
 
-    local o
+    # read options
+    local OPTIND o
     local silent=
     local warning_only=
-    while getopts "sw" o; do
+    while getopts ":sw" o; do
         case "${o}" in
             s)
                 silent=1
@@ -46,10 +49,19 @@ function core.api() {
             w)
                 warning_only=1
                 ;;
+            \?)
+                bashio::log.error "Invalid option: -${OPTARG}"
+                return "${__BASHIO_EXIT_NOK}"
+                ;;
+            :)
+                bashio::log.error "Option -${OPTARG} requires an argument."
+                return "${__BASHIO_EXIT_NOK}"
+                ;;
             *)
                 ;;
         esac
     done
+    shift $((OPTIND-1))
 
     local auth_header='Authorization: Bearer'
     local response
@@ -117,6 +129,10 @@ function core.api() {
     if bashio::var.has_value "${filter}"; then
         bashio::log.debug "Filtering response using: ${filter}"
         response=$(bashio::jq "${response}" "${filter}")
+        if [ "$?" -ne "${__BASHIO_EXIT_OK}" ]; then
+            bashio::log.error "Failed to execute the jq filter"
+            return "${__BASHIO_EXIT_NOK}"
+        fi
     fi
 
     echo "${response}"
