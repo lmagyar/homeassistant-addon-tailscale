@@ -73,20 +73,16 @@ function remove_forwarding() {
   done
 }
 
-function dig_hassio_dns() {
-  local type="${1}"
-  dig dns.local.hass.io "${type}" +short | { grep -Ev '^;|\.$|^$' || true ;} | head -n 1
-}
-
-function dig_hassio_supervisor() {
-  local type="${1}"
-  dig supervisor.local.hass.io "${type}" +short | { grep -Ev '^;|\.$|^$' || true ;} | head -n 1
+function dig_hassio_host() {
+  local host="${1}"
+  local type="${2}"
+  dig "${host}. local.hass.io" "${type}" +short | { grep -Ev '^;|\.$|^$' || true ;} | head -n 1
 }
 
 # Hassio DNS's IP addresses
 # For the status of IPv6 support see https://github.com/home-assistant/supervisor/issues/2133
-if ! hassio_dns_ipv4=$(dig_hassio_dns A) || \
-  ! hassio_dns_ipv6=$(dig_hassio_dns AAAA) || \
+if ! hassio_dns_ipv4=$(dig_hassio_host 'dns' A) || \
+  ! hassio_dns_ipv6=$(dig_hassio_host 'dns' AAAA) || \
   bashio::var.is_empty "${hassio_dns_ipv4-}" && bashio::var.is_empty "${hassio_dns_ipv6-}"
 then
   # This is useful when stopping services and dig fails but we already stored this value
@@ -103,8 +99,8 @@ fi
 
 # Supervisor's IP addresses
 # For the status of IPv6 support see https://github.com/home-assistant/supervisor/issues/2133
-if ! hassio_supervisor_ipv4=$(dig_hassio_supervisor A) || \
-  ! hassio_supervisor_ipv6=$(dig_hassio_supervisor AAAA) || \
+if ! hassio_supervisor_ipv4=$(dig_hassio_host 'supervisor' A) || \
+  ! hassio_supervisor_ipv6=$(dig_hassio_host 'supervisor' AAAA) || \
   bashio::var.is_empty "${hassio_supervisor_ipv4-}" && bashio::var.is_empty "${hassio_supervisor_ipv6-}"
 then
   # This is useful when stopping services and dig fails but we already stored this value
