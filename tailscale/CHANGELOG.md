@@ -2,6 +2,7 @@
 
 ## vNext (forked)
 
+- Bugfix for MagicDNS: do not log SERVFAIL caused by Supervisor's hourly tests
 - Merge released changes from community app
   - Drop support for armv7 architecture
   - Update Add-on base image to v20 (drop armv7 support)
