@@ -6,6 +6,7 @@
 >
 > Changes:
 > - Release unreleased changes from community app
+>   - Update tailscale/tailscale to v1.94.2
 >   - Fix MagicDNS incompatibility with Home Assistant
 >   - Make all config options mandatory, fill in the default values for previously optional config options
 >   - Add support for Taildrive

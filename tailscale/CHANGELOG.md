@@ -5,6 +5,7 @@
 - Merge released changes from community app
   - Refactoring and renaming add-ons to apps
 - Release unreleased changes from community app
+  - Update tailscale/tailscale to v1.94.2
   - Make service name option configurable for Share Home Assistant option
 
 ## 0.26.1.11 (forked)
