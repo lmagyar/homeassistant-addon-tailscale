@@ -18,9 +18,6 @@ Zero config VPN for building secure networks.
 > - Release pending changes from community app
 >   - Make accept_routes, advertise_connector, advertise_exit_node, advertise_routes, taildrop and userspace_networking options default disabled to align with stock Tailscale's platform-specific behavior
 >   - Rename tags option to advertise_tags to align with stock Tailscale's naming convention - ***config is automatically updated***
-> - Withhold changes from community app (will be released here later)
->   - Drop support for armv7 architecture
->   - Update App base image to v20 (drop armv7 support)
 > - Release unmerged changes from community app
 >   - Make Tailscale SSH configurable
 >   - Create persistent notification also (not just log warning) when key expiration is detected

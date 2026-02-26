@@ -1,7 +1,10 @@
 # Changelog
 
-- Drop support for armv7 architecture
-- Update Add-on base image to v20 (drop armv7 support)
+## vNext (forked)
+
+- Merge released changes from community app
+  - Drop support for armv7 architecture
+  - Update Add-on base image to v20 (drop armv7 support)
 
 ## 0.27.1.1 (forked)
 
