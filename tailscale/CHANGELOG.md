@@ -2,11 +2,12 @@
 
 ## vNext (forked)
 
-- Merge released changes from community app
-  - Refactoring and renaming add-ons to apps
+- Add new options for Tailscale SSH: packages and init_commands
 - Release unreleased changes from community app
   - Update tailscale/tailscale to v1.94.2
   - Make service name option configurable for Share Home Assistant option
+- Merge released changes from community app
+  - Refactoring and renaming add-ons to apps
 
 ## 0.26.1.11 (forked)
 
