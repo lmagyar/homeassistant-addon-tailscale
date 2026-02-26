@@ -12,6 +12,7 @@ declare healthcheck_offline_timeout healthcheck_restart_timeout
 declare forward_to_host
 declare advertise_routes
 declare tags
+declare ssh
 
 # This is to execute potentially failing supervisor api functions within conditions,
 # where set -e is not propagated inside the function and bashio relies on set -e for api error handling
@@ -101,6 +102,27 @@ if bashio::var.has_value "${tags}"; then
         bashio::log.info "Successfully renamed tags option to advertise_tags"
     fi
     bashio::addon.option 'tags'
+fi
+
+# Migrate ssh to tailscale_ssh.enabled
+ssh=$(bashio::jq "${options}" '.ssh | select(.!=null)')
+if bashio::var.has_value "${ssh}"; then
+    try bashio::addon.option 'tailscale_ssh.enabled' "^${ssh}"
+    if ((TRY_ERROR)); then
+        bashio::log.warning "The ssh option migration failed, ssh option '${ssh}' is dropped, using default disabled."
+    else
+        bashio::log.info "Successfully migrated ssh option to tailscale_ssh.enabled"
+    fi
+    bashio::addon.option 'ssh'
+fi
+
+# Disable init-packages service when tailscale_ssh.enabled is false
+# or no packages and no init_commands are defined
+if bashio::config.false 'tailscale_ssh.enabled' || \
+    (! bashio::config.has_value 'tailscale_ssh.packages' && \
+    ! bashio::config.has_value 'tailscale_ssh.init_commands')
+then
+    rm /etc/s6-overlay/s6-rc.d/tailscaled/dependencies.d/init-packages
 fi
 
 # MagicDNS related service dependencies:

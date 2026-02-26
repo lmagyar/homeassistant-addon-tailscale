@@ -1,0 +1,40 @@
+#!/command/with-contenv bashio
+# shellcheck shell=bash
+export LOG_FD
+# ==============================================================================
+# Home Assistant Community Add-on: Tailscale
+# Install SSH packages and run init commands (only runs when ssh is true)
+# ==============================================================================
+
+# Packages: try install, warn and continue startup on failure
+if bashio::config.has_value 'tailscale_ssh.packages'; then
+  if ! apk update; then
+    bashio::log.warning "Failed updating Alpine packages repository indexes"
+    bashio::exit.ok
+  fi
+  for package in $(bashio::config 'tailscale_ssh.packages'); do
+    if ! apk add --no-cache "$package"; then
+      bashio::log.warning "Failed installing package ${package}"
+      bashio::exit.ok
+    fi
+  done
+fi
+
+# Execute tailscale_ssh.init_commands: try each, warn and continue startup on failure
+if bashio::config.has_value 'tailscale_ssh.init_commands'; then
+  # Use bashio::config to properly iterate over the array, preserving multi-line commands
+  if ! length=$(bashio::config 'tailscale_ssh.init_commands | length'); then
+      bashio::log.warning 'Failed to get tailscale_ssh.init_commands array length'
+      bashio::exit.ok
+  fi
+  for ((i = 0; i < length; i++)); do
+    if ! cmd=$(bashio::config "tailscale_ssh.init_commands[${i}]"); then
+      bashio::log.warning "Failed to get init command at index ${i}"
+      bashio::exit.ok
+    fi
+    if ! eval "${cmd}"; then
+      bashio::log.warning "Init command failed: ${cmd}"
+      bashio::exit.ok
+    fi
+  done
+fi
