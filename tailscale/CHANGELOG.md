@@ -1,6 +1,6 @@
 # Changelog
 
-## vNext (forked)
+## 0.27.1.2 (forked)
 
 - Bugfix for MagicDNS: do not log SERVFAIL caused by Supervisor's hourly tests
 - For supervised installations add networking rules to apparmor.txt
