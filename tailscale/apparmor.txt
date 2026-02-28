@@ -36,6 +36,13 @@ profile tailscale flags=(attach_disconnected,mediate_deleted) {
   capability chown,
   capability kill,
 
+  # For supervised installations - networking rules derived from complain mode analysis
+  network inet dgram,
+  network inet6 dgram,
+  network inet stream,
+  network inet6 stream,
+  network netlink raw,
+
   # General - based on Config.yaml
   capability net_admin,
   capability net_raw,
