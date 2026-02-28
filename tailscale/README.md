@@ -17,9 +17,6 @@ Zero config VPN for building secure networks.
 > - Release pending changes from community app
 >   - Make accept_routes, advertise_connector, advertise_exit_node, advertise_routes, taildrop and userspace_networking options default disabled to align with stock Tailscale's platform-specific behavior
 >   - Rename tags option to advertise_tags to align with stock Tailscale's naming convention - ***config is automatically updated***
-> - Withhold changes from community app (will be released here later)
->   - Drop support for armv7 architecture
->   - Update App base image to v20 (drop armv7 support)
 > - Release unmerged changes from community app
 >   - Make Tailscale SSH configurable
 >   - Create persistent notification also (not just log warning) when key expiration is detected
@@ -83,7 +80,7 @@ manages firewall rules for you, and works from anywhere you are.
 [aarch64-shield]: https://img.shields.io/badge/aarch64-yes-green.svg
 [amd64-shield]: https://img.shields.io/badge/amd64-yes-green.svg
 [armhf-shield]: https://img.shields.io/badge/armhf-no-red.svg
-[armv7-shield]: https://img.shields.io/badge/armv7-yes-green.svg
+[armv7-shield]: https://img.shields.io/badge/armv7-no-red.svg
 [commits-shield]: https://img.shields.io/github/commit-activity/y/lmagyar/homeassistant-addon-tailscale.svg
 [commits]: https://github.com/lmagyar/homeassistant-addon-tailscale/commits/main
 [github-actions-shield]: https://github.com/lmagyar/homeassistant-addon-tailscale/workflows/Publish/badge.svg
