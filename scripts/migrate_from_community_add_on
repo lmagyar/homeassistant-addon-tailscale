@@ -1231,6 +1231,15 @@ fi
 if bashio::var.equals "${from_state}" "started"; then
   bashio::log.info "Starting app ${to} (${to_name})..."
   bashio::addon.start "${to}" | sed -e "/^$/d"
+  # There is a bug in Supervisor, in case the app fails to start up and gets into "error" state, Supervisor returns OK
+  # So we have to check the state directly
+  bashio::cache.flush_all
+  to_state="$(bashio::addon.state "${to}")"
+  if ! bashio::var.equals "${to_state}" "started" \
+    && ! bashio::var.equals "${to_state}" "startup"
+  then
+    bashio::exit.nok "Starting app ${to} (${to_name}) has failed, app has state '${to_state}', please check the app's log"
+  fi
 fi
 
 bashio::log.notice "****************************************************************************************************"
