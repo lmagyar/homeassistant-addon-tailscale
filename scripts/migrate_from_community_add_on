@@ -799,7 +799,7 @@ then
   bashio::exit.nok "Repository of app ${from} is not installed"
 fi
 
-readonly from_name=$(bashio::addon.name "${from}")
+from_name=$(bashio::addon.name "${from}")
 
 from_installed="$(bashio::addon.installed "${from}")"
 if bashio::var.false "${from_installed}"; then
@@ -828,7 +828,7 @@ fi
 # Install or backup "to" app
 ################################################################################
 
-readonly to_name=$(bashio::addon.name "${to}")
+to_name=$(bashio::addon.name "${to}")
 
 to_installed="$(bashio::addon.installed "${to}")"
 if bashio::var.false "${to_installed}"; then
@@ -863,7 +863,7 @@ fi
 # Stop, disable, backup "from" app
 ################################################################################
 
-readonly from_state=$(bashio::addon.state "${from}")
+from_state=$(bashio::addon.state "${from}")
 if bashio::var.equals "${from_state}" "started" \
   || bashio::var.equals "${from_state}" "startup"
 then
@@ -871,25 +871,25 @@ then
   bashio::addon.stop "${from}" | sed -e "/^$/d"
 fi
 
-readonly from_boot=$(bashio::addon.boot "${from}")
+from_boot=$(bashio::addon.boot "${from}")
 if ! bashio::var.equals "${from_boot}" "manual"; then
   bashio::log.info "Disabling start on boot for app ${from} (${from_name})..."
   bashio::addon.boot "${from}" "manual" | sed -e "/^$/d"
 fi
 
-readonly from_watchdog=$(bashio::addon.watchdog "${from}")
+from_watchdog=$(bashio::addon.watchdog "${from}")
 if bashio::var.true "${from_watchdog}"; then
   bashio::log.info "Disabling watchdog for app ${from} (${from_name})..."
   bashio::addon.watchdog "${from}" "false" | sed -e "/^$/d"
 fi
 
-readonly from_auto_update=$(bashio::addon.auto_update "${from}")
+from_auto_update=$(bashio::addon.auto_update "${from}")
 if bashio::var.true "${from_auto_update}"; then
   bashio::log.info "Disabling auto update for app ${from} (${from_name})..."
   bashio::addon.auto_update "${from}" "false" | sed -e "/^$/d"
 fi
 
-readonly from_ingress_panel=$(bashio::addon.ingress_panel "${from}")
+from_ingress_panel=$(bashio::addon.ingress_panel "${from}")
 if bashio::var.true "${from_ingress_panel}"; then
   bashio::log.info "Removing from the sidebar the app ${from} (${from_name})..."
   bashio::addon.ingress_panel "${from}" "false" | sed -e "/^$/d"
@@ -911,7 +911,7 @@ fi
 # Backup original addons.json
 ################################################################################
 
-readonly addons_backup_filename="/share/addons_$(date "+%Y%m%d_%H%M%S").json"
+addons_backup_filename="/share/addons_$(date "+%Y%m%d_%H%M%S").json"
 bashio::log.info "Copying original addons.json from Supervisor to ${addons_backup_filename}..."
 docker cp -q `docker ps -q -f name="^hassio_supervisor$"`:/data/addons.json "${addons_backup_filename}"
 bashio::log.notice "If everything goes well, you can safely delete the ${addons_backup_filename} file later"
@@ -1069,8 +1069,8 @@ function merge_options() {
   jq -srcM 'map(to_entries) | flatten | group_by(.key) | map({key: .[0].key, value: .[0].value}) | from_entries' <<< "${merge_from}${merge_to}"
 }
 
-readonly from_options=$(jq -rcM ".user.\"${from}\".options" /data/addons.json)
-readonly to_options=$(jq -rcM ".user.\"${to}\".options // \"\"" /data/addons.json)
+from_options=$(jq -rcM ".user.\"${from}\".options" /data/addons.json)
+to_options=$(jq -rcM ".user.\"${to}\".options // \"\"" /data/addons.json)
 declare merged_options="${from_options}"
 
 # merge default options
