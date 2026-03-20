@@ -8,6 +8,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # Setup base
 ARG BUILD_ARCH=amd64
 ARG TAILSCALE_VERSION="v1.94.2"
+ARG HA_CLI_VERSION="4.46.0"
 RUN \
     apk add --no-cache \
         bind-tools=9.20.19-r0 \
@@ -32,7 +33,13 @@ RUN \
         | tar zxvf - -C /opt/ --strip-components 1 \
     \
     && rm -f -r \
-        /opt/systemd
+        /opt/systemd \
+    \
+    && curl -L -s -o /usr/bin/ha.bin \
+        "https://github.com/home-assistant/cli/releases/download/${HA_CLI_VERSION}/ha_${BUILD_ARCH}" \
+    && chmod a+x /usr/bin/ha.bin \
+    && printf '#!/bin/sh\nif [ -z "$SUPERVISOR_TOKEN" ] && [ -f /run/s6/container_environment/SUPERVISOR_TOKEN ]; then\n    export SUPERVISOR_TOKEN\n    SUPERVISOR_TOKEN=$(cat /run/s6/container_environment/SUPERVISOR_TOKEN)\nfi\nexec /usr/bin/ha.bin "$@"\n' > /usr/bin/ha \
+    && chmod a+x /usr/bin/ha
 
 # Copy root filesystem
 COPY rootfs /
