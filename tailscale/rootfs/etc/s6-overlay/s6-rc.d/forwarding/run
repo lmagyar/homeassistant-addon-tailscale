@@ -55,22 +55,24 @@ function get_host_address() {
 # In case of non userspace networking, forward incoming tailnet connections to the host's primary interface
 function setup_forwarding() {
   local cmd="${1}"
-  local ip_version="${2}"
-  local address_bits="${3}"
-  local from_address="${4}"
-  local to_address="${5}"
+  local chain="${2}"
+  local ip_version="${3}"
+  local address_bits="${4}"
+  local from_address="${5}"
+  local to_address="${6}"
+  local name="${7}"
 
   if bashio::var.has_value "${from_address}" && bashio::var.has_value "${to_address}"; then
     bashio::log.info \
-      "Forwarding incoming tailnet connections directed to ${from_address} to the host's ${to_address} address (${ip_version})"
-    if ${cmd} -t nat -S PREROUTING \
-      | grep -Eq "^-A PREROUTING -d ${from_address}/${address_bits} -j DNAT --to-destination ${to_address}$"
+      "Forwarding ${name} tailnet connections directed to ${from_address} to the host's ${to_address} address (${ip_version})"
+    if ${cmd} -t nat -S "${chain}" \
+      | grep -Eq "^-A ${chain} -d ${from_address}/${address_bits} -j DNAT --to-destination ${to_address}$"
     then
-      bashio::log.notice "Forwarding is already set (${ip_version})"
+      bashio::log.notice "Forwarding for ${name} connections is already set (${ip_version})"
     else
       # Difference compared to Tailscale's docker image: using only -A append, less intrusive than -I insert
-      if ! ${cmd} -t nat -A PREROUTING -d "${from_address}" -j DNAT --to-destination "${to_address}"; then
-        bashio::log.warning "Setting up forwarding is unsuccessful (${ip_version})"
+      if ! ${cmd} -t nat -A "${chain}" -d "${from_address}" -j DNAT --to-destination "${to_address}"; then
+        bashio::log.warning "Setting up forwarding for ${name} connections is unsuccessful (${ip_version})"
       fi
     fi
   fi
@@ -93,6 +95,8 @@ else
   to_address_ipv4=$(get_host_address "ipv4")
   to_address_ipv6=$(get_host_address "ipv6")
 
-  setup_forwarding "iptables" "IPv4" "32" "${from_address_ipv4-}" "${to_address_ipv4}"
-  setup_forwarding "ip6tables" "IPv6" "128" "${from_address_ipv6-}" "${to_address_ipv6}"
+  setup_forwarding "iptables" "PREROUTING" "IPv4" "32" "${from_address_ipv4-}" "${to_address_ipv4}" "incoming"
+  setup_forwarding "ip6tables" "PREROUTING" "IPv6" "128" "${from_address_ipv6-}" "${to_address_ipv6}" "incoming"
+  setup_forwarding "iptables" "OUTPUT" "IPv4" "32" "${from_address_ipv4-}" "${to_address_ipv4}" "local"
+  setup_forwarding "ip6tables" "OUTPUT" "IPv6" "128" "${from_address_ipv6-}" "${to_address_ipv6}" "local"
 fi
