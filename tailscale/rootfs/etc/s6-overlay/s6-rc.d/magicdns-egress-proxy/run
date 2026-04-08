@@ -19,13 +19,14 @@ export LOG_FD
 source /usr/lib/trace.sh
 
 readonly DNSMASQ_EGRESS_ADDRESS_IPV4="127.100.100.100"
-readonly DNSMASQ_EGRESS_PORT=53
+readonly DNSMASQ_EGRESS_DEFAULT_PORT=12753
 readonly DNSMASQ_BLACK_WHITE_LIST_LOCATION="/etc/dnsmasq-black-white-list"
 
 declare hassio_dns_ipv4
 declare -a white_list
 declare domain
 declare -a options
+declare dnsmasq_egress_port
 
 bashio::log.info "Starting MagicDNS egress proxy..."
 
@@ -36,6 +37,35 @@ function dig_hassio_dns() {
     | head -n 1
 }
 
+function setup_forwarding() {
+  local cmd="${1}"
+  local proto="${2}"
+  local ip_version="${3}"
+  local address_bits="${4}"
+  local from_address="${5}"
+  local to_address="${6}"
+  local to_port="${7}"
+
+  bashio::log.info "Setting up forwarding for MagicDNS egress proxy (${proto}, ${ip_version})"
+  if ${cmd} -t nat -S OUTPUT \
+    | grep -Eq "^-A OUTPUT -d ${from_address//[\[\]]/}/${address_bits} -p ${proto} -m ${proto} --dport 53 -j DNAT --to-destination $(sed -r 's/(\[|\])/\\\1/g' <<< "${to_address}"):${to_port}$"
+  then
+    bashio::log.notice "Forwarding is already set for MagicDNS egress proxy (${proto}, ${ip_version})"
+  else
+    if ! ${cmd} -t nat -A OUTPUT -d "${from_address//[\[\]]/}" -p "${proto}" --dport 53 -j DNAT --to-destination "${to_address}:${to_port}"; then
+      bashio::exit.nok "Setting up forwarding for MagicDNS egress proxy is unsuccessful (${proto}, ${ip_version})"
+    fi
+  fi
+}
+
+# Search for unallocated port in case of collision
+dnsmasq_egress_port="${DNSMASQ_EGRESS_DEFAULT_PORT}"
+while netstat -lntu | awk '{print $4}' | grep -q ":${dnsmasq_egress_port}$"; do
+  if ((++dnsmasq_egress_port == 65536)); then
+    bashio::exit.nok "Can't find free port for MagicDNS egress proxy"
+  fi
+done
+
 options+=(--no-hosts)
 options+=(--no-resolv)
 options+=(--conf-file=/dev/null)
@@ -45,7 +75,7 @@ options+=(--cache-size=0)
 
 options+=(--listen-address="${DNSMASQ_EGRESS_ADDRESS_IPV4}")
 options+=(--bind-dynamic)
-options+=(--port="${DNSMASQ_EGRESS_PORT}")
+options+=(--port="${dnsmasq_egress_port}")
 
 # Hassio DNS's IP addresses
 if ! hassio_dns_ipv4=$(dig_hassio_dns A) || \
@@ -68,10 +98,12 @@ if bashio_custom::trace; then
   options+=(--log-debug)
 fi
 
+setup_forwarding "iptables" "udp" "IPv4" "32" "${DNSMASQ_EGRESS_ADDRESS_IPV4}" "${DNSMASQ_EGRESS_ADDRESS_IPV4}" "${dnsmasq_egress_port}"
+setup_forwarding "iptables" "tcp" "IPv4" "32" "${DNSMASQ_EGRESS_ADDRESS_IPV4}" "${DNSMASQ_EGRESS_ADDRESS_IPV4}" "${dnsmasq_egress_port}"
+
 # We need to delay the starting of the dependent services until the conf file is written
 echo "nameserver ${DNSMASQ_EGRESS_ADDRESS_IPV4}" > /etc/resolv.dnsmasq.conf
 echo "" >&3
 
 # This DNS forwards the white_list to HA's DNS, otherwise replies NXDOMAIN for everything
-# It must run on port 53 to be able to specify it in a resolv.conf
 exec dnsmasq "${options[@]}"
