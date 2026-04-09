@@ -37,27 +37,6 @@ function dig_hassio_dns() {
     | head -n 1
 }
 
-function setup_forwarding() {
-  local cmd="${1}"
-  local proto="${2}"
-  local ip_version="${3}"
-  local address_bits="${4}"
-  local from_address="${5}"
-  local to_address="${6}"
-  local to_port="${7}"
-
-  bashio::log.info "Setting up forwarding for MagicDNS egress proxy (${proto}, ${ip_version})"
-  if ${cmd} -t nat -S OUTPUT \
-    | grep -Eq "^-A OUTPUT -d ${from_address//[\[\]]/}/${address_bits} -p ${proto} -m ${proto} --dport 53 -j DNAT --to-destination $(sed -r 's/(\[|\])/\\\1/g' <<< "${to_address}"):${to_port}$"
-  then
-    bashio::log.notice "Forwarding is already set for MagicDNS egress proxy (${proto}, ${ip_version})"
-  else
-    if ! ${cmd} -t nat -A OUTPUT -d "${from_address//[\[\]]/}" -p "${proto}" --dport 53 -j DNAT --to-destination "${to_address}:${to_port}"; then
-      bashio::exit.nok "Setting up forwarding for MagicDNS egress proxy is unsuccessful (${proto}, ${ip_version})"
-    fi
-  fi
-}
-
 # Search for unallocated port in case of collision
 dnsmasq_egress_port="${DNSMASQ_EGRESS_DEFAULT_PORT}"
 while netstat -lntu | awk '{print $4}' | grep -q ":${dnsmasq_egress_port}$"; do
@@ -98,8 +77,7 @@ if bashio_custom::trace; then
   options+=(--log-debug)
 fi
 
-setup_forwarding "iptables" "udp" "IPv4" "32" "${DNSMASQ_EGRESS_ADDRESS_IPV4}" "${DNSMASQ_EGRESS_ADDRESS_IPV4}" "${dnsmasq_egress_port}"
-setup_forwarding "iptables" "tcp" "IPv4" "32" "${DNSMASQ_EGRESS_ADDRESS_IPV4}" "${DNSMASQ_EGRESS_ADDRESS_IPV4}" "${dnsmasq_egress_port}"
+magicdns-egress-proxy-forwarding setup forwarding "${dnsmasq_egress_port}"
 
 # We need to delay the starting of the dependent services until the conf file is written
 echo "nameserver ${DNSMASQ_EGRESS_ADDRESS_IPV4}" > /etc/resolv.dnsmasq.conf
