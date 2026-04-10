@@ -53,7 +53,7 @@ options+=(--log-facility='-')
 options+=(--cache-size=0)
 
 options+=(--listen-address="${DNSMASQ_EGRESS_ADDRESS_IPV4}")
-options+=(--bind-dynamic)
+options+=(--bind-interfaces)
 options+=(--port="${dnsmasq_egress_port}")
 
 # Hassio DNS's IP addresses
