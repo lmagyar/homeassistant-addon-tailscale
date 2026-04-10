@@ -19,7 +19,7 @@ export LOG_FD
 source /usr/lib/trace.sh
 
 readonly DNSMASQ_EGRESS_ADDRESS_IPV4="127.100.100.100"
-readonly DNSMASQ_EGRESS_DEFAULT_PORT=12753
+readonly DNSMASQ_EGRESS_DEFAULT_PORT=53127
 readonly DNSMASQ_BLACK_WHITE_LIST_LOCATION="/etc/dnsmasq-black-white-list"
 
 declare hassio_dns_ipv4
@@ -39,8 +39,11 @@ function dig_hassio_dns() {
 
 # Search for unallocated port in case of collision
 dnsmasq_egress_port="${DNSMASQ_EGRESS_DEFAULT_PORT}"
-while netstat -lntu | awk '{print $4}' | grep -q ":${dnsmasq_egress_port}$"; do
-  if ((++dnsmasq_egress_port == 65536)); then
+while netstat -lntu \
+  | awk '{print $4}' \
+  | grep -q ":${dnsmasq_egress_port}$"
+do
+  if ((++dnsmasq_egress_port == DNSMASQ_EGRESS_DEFAULT_PORT + 1000)); then
     bashio::exit.nok "Can't find free port for MagicDNS egress proxy"
   fi
 done
