@@ -56,6 +56,9 @@ options+=(--log-facility='-')
 options+=(--cache-size=0)
 
 options+=(--listen-address="${DNSMASQ_EGRESS_ADDRESS_IPV4}")
+# on the lo interface this bind-interfaces option has the effect that dnsmasq connects only to the specified address
+# and on the lo interface bind-interfaces option doesn't result in a logged warning
+# this is intentionally different from the ingress proxy, where on a non-lo interface bind-dynamic option has the same effect
 options+=(--bind-interfaces)
 options+=(--port="${dnsmasq_egress_port}")
 

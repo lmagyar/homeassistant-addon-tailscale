@@ -63,6 +63,9 @@ if bashio::var.has_value "${tailscale_address_ipv6-}"; then
   options+=(--listen-address=${tailscale_address_ipv6})
 fi
 
+# on a non-lo interface this bind-dynamic option has the effect that dnsmasq connects only to the specified address
+# this is intentionally different from the egress proxy, where on the lo interface bind-interfaces option has the same effect
+# and on the lo interface bind-interfaces option doesn't result in a logged warning
 options+=(--bind-dynamic)
 options+=(--port=${dnsmasq_ingress_port})
 
