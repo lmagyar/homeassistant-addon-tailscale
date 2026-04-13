@@ -1,6 +1,5 @@
 #!/command/with-contenv bashio
 # shellcheck shell=bash
-export LOG_FD
 # ==============================================================================
 # Home Assistant Community App: Tailscale
 # S6 Overlay stage2 hook to customize services
