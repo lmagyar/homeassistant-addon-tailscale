@@ -19,15 +19,6 @@ readonly MAGIC_DNS_IPV6="fd7a:115c:a1e0::53"
 declare dns
 declare invalid_dns_config
 
-# This is to execute potentially failing supervisor api functions within conditions,
-# where set -e is not propagated inside the function and bashio relies on set -e for api error handling
-function try {
-    set +e
-    (set -e; "$@")
-    declare -gx TRY_ERROR=$?
-    set -e
-}
-
 # Load app options, even deprecated one to upgrade
 options=$(bashio::addon.options)
 
@@ -48,8 +39,8 @@ if bashio::var.true "${proxy}"; then
 fi
 # Upgrade to share_on_port
 if bashio::var.has_value "${proxy_and_funnel_port}"; then
-    try bashio::addon.option 'share_on_port' "^${proxy_and_funnel_port}"
-    if ((TRY_ERROR)); then
+    bashio::try bashio::addon.option 'share_on_port' "^${proxy_and_funnel_port}"
+    if bashio::try.failed; then
         bashio::log.warning "The proxy_and_funnel_port option value '${proxy_and_funnel_port}' is invalid, proxy_and_funnel_port option is dropped, using default port."
     else
         bashio::log.info "Successfully migrated proxy_and_funnel_port option to share_on_port: ${proxy_and_funnel_port}"
@@ -99,8 +90,8 @@ fi
 # Rename changed options
 tags=$(bashio::jq "${options}" '.tags | select(.!=null)')
 if bashio::var.has_value "${tags}"; then
-    try bashio::addon.option 'advertise_tags' "^${tags}"
-    if ((TRY_ERROR)); then
+    bashio::try bashio::addon.option 'advertise_tags' "^${tags}"
+    if bashio::try.failed; then
         bashio::log.warning "The tags option value is invalid, tags option is dropped, using default no advertise_tags."
         bashio::log.warning "The invalid tags option value is: '${tags}'"
     else
@@ -112,8 +103,8 @@ fi
 # Migrate ssh to tailscale_ssh.enabled
 ssh=$(bashio::jq "${options}" '.ssh | select(.!=null)')
 if bashio::var.has_value "${ssh}"; then
-    try bashio::addon.option 'tailscale_ssh.enabled' "^${ssh}"
-    if ((TRY_ERROR)); then
+    bashio::try bashio::addon.option 'tailscale_ssh.enabled' "^${ssh}"
+    if bashio::try.failed; then
         bashio::log.warning "The ssh option migration failed, ssh option '${ssh}' is dropped, using default disabled."
     else
         bashio::log.info "Successfully migrated ssh option to tailscale_ssh.enabled"
