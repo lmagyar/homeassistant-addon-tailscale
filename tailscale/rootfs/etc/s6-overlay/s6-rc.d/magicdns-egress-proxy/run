@@ -71,6 +71,7 @@ fi
 # We need to delay the starting of the dependent services until the conf file is written
 echo "nameserver ${DNSMASQ_EGRESS_ADDRESS_IPV4}" > /etc/resolv.dnsmasq.conf
 echo "" >&3
+exec 3>&-
 
 # This DNS forwards the white_list to HA's DNS, otherwise replies NXDOMAIN for everything
 # It must run on port 53 to be able to specify it in a resolv.conf
