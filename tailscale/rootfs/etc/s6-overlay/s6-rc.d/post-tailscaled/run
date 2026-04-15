@@ -13,6 +13,7 @@ declare -a colliding_routes=()
 declare login_server
 declare tags
 declare keyexpiry
+declare error_message
 
 # Default options
 options+=(--hostname "$(bashio::info.hostname)")
@@ -99,8 +100,17 @@ do
 done
 
 # Start Tailscale
-if ! /opt/tailscale up "${options[@]}"; then
-  bashio::exit.nok "Unable to start up Tailscale"
+# Capture stderr in a variable but write it to the log also
+if ! { error_message=$(/opt/tailscale up "${options[@]}" 2> >(tee /dev/fd/2) 1>&9); } 9>&1; then
+  if [[ $error_message != *"can't change --login-server without --force-reauth"* ]]; then
+    bashio::exit.nok "Unable to start up Tailscale"
+  fi
+  # Execute this only, if tailscale up explicitly complained about this
+  bashio::log.notice "The login server option has changed, forcing reauthentication"
+  options+=(--force-reauth)
+  if ! /opt/tailscale up "${options[@]}"; then
+    bashio::exit.nok "Unable to start up Tailscale"
+  fi
 fi
 
 # Wait for the network to be available and logged in
