@@ -101,8 +101,8 @@ unset IFS
 # - NeedsMachineAuth
 # - Running
 while ! bashio::fs.socket_exists "/var/run/tailscale/tailscaled.sock" || \
-  /opt/tailscale status --json --peers=false --self=false \
-    | jq --exit-status '.BackendState == "Starting"' > /dev/null;
+  ! /opt/tailscale status --json --peers=false --self=false \
+    | jq --exit-status '.BackendState | IN("NoState", "Stopped", "NeedsLogin", "NeedsMachineAuth", "Running")' > /dev/null;
 do
   sleep 2
 done
