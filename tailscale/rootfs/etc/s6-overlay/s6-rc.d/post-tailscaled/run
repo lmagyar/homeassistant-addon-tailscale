@@ -109,7 +109,7 @@ done
 
 # Start Tailscale
 # Capture stderr in a variable but write it to the log also
-if ! { error_message=$(/opt/tailscale up "${options[@]}" 2> >(tee /dev/fd/2) 1>&9); } 9>&1; then
+if ! { error_message=$(/opt/tailscale up "${options[@]}" 2> >(tee /dev/fd/2) 1>&3); } 3>&1; then
   if [[ $error_message != *"can't change --login-server without --force-reauth"* ]]; then
     bashio::exit.nok "Unable to start up Tailscale"
   fi
