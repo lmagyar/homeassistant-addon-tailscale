@@ -91,21 +91,21 @@ IFS=","
 options+=(--advertise-routes="${routes[*]}")
 unset IFS
 
-# Wait for the network to be available and logged in
+# Wait for the network to be available
+# Loop here while BackendState is:
+# - Starting
+# Move on to tailscale up, when BackendState is:
+# - NoState (first time connecting to control)
+# - Stopped (result of a manual tailscale down command)
+# - NeedsLogin
+# - NeedsMachineAuth
+# - Running
 while ! bashio::fs.socket_exists "/var/run/tailscale/tailscaled.sock" || \
-  ! /opt/tailscale status --json --peers=false --self=false \
-    | jq --exit-status '.BackendState == "Running" or .BackendState == "NeedsLogin" or .BackendState == "Stopped" or .BackendState == "NoState"' > /dev/null;
+  /opt/tailscale status --json --peers=false --self=false \
+    | jq --exit-status '.BackendState == "Starting"' > /dev/null;
 do
   sleep 2
 done
-
-# Execute this only, if tailscale is logged out
-if /opt/tailscale status --json --peers=false --self=false \
-  | jq --exit-status '.BackendState == "NoState"' > /dev/null
-then
-  bashio::log.warning "Tailscale is logged out, forcing reauthentication"
-  options+=(--force-reauth)
-fi
 
 # Start Tailscale
 # Capture stderr in a variable but write it to the log also
