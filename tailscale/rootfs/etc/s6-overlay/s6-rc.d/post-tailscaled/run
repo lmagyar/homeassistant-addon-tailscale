@@ -14,6 +14,8 @@ declare login_server
 declare tags
 declare keyexpiry
 declare error_message
+declare backend_state
+declare nostate_started_timestamp
 
 # Default options
 options+=(--hostname "$(bashio::info.hostname)")
@@ -94,15 +96,22 @@ unset IFS
 # Wait for the network to be available
 # Loop here while BackendState is:
 # - Starting
+# - NoState (first time connecting to control) for less than 30s, to handle potential startup transients
 # Move on to tailscale up, when BackendState is:
-# - NoState (first time connecting to control)
+# - NoState (first time connecting to control) for more than 30s
 # - Stopped (result of a manual tailscale down command)
 # - NeedsLogin
 # - NeedsMachineAuth
 # - Running
+# Note: {} is used instead of () to achieve && precedence over || without subshell,
+#   subshell would not update the value of nostate_started_timestamp here
 while ! bashio::fs.socket_exists "/var/run/tailscale/tailscaled.sock" || \
-  ! /opt/tailscale status --json --peers=false --self=false \
-    | jq --exit-status '.BackendState | IN("NoState", "Stopped", "NeedsLogin", "NeedsMachineAuth", "Running")' > /dev/null;
+  ! backend_state=$( \
+    /opt/tailscale status --json --peers=false --self=false \
+    | jq -rcM '.BackendState') || \
+  [[ ! "${backend_state}" = @(NoState|Stopped|NeedsLogin|NeedsMachineAuth|Running) ]] || \
+  { [[ "${backend_state}" == "NoState" ]] && \
+    (( $(date +"%s") - ${nostate_started_timestamp:=$(date +"%s")} < 30 )) }
 do
   sleep 2
 done
