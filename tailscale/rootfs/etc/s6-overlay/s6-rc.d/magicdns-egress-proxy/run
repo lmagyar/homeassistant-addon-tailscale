@@ -6,10 +6,11 @@ export LOG_FD
 # Runs the MagicDNS egress proxy
 # ==============================================================================
 
-# Note: This service runs when userspace_networking is disabled, and accept_dns is enabled.
+# Note: This service runs when userspace_networking is disabled
+
+# Sets up IPv4 egress DNS proxy for tailscaled/MagicDNS, that forwards queries to IPv4 hassio DNS.
 
 # Note: This script assumes that internal hassio network is available in IPv4.
-# Sets up IPv4 upstream DNS for tailscaled, and redirects the white_list to IPv4 hassio DNS.
 # In case of an IPv6-only hassio network this IPv4 solution won't work.
 # But running an egress DNS proxy on ::1 IPv6 localhost is impossible, because DNS apps can bind to this address also,
 # but we can specify only port 53 DNS in resolv.conf for tailscaled.
@@ -20,9 +21,14 @@ source /usr/lib/trace.sh
 
 readonly DNSMASQ_EGRESS_ADDRESS_IPV4="127.100.100.100"
 readonly DNSMASQ_EGRESS_DEFAULT_PORT=53127
-readonly DNSMASQ_BLACK_WHITE_LIST_LOCATION="/etc/dnsmasq-black-white-list"
+
+# MAGICDNS_MODE is in contenv at /var/run/s6/container_environment
+# - "RESTRICTED"   only domains in black-white-list are allowed on ingress side, everything else on egress side
+# - "UNRESTRICTED" everything except domains in black-white-list are allowed on ingress side, only domains in black-white-list on egress side
+readonly DNSMASQ_BLACK_WHITE_LIST_LOCATION="/run/dnsmasq_black_white_list"
 
 declare hassio_dns_ipv4
+declare -a black_list
 declare -a white_list
 declare domain
 declare -a options
@@ -69,14 +75,34 @@ then
   bashio::exit.nok "Failed to resolve Home Assistant's IPv4 DNS address"
 fi
 
-# White-list
-readarray -t white_list < "${DNSMASQ_BLACK_WHITE_LIST_LOCATION}"
+if bashio::var.equals "${MAGICDNS_MODE}" "RESTRICTED"; then
+  # This means "Unrestricted" on egress side, ie. everything except domains in black-white-list are allowed
 
-# Return NXDOMAIN for everything, except the white_list
-options+=(--address=/#/)
-for domain in "${white_list[@]}"; do
-  options+=(--server=/${domain}/${hassio_dns_ipv4})
-done
+  # Black-list
+  readarray -t black_list < "${DNSMASQ_BLACK_WHITE_LIST_LOCATION}"
+
+  # Forward everything to hassio DNS, except the black_list
+  bashio::log.info "MagicDNS egress proxy: forwarding everything to ${hassio_dns_ipv4}${black_list:+, except:}"
+  options+=(--server=${hassio_dns_ipv4})
+  for domain in "${black_list[@]}"; do
+    bashio::log.info "  ${domain}"
+    options+=(--server=/${domain}/)
+  done
+
+else
+  # This means "Restricted" on egress side, ie. only domains in black-white-list are allowed
+
+  # White-list
+  readarray -t white_list < "${DNSMASQ_BLACK_WHITE_LIST_LOCATION}"
+
+  # Return NXDOMAIN for everything, except the white_list
+  bashio::log.info "MagicDNS egress proxy: returning NXDOMAIN for everything${white_list:+, except forwarding to ${hassio_dns_ipv4} in case of:}"
+  options+=(--address=/#/)
+  for domain in "${white_list[@]}"; do
+    bashio::log.info "  ${domain}"
+    options+=(--server=/${domain}/${hassio_dns_ipv4})
+  done
+fi
 
 if bashio_custom::trace; then
   options+=(--log-queries)
@@ -85,9 +111,12 @@ fi
 
 magicdns-egress-proxy-forwarding setup forwarding "${dnsmasq_egress_port}"
 
-# We need to delay the starting of the dependent services until the conf file is written
-echo "nameserver ${DNSMASQ_EGRESS_ADDRESS_IPV4}" > /etc/resolv.dnsmasq.conf
+if ! bashio::fs.file_exists "/etc/resolv.for-tailscaled.conf"; then
+  # Overwrite it only on the first service startup
+  echo "nameserver ${DNSMASQ_EGRESS_ADDRESS_IPV4}" > /etc/resolv.for-tailscaled.conf
+fi
+
+# We need to delay the starting of the dependent services until iptables are configured and the conf file is written
 echo "" >&3
 
-# This DNS forwards the white_list to HA's DNS, otherwise replies NXDOMAIN for everything
 exec dnsmasq "${options[@]}"

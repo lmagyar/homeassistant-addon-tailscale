@@ -3,20 +3,12 @@
 export LOG_FD
 # ==============================================================================
 # Home Assistant Community App: Tailscale
-# Take down the S6 supervision tree when MagicDNS ingress proxy fails
+# Take down the S6 supervision tree when MagicDNS proxies reconfigurator fails
 # ==============================================================================
 readonly exit_code_container=$(</run/s6-linux-init-container-results/exitcode)
 readonly exit_code_service="${1}"
 readonly exit_code_signal="${2}"
-readonly service="magicdns-ingress-proxy"
-
-# updated by the magicdns-proxies-reconfigurator service
-readonly MAGICDNS_INGRESS_PROXY_SUPPRESS_FORWARDING_CONFIGURATION_LOCATION="/run/magicdns_ingress_proxy_suppress_forwarding_configuration"
-
-if ! bashio::fs.file_exists "${MAGICDNS_INGRESS_PROXY_SUPPRESS_FORWARDING_CONFIGURATION_LOCATION}"; then
-  magicdns-ingress-proxy-forwarding setup drop
-  magicdns-ingress-proxy-forwarding remove forwarding
-fi
+readonly service="magicdns-proxies-reconfigurator"
 
 bashio::log.info \
   "Service ${service} exited with code ${exit_code_service}" \
