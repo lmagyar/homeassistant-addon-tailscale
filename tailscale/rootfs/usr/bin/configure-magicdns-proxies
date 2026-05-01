@@ -100,7 +100,7 @@ else
   fi
 fi
 
-printf "${MAGICDNS_MODE}" > /var/run/s6/container_environment/MAGICDNS_MODE
+printf "%s" "${MAGICDNS_MODE}" > /var/run/s6/container_environment/MAGICDNS_MODE
 printf "%s" "${black_white_list[@]/%/$'\n'}" > "${DNSMASQ_BLACK_WHITE_LIST_LOCATION}"
 
-printf "${dns_status_json}" > "${PREVIOUS_MAGICDNS_STATUS_LOCATION}"
+printf "%s" "${dns_status_json}" > "${PREVIOUS_MAGICDNS_STATUS_LOCATION}"
