@@ -17,6 +17,36 @@ readonly DNSMASQ_INGRESS_PORT_LOCATION="/run/dnsmasq_ingress_port"
 declare magicdns_proxies_configuration
 declare healthy=true
 
+function try {
+    set +e
+    (set -e; "$@")
+    declare -gx TRY_ERROR=$?
+    set -e
+}
+
+function restart_proxies() {
+  bashio::log.info "MagicDNS proxy configuration has changed"
+
+  bashio::log.info "Disabling incoming DNS queries during reconfiguration..."
+  magicdns-ingress-proxy-forwarding setup drop
+  magicdns-ingress-proxy-forwarding remove forwarding
+
+  bashio::log.info "Restarting MagicDNS egress proxy..."
+  s6-svc -ruwR /run/service/magicdns-egress-proxy
+
+  bashio::log.info "Restarting MagicDNS ingress proxy..."
+  touch "${MAGICDNS_INGRESS_PROXY_SUPPRESS_FORWARDING_CONFIGURATION_LOCATION}"
+  rm -r -f "${DNSMASQ_INGRESS_PORT_LOCATION}"
+  s6-svc -ruwR /run/service/magicdns-ingress-proxy
+  rm -r -f "${MAGICDNS_INGRESS_PROXY_SUPPRESS_FORWARDING_CONFIGURATION_LOCATION}"
+  bashio::fs.file_exists "${DNSMASQ_INGRESS_PORT_LOCATION}"
+
+  bashio::log.info "Enabling incoming DNS queries after reconfiguration..."
+  magicdns-ingress-proxy-forwarding setup forwarding "$(<"${DNSMASQ_INGRESS_PORT_LOCATION}")"
+  rm -r -f "${DNSMASQ_INGRESS_PORT_LOCATION}"
+  magicdns-ingress-proxy-forwarding remove drop
+}
+
 while true
 do
   # crond is great for long term schedules, but not so great for "fast" repetition
@@ -32,22 +62,12 @@ do
     fi
     # Restart dnsmasq proxies if required
     if ! bashio::var.equals "${magicdns_proxies_configuration}" 'unchanged'; then
-      bashio::log.info "MagicDNS proxy configuration has changed"
-      bashio::log.info "Disabling incoming DNS queries during reconfiguration..."
-      touch "${MAGICDNS_INGRESS_PROXY_SUPPRESS_FORWARDING_CONFIGURATION_LOCATION}"
-      magicdns-ingress-proxy-forwarding setup drop
-      magicdns-ingress-proxy-forwarding remove forwarding
-
-      bashio::log.info "Restarting MagicDNS egress proxy..."
-      s6-svc -ruwR /run/service/magicdns-egress-proxy
-      bashio::log.info "Restarting MagicDNS ingress proxy..."
-      s6-svc -ruwR /run/service/magicdns-ingress-proxy
-
-      bashio::log.info "Enabling incoming DNS queries after reconfiguration..."
-      magicdns-ingress-proxy-forwarding setup forwarding "$(<"${DNSMASQ_INGRESS_PORT_LOCATION}")"
-      magicdns-ingress-proxy-forwarding remove drop
-      rm -r -f "${MAGICDNS_INGRESS_PROXY_SUPPRESS_FORWARDING_CONFIGURATION_LOCATION}"
-      rm -r -f "${DNSMASQ_INGRESS_PORT_LOCATION}"
+      try restart_proxies
+      if ((TRY_ERROR)); then
+        bashio::log.fatal "Failed to reconfigure and restart MagicDNS proxies. Halting app to prevent network loss."
+        echo -n 1 > /run/s6-linux-init-container-results/exitcode
+        exec /run/s6/basedir/bin/halt
+      fi
     fi
   fi
 done
