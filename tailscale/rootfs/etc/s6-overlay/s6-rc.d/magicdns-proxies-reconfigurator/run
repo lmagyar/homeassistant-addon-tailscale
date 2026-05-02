@@ -24,6 +24,16 @@ function try {
     set -e
 }
 
+function file_non_empty() {
+    local file=${1}
+
+    if [[ -s "${file}" ]]; then
+        return "${__BASHIO_EXIT_OK}"
+    fi
+
+    return "${__BASHIO_EXIT_NOK}"
+}
+
 function restart_proxies() {
   bashio::log.info "MagicDNS proxy configuration has changed"
 
@@ -39,7 +49,10 @@ function restart_proxies() {
   rm -r -f "${DNSMASQ_INGRESS_PORT_LOCATION}"
   s6-svc -ruwR /run/service/magicdns-ingress-proxy
   rm -r -f "${MAGICDNS_INGRESS_PROXY_SUPPRESS_FORWARDING_CONFIGURATION_LOCATION}"
-  bashio::fs.file_exists "${DNSMASQ_INGRESS_PORT_LOCATION}"
+  if ! file_non_empty "${DNSMASQ_INGRESS_PORT_LOCATION}"; then
+    bashio::log.fatal "MagicDNS ingress proxy port is unknown"
+    return 1
+  fi
 
   bashio::log.info "Enabling incoming DNS queries after reconfiguration..."
   magicdns-ingress-proxy-forwarding setup forwarding "$(<"${DNSMASQ_INGRESS_PORT_LOCATION}")"
