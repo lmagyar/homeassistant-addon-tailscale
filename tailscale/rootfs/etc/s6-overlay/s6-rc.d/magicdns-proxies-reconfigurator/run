@@ -25,27 +25,29 @@ do
   if ! magicdns_proxies_configuration=$(configure-magicdns-proxies test); then
     printf "UNHEALTHY" > /var/run/s6/container_environment/MAGICDNS_PROXIES_RECONFIGURATOR_HEALTH_STATE
     healthy=false
-  elif bashio::var.false "${healthy}"; then
-    printf "HEALTHY" > /var/run/s6/container_environment/MAGICDNS_PROXIES_RECONFIGURATOR_HEALTH_STATE
-    healthy=true
-  fi
-  # Restart dnsmasq proxies if required
-  if ! bashio::var.equals "${magicdns_proxies_configuration}" 'unchanged'; then
-    bashio::log.info "MagicDNS proxy configuration has changed"
-    bashio::log.info "Disabling incoming DNS queries during reconfiguration..."
-    touch "${MAGICDNS_INGRESS_PROXY_SUPPRESS_FORWARDING_CONFIGURATION_LOCATION}"
-    magicdns-ingress-proxy-forwarding setup drop
-    magicdns-ingress-proxy-forwarding remove forwarding
+  else
+    if bashio::var.false "${healthy}"; then
+      printf "HEALTHY" > /var/run/s6/container_environment/MAGICDNS_PROXIES_RECONFIGURATOR_HEALTH_STATE
+      healthy=true
+    fi
+    # Restart dnsmasq proxies if required
+    if ! bashio::var.equals "${magicdns_proxies_configuration}" 'unchanged'; then
+      bashio::log.info "MagicDNS proxy configuration has changed"
+      bashio::log.info "Disabling incoming DNS queries during reconfiguration..."
+      touch "${MAGICDNS_INGRESS_PROXY_SUPPRESS_FORWARDING_CONFIGURATION_LOCATION}"
+      magicdns-ingress-proxy-forwarding setup drop
+      magicdns-ingress-proxy-forwarding remove forwarding
 
-    bashio::log.info "Restarting MagicDNS egress proxy..."
-    s6-svc -ruwR /run/service/magicdns-egress-proxy
-    bashio::log.info "Restarting MagicDNS ingress proxy..."
-    s6-svc -ruwR /run/service/magicdns-ingress-proxy
+      bashio::log.info "Restarting MagicDNS egress proxy..."
+      s6-svc -ruwR /run/service/magicdns-egress-proxy
+      bashio::log.info "Restarting MagicDNS ingress proxy..."
+      s6-svc -ruwR /run/service/magicdns-ingress-proxy
 
-    bashio::log.info "Enabling incoming DNS queries after reconfiguration..."
-    magicdns-ingress-proxy-forwarding setup forwarding "$(<"${DNSMASQ_INGRESS_PORT_LOCATION}")"
-    magicdns-ingress-proxy-forwarding remove drop
-    rm -r -f "${MAGICDNS_INGRESS_PROXY_SUPPRESS_FORWARDING_CONFIGURATION_LOCATION}"
-    rm -r -f "${DNSMASQ_INGRESS_PORT_LOCATION}"
+      bashio::log.info "Enabling incoming DNS queries after reconfiguration..."
+      magicdns-ingress-proxy-forwarding setup forwarding "$(<"${DNSMASQ_INGRESS_PORT_LOCATION}")"
+      magicdns-ingress-proxy-forwarding remove drop
+      rm -r -f "${MAGICDNS_INGRESS_PROXY_SUPPRESS_FORWARDING_CONFIGURATION_LOCATION}"
+      rm -r -f "${DNSMASQ_INGRESS_PORT_LOCATION}"
+    fi
   fi
 done

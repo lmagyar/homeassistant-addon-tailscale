@@ -49,7 +49,7 @@ while netstat -lntu \
   | awk '{print $4}' \
   | grep -q ":${dnsmasq_egress_port}$"
 do
-  if ((++dnsmasq_egress_port == DNSMASQ_EGRESS_DEFAULT_PORT + 1000)); then
+  if ((++dnsmasq_egress_port >= DNSMASQ_EGRESS_DEFAULT_PORT + 1000)); then
     bashio::exit.nok "Can't find free port for MagicDNS egress proxy"
   fi
 done
@@ -88,8 +88,7 @@ if bashio::var.equals "${MAGICDNS_MODE}" "RESTRICTED"; then
     bashio::log.info "  ${domain}"
     options+=(--server=/${domain}/)
   done
-
-else
+elif bashio::var.equals "${MAGICDNS_MODE}" "UNRESTRICTED"; then
   # This means "Restricted" on egress side, ie. only domains in black-white-list are allowed
 
   # White-list
@@ -102,6 +101,8 @@ else
     bashio::log.info "  ${domain}"
     options+=(--server=/${domain}/${hassio_dns_ipv4})
   done
+else
+  bashio::exit.nok "Invalid MAGICDNS_MODE: '${MAGICDNS_MODE}'"
 fi
 
 if bashio_custom::trace; then

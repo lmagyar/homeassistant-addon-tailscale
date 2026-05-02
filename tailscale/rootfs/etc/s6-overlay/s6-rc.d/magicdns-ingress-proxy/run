@@ -42,7 +42,7 @@ while netstat -lntu \
   | awk '{print $4}' \
   | grep -q ":${dnsmasq_ingress_port}$"
 do
-  if ((++dnsmasq_ingress_port == DNSMASQ_INGRESS_DEFAULT_PORT + 1000)); then
+  if ((++dnsmasq_ingress_port >= DNSMASQ_INGRESS_DEFAULT_PORT + 1000)); then
     bashio::exit.nok "Can't find free port for MagicDNS ingress proxy"
   fi
 done
@@ -89,7 +89,7 @@ if bashio::var.equals "${MAGICDNS_MODE}" "RESTRICTED"; then
     bashio::log.info "  ${domain}"
     options+=(--server=/${domain}/${MAGIC_DNS_IPV4})
   done
-else
+elif bashio::var.equals "${MAGICDNS_MODE}" "UNRESTRICTED"; then
   # Everything except domains in black-white-list are allowed
 
   # Black-list
@@ -102,6 +102,8 @@ else
     bashio::log.info "  ${domain}"
     options+=(--server=/${domain}/)
   done
+else
+  bashio::exit.nok "Invalid MAGICDNS_MODE: '${MAGICDNS_MODE}'"
 fi
 
 if bashio_custom::trace; then
