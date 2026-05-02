@@ -64,9 +64,7 @@ do
     if ! bashio::var.equals "${magicdns_proxies_configuration}" 'unchanged'; then
       try restart_proxies
       if ((TRY_ERROR)); then
-        bashio::log.fatal "Failed to reconfigure and restart MagicDNS proxies. Halting app to prevent network loss."
-        echo -n 1 > /run/s6-linux-init-container-results/exitcode
-        exec /run/s6/basedir/bin/halt
+        bashio::exit.nok "Failed to reconfigure and restart MagicDNS proxies. Halting app to prevent network loss."
       fi
     fi
   fi
