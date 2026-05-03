@@ -68,10 +68,10 @@ bashio::log.info "Subscribing to IPN message bus..."
 # {"Resolvers":true,"Routes":["foo.com","tail1234.ts.net.","ts.net."]}
 # If the structure changes, that should break the most basic smoke test after a TS client update, so we can fix it before release
 /opt/tailscale debug watch-ipn --initial=true --netmap=true --rate-limit=false \
-| stdbuf -i0 -oL -eL jq -rcM '{"Resolvers": .NetMap.DNS | has("Resolvers"), "Routes": .NetMap.DNS.Routes | keys}' \
+| stdbuf -i0 -oL -eL jq -rcM '{"DNS": .NetMap | has("DNS"), "Resolvers": .NetMap.DNS | has("Resolvers"), "Routes": .NetMap.DNS.Routes // {} | keys}' \
 | while IFS= read -r current_ipn_dns_config
 do
-  if [[ "${current_ipn_dns_config}" != "${previous_ipn_dns_config}" ]]; then
+  if [[ "${current_ipn_dns_config}" == '{"DNS":true,'* && "${current_ipn_dns_config}" != "${previous_ipn_dns_config}" ]]; then
 
     # This seems to be double check, but not completely:
     # - The ipn watcher will send the initial state, and we compare then the current DNS state
