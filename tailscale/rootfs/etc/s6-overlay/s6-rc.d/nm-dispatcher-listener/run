@@ -24,6 +24,10 @@ mkfifo "${NM_DISPATCHER_LISTENER_QUEUE}"
 # Pin it to prevent closing it by other processes
 exec 4<>"${NM_DISPATCHER_LISTENER_QUEUE}"
 
+# We need to delay the starting of the dependent services until listener queue is created
+echo "" >&3
+exec 3>&-
+
 while IFS= read -r -u 4 action
 do
   case "${action}" in
