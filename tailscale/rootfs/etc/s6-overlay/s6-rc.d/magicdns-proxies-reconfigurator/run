@@ -63,6 +63,7 @@ function restart_proxies() {
   magicdns-ingress-proxy-forwarding remove drop
 }
 
+bashio::log.info "Subscribing to IPN message bus..."
 # This jq filters the whole state into sg. like:
 # {"Resolvers":true,"Routes":["foo.com","tail1234.ts.net.","ts.net."]}
 # If the structure changes, that should break the most basic smoke test after a TS client update, so we can fix it before release
