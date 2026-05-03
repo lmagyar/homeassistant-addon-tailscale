@@ -5,8 +5,10 @@ export LOG_FD
 # Configures the dnsmasq proxies black/white list
 # ==============================================================================
 
-readonly DEFAULT_LOGIN_SERVER="controlplane.tailscale.com"
-readonly LOG_SERVER="log.tailscale.com"
+readonly DEFAULT_LOGIN_SERVER_1="controlplane.tailscale.com"
+readonly DEFAULT_LOGIN_SERVER_2="login.tailscale.com"
+readonly LOG_SERVER_1="log.tailscale.com"
+readonly LOG_SERVER_2="log.tailscale.io"
 readonly LETSENCRYPT_API="acme-v02.api.letsencrypt.org"
 
 # MAGICDNS_MODE is in contenv at /var/run/s6/container_environment
@@ -16,7 +18,7 @@ readonly DNSMASQ_BLACK_WHITE_LIST_LOCATION="/run/dnsmasq_black_white_list"
 
 readonly PREVIOUS_MAGICDNS_STATUS_LOCATION="/run/previous_magicdns_status"
 
-declare login_server="${DEFAULT_LOGIN_SERVER}"
+declare login_server="${DEFAULT_LOGIN_SERVER_1}"
 declare -a black_white_list=()
 declare dns_status_json
 declare previous_dns_status_json
@@ -89,10 +91,17 @@ else
       bashio::exit.nok "Determining host name from '$(bashio::config "login_server")' has failed"
     fi
     black_white_list+=("${login_server}")
+    if bashio::var.equals "${login_server}" "${DEFAULT_LOGIN_SERVER_1}"; then
+      black_white_list+=("${DEFAULT_LOGIN_SERVER_2}")
+    fi
+    if bashio::var.equals "${login_server}" "${DEFAULT_LOGIN_SERVER_2}"; then
+      black_white_list+=("${DEFAULT_LOGIN_SERVER_1}")
+    fi
 
     # When log upload is enabled, resolve log server also
     if bashio::debug; then
-      black_white_list+=("${LOG_SERVER}")
+      black_white_list+=("${LOG_SERVER_1}")
+      black_white_list+=("${LOG_SERVER_2}")
     fi
 
     # Always resolve letsencrypt's api also (independent of share_homeassistant)
