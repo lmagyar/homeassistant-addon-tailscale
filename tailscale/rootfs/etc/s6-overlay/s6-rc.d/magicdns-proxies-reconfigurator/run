@@ -72,7 +72,6 @@ bashio::log.info "Subscribing to IPN message bus..."
 | while IFS= read -r current_ipn_dns_config
 do
   if [[ "${current_ipn_dns_config}" != "${previous_ipn_dns_config}" ]]; then
-    previous_ipn_dns_config="${current_ipn_dns_config}"
 
     # This seems to be double check, but not completely:
     # - The ipn watcher will send the initial state, and we compare then the current DNS state
@@ -85,6 +84,7 @@ do
       printf "UNHEALTHY" > /var/run/s6/container_environment/MAGICDNS_PROXIES_RECONFIGURATOR_HEALTH_STATE
       healthy=false
     else
+      previous_ipn_dns_config="${current_ipn_dns_config}"
       if bashio::var.false "${healthy}"; then
         printf "HEALTHY" > /var/run/s6/container_environment/MAGICDNS_PROXIES_RECONFIGURATOR_HEALTH_STATE
         healthy=true
