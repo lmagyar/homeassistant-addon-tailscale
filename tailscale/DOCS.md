@@ -230,6 +230,8 @@ you are troubleshooting.
 
 Controls Tailscale's client log upload to log.tailscale.com.
 
+**Note:** When disabled, turns on Tailscale's `--no-logs-no-support` flag.
+
 This option is disabled by default.
 
 ### Option: `login_server`
