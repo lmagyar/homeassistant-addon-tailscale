@@ -13,7 +13,7 @@ fi
 
 case "${NM_DISPATCHER_ACTION}" in
   up|down|dhcp4-change|dhcp6-change)
-    bashio::log.debug "Receiving Network Manager action ${DEVICE_IP_IFACE-} ${NM_DISPATCHER_ACTION}"
+    bashio::log.debug "Received Network Manager action ${DEVICE_IP_IFACE-} ${NM_DISPATCHER_ACTION}"
     if ! echo "${DEVICE_IP_IFACE-} ${NM_DISPATCHER_ACTION}" > "${NM_DISPATCHER_LISTENER_QUEUE}"; then
       bashio::log.fatal "Failed to send nm-dispatcher action to listener. Halting app to prevent network loss."
       echo -n 1 > /run/s6-linux-init-container-results/exitcode
