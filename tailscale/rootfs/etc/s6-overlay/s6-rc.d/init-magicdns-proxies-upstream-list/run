@@ -34,7 +34,7 @@ if bashio::config.true "accept_dns"; then
   black_white_list+=("${login_server}")
 
   # When log upload is enabled, resolve log server also
-  if bashio::debug; then
+  if bashio::config.true "log_upload"; then
     black_white_list+=("${LOG_SERVER}")
   fi
 

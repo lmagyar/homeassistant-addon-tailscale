@@ -53,6 +53,11 @@ configuration:
     description: >-
       Controls the level of log details the app provides.
       This only applies to the app itself, not Tailscale.
+  log_upload:
+    name: Log upload
+    description: >-
+      Controls Tailscale's client log upload to log.tailscale.com.
+      This option is disabled by default.
   login_server:
     name: Login server
     description: >-
