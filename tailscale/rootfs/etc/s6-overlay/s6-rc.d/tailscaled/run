@@ -29,7 +29,7 @@ options+=(--state=/data/tailscaled.state)
 options+=(--statedir=/data/state)
 
 # Opt out of client log upload to log.tailscale.io
-if ! bashio::debug ; then
+if bashio::config.false "log_upload"; then
   options+=(--no-logs-no-support)
 fi
 

@@ -3,14 +3,17 @@
 export LOG_FD
 # ==============================================================================
 # Home Assistant Community App: Tailscale
-# Take down the S6 supervision tree when protect-subnets fails
+# Take down the S6 supervision tree when nm-dispatcher-listener fails
 # ==============================================================================
 readonly exit_code_container=$(</run/s6-linux-init-container-results/exitcode)
 readonly exit_code_service="${1}"
 readonly exit_code_signal="${2}"
-readonly service="protect-subnets"
+readonly service="nm-dispatcher-listener"
 
-unprotect-subnet-routes
+readonly NM_DISPATCHER_LISTENER_QUEUE=/run/nm-dispatcher-listener-queue
+
+exec 4>&-
+rm -rf "${NM_DISPATCHER_LISTENER_QUEUE}"
 
 bashio::log.info \
   "Service ${service} exited with code ${exit_code_service}" \

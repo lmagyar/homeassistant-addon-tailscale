@@ -1,9 +1,16 @@
 # Changelog
 
+## 0.28.1.4 (forked)
+
+- Fix: Don't poll for global DNS config changes, use tailscale's ipn bus events
+- Release unreleased changes from community app
+  - Refactor slow activities from nm-dispatcher script into separate listener service
+  - Add log_upload config option to configure log upload separately from local app log level
+
 ## 0.28.1.3 (forked)
 
-- Fix: during startup move on from NoState only after 30s
-- Fix MagicDNS: Refactor to support appconnectors also
+- Fix: During startup move on from NoState only after 30s
+- Fix: Refactor MagicDNS support to properly handle appconnectors
 - Release unreleased changes from community app
   - Update App base image to v20.1.0
 

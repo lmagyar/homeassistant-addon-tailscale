@@ -78,6 +78,13 @@ configuration:
     description: >-
       Controls the level of log details the app provides.
       This only applies to the app itself, not Tailscale.
+  log_upload:
+    name: Log upload
+    description: >-
+      Controls Tailscale's client log upload to log.tailscale.com. Enable it if your
+      tailnet policy/Admin Console requires client log upload, otherwise Tailscale
+      and the app can refuse to start.
+      This option is disabled by default.
   login_server:
     name: Login server
     description: >-
