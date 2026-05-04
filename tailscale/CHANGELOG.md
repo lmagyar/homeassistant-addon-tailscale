@@ -1,6 +1,6 @@
 # Changelog
 
-## vNext (forked)
+## 0.28.1.4 (forked)
 
 - Fix: Don't poll for global DNS config changes, use tailscale's ipn bus events
 - Release unreleased changes from community app
