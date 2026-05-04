@@ -109,6 +109,25 @@ function bashio::addon.uninstall() {
 # This is currently broken in bashio
 
 # ------------------------------------------------------------------------------
+# Update the specified add-on.
+#
+# Arguments:
+#   $1 Add-on slug (optional, default: self)
+# ------------------------------------------------------------------------------
+function bashio::addon.update() {
+    local slug=${1:-'self'}
+    # This call is redirected to the store, and store doesn't support 'self'
+    if bashio::var.equals "${slug}" 'self'; then
+        slug=$(bashio::addon.slug)
+    fi
+    bashio::log.trace "${FUNCNAME[0]}"
+    bashio::api.supervisor POST "/store/addons/${slug}/update"
+    bashio::cache.flush_all
+}
+
+# This is currently broken in bashio
+
+# ------------------------------------------------------------------------------
 # Returns a JSON object with information about addons.
 #
 # Arguments:
@@ -980,6 +999,11 @@ else
       wait_for_backup "${backup_job}"
     fi
     bashio::exit.nok "Backup job has failed"
+  fi
+  update_available=$(bashio::addon.update_available "${to}")
+  if bashio::var.true "${update_available}"; then
+    bashio::log.info "Updating app ${to} (${to_name}) to the latest version..."
+    bashio::addon.update "${to}" | sed -e "/^$/d"
   fi
 fi
 
