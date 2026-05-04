@@ -13,6 +13,9 @@ declare certfile keyfile
 declare certdir keydir
 declare cp_log
 
+# Add timestamp to plain stdout and stderr messages
+exec &> >(ts "${__BASHIO_LOG_TIMESTAMP} service $(basename ${PWD}):")
+
 # Check if Tailscale HTTPS is enabled
 if ! /opt/tailscale status --self=true --peers=false --json \
   | jq -rce '.Self.CapMap | has("https")' > /dev/null;

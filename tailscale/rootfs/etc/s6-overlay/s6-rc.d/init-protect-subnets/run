@@ -6,4 +6,7 @@ export LOG_FD
 # Prevent local subnets to be routed toward the tailnet
 # ==============================================================================
 
+# Add timestamp to plain stdout and stderr messages
+exec &> >(ts "${__BASHIO_LOG_TIMESTAMP} service $(basename ${PWD}):")
+
 protect-subnet-routes

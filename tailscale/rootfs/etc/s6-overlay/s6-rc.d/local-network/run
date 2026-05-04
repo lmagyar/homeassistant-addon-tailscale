@@ -13,6 +13,9 @@ declare wait_counter=0
 # Some services need a working local network to function properly.
 # They can mark this service as dependency, and wait for the successful startup.
 
+# Add timestamp to plain stdout and stderr messages
+exec &> >(ts "${__BASHIO_LOG_TIMESTAMP} service $(basename ${PWD}):")
+
 # Until HA has no default interface, we wait a little
 while ! eval "bashio::api.supervisor GET /network/interface/default/info false &> /dev/null ${LOG_FD}> /dev/null"; do
   if (( wait_counter++ == WAIT_COUNT )); then

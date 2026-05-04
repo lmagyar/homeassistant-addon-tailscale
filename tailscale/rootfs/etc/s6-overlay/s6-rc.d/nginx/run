@@ -6,6 +6,9 @@ export LOG_FD
 # Runs the Nginx daemon
 # ==============================================================================
 
+# Add timestamp to plain stdout and stderr messages
+exec &> >(ts "${__BASHIO_LOG_TIMESTAMP} service $(basename ${PWD}):")
+
 # Wait for the Tailscale webinterface to become available
 bashio::net.wait_for 25898 localhost 900
 

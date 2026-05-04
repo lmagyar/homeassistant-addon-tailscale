@@ -21,6 +21,9 @@ declare error_message
 declare backend_state
 declare nostate_started_timestamp
 
+# Add timestamp to plain stdout and stderr messages
+exec &> >(ts "${__BASHIO_LOG_TIMESTAMP} service $(basename ${PWD}):")
+
 # Default options
 options+=(--hostname "$(bashio::info.hostname)")
 

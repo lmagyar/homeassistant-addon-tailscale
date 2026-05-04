@@ -11,6 +11,9 @@ if [[ "${LOG_FD:-}" =~ ^[0-9]+$ ]]; then
   eval "exec ${LOG_FD}>&1" || true
 fi
 
+# Add timestamp to plain stdout and stderr messages
+exec &> >(ts "${__BASHIO_LOG_TIMESTAMP} service $(basename ${PWD}):")
+
 case "${NM_DISPATCHER_ACTION}" in
   up|down|dhcp4-change|dhcp6-change)
     bashio::log.debug "Received Network Manager action ${DEVICE_IP_IFACE-} ${NM_DISPATCHER_ACTION}"

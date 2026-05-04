@@ -10,6 +10,9 @@ readonly exit_code_service="${1}"
 readonly exit_code_signal="${2}"
 readonly service="magicdns-egress-proxy"
 
+# Add timestamp to plain stdout and stderr messages
+exec &> >(ts "${__BASHIO_LOG_TIMESTAMP} service $(basename ${PWD}):")
+
 magicdns-egress-proxy-forwarding remove forwarding
 
 bashio::log.info \

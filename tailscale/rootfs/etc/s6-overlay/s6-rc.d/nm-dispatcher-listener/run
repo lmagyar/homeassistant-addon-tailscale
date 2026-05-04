@@ -12,6 +12,9 @@ declare action
 declare subnet_routes_to_unprotect
 declare subnet_routes_to_protect
 
+# Add timestamp to plain stdout and stderr messages
+exec &> >(ts "${__BASHIO_LOG_TIMESTAMP} service $(basename ${PWD}):")
+
 function try {
     set +e
     (set -e; "$@")

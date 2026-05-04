@@ -6,6 +6,9 @@ export LOG_FD
 # Install SSH packages and run init commands (only runs when ssh is true)
 # ==============================================================================
 
+# Add timestamp to plain stdout and stderr messages
+exec &> >(ts "${__BASHIO_LOG_TIMESTAMP} service $(basename ${PWD}):")
+
 # Packages: try install, warn and continue startup on failure
 if bashio::config.has_value 'tailscale_ssh.packages'; then
   if ! apk update; then

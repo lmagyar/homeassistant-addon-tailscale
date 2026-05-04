@@ -22,6 +22,7 @@ RUN \
         coreutils=9.8-r1 \
         networkmanager=1.54.3-r0 \
         inotify-tools=4.23.9.0-r0 \
+        moreutils \
     \
     && ln -sf /sbin/xtables-nft-multi /sbin/ip6tables \
     && ln -sf /sbin/xtables-nft-multi /sbin/iptables \

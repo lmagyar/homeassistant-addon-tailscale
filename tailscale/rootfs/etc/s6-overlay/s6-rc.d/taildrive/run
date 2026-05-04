@@ -13,6 +13,9 @@ declare active_share_names
 
 declare share_name
 
+# Add timestamp to plain stdout and stderr messages
+exec &> >(ts "${__BASHIO_LOG_TIMESTAMP} service $(basename ${PWD}):")
+
 # Read all possible and configured directories from the app configuration.
 if ! all_share_names=$(bashio::config 'taildrive' | jq -rc 'keys_unsorted[]') || \
   ! configured_share_names=$(bashio::config 'taildrive' | jq -rc 'to_entries[] | select(.value) | .key')

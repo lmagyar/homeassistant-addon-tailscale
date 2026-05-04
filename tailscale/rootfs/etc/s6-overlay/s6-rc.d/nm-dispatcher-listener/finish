@@ -12,6 +12,9 @@ readonly service="nm-dispatcher-listener"
 
 readonly NM_DISPATCHER_LISTENER_QUEUE=/run/nm-dispatcher-listener-queue
 
+# Add timestamp to plain stdout and stderr messages
+exec &> >(ts "${__BASHIO_LOG_TIMESTAMP} service $(basename ${PWD}):")
+
 exec 4>&-
 rm -rf "${NM_DISPATCHER_LISTENER_QUEUE}"
 

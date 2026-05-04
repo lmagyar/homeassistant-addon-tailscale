@@ -6,6 +6,9 @@ export LOG_FD
 # Runs the nm-dispatcher service
 # ==============================================================================
 
+# Add timestamp to plain stdout and stderr messages
+exec &> >(ts "${__BASHIO_LOG_TIMESTAMP} service $(basename ${PWD}):")
+
 # runs scripts in /etc/NetworkManager/dispatcher.d
 # --debug is used to prevent logging to syslog (HA cli)
 exec /usr/libexec/nm-dispatcher --persist --debug > /dev/null

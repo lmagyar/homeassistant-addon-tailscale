@@ -13,6 +13,9 @@ readonly service="magicdns-ingress-proxy"
 # updated by the magicdns-proxies-reconfigurator service
 readonly MAGICDNS_INGRESS_PROXY_SUPPRESS_FORWARDING_CONFIGURATION_LOCATION="/run/magicdns_ingress_proxy_suppress_forwarding_configuration"
 
+# Add timestamp to plain stdout and stderr messages
+exec &> >(ts "${__BASHIO_LOG_TIMESTAMP} service $(basename ${PWD}):")
+
 if ! bashio::fs.file_exists "${MAGICDNS_INGRESS_PROXY_SUPPRESS_FORWARDING_CONFIGURATION_LOCATION}"; then
   magicdns-ingress-proxy-forwarding setup drop
   magicdns-ingress-proxy-forwarding remove forwarding

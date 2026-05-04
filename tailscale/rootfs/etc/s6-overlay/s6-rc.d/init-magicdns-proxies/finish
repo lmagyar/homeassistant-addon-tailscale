@@ -6,4 +6,7 @@ export LOG_FD
 # Remove forwarding
 # ==============================================================================
 
+# Add timestamp to plain stdout and stderr messages
+exec &> >(ts "${__BASHIO_LOG_TIMESTAMP} service $(basename ${PWD}):")
+
 magicdns-ingress-proxy-forwarding remove drop

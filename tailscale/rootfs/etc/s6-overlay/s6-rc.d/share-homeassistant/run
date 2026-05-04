@@ -14,6 +14,9 @@ declare curl_result
 
 declare -a options
 
+# Add timestamp to plain stdout and stderr messages
+exec &> >(ts "${__BASHIO_LOG_TIMESTAMP} service $(basename ${PWD}):")
+
 # Validate share_homeassistant value
 if ! bashio::config.equals 'share_homeassistant' 'serve' && \
   ! bashio::config.equals 'share_homeassistant' 'funnel'

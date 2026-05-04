@@ -17,6 +17,9 @@ declare invalid_dns_config
 # - "UNRESTRICTED" everything except domains in black-white-list are allowed on ingress side, only domains in black-white-list on egress side
 readonly DNSMASQ_BLACK_WHITE_LIST_LOCATION="/run/dnsmasq_black_white_list"
 
+# Add timestamp to plain stdout and stderr messages
+exec &> >(ts "${__BASHIO_LOG_TIMESTAMP} service $(basename ${PWD}):")
+
 # Check DNS configuration
 invalid_dns_config="true"
 for dns in $(bashio::dns.servers); do

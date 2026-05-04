@@ -10,6 +10,9 @@ readonly exit_code_service="${1}"
 readonly exit_code_signal="${2}"
 readonly service="magicdns-proxies-reconfigurator"
 
+# Add timestamp to plain stdout and stderr messages
+exec &> >(ts "${__BASHIO_LOG_TIMESTAMP} service $(basename ${PWD}):")
+
 bashio::log.info \
   "Service ${service} exited with code ${exit_code_service}" \
   "(by signal ${exit_code_signal})"

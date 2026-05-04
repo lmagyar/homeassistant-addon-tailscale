@@ -34,6 +34,9 @@ declare domain
 declare -a options
 declare dnsmasq_ingress_port
 
+# Add timestamp to plain stdout and stderr messages
+exec &> >(ts "${__BASHIO_LOG_TIMESTAMP} service $(basename ${PWD}):")
+
 bashio::log.info "Starting MagicDNS ingress proxy..."
 
 # Search for unallocated port in case of collision

@@ -15,6 +15,9 @@ if [[ "${LOG_FD:-}" =~ ^[0-9]+$ ]]; then
   eval "exec ${LOG_FD}>&1" || true
 fi
 
+# Add timestamp to plain stdout and stderr messages
+exec &> >(ts "${__BASHIO_LOG_TIMESTAMP} service $(basename ${PWD}):")
+
 readonly HEALTHCHECK_OFFLINE_TIMEOUT=300   # 5 minutes
 readonly HEALTHCHECK_RESTART_TIMEOUT=3600  # 1 hour
 

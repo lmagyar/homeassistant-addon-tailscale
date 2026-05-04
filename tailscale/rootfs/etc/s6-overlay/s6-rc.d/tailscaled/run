@@ -14,6 +14,11 @@ declare -a options
 declare udp_port
 declare tailscaled_gid
 
+# Add timestamp to plain stdout and stderr messages
+exec 4>&1
+exec 5>&2
+exec &> >(ts "${__BASHIO_LOG_TIMESTAMP} ###TODO service $(basename ${PWD}):")
+
 bashio::log.info 'Starting Tailscale...'
 
 # Remove stale directories/files due to --statedir=/data/state changed in v0.9.0.1
@@ -80,6 +85,11 @@ if bashio::config.true "always_use_derp"; then
   export TS_DEBUG_ALWAYS_USE_DERP=true
   bashio::log.notice "You have enabled always_use_derp, all traffic will be routed via DERP servers"
 fi
+
+exec 1>&4
+exec 4>&-
+exec 2>&5
+exec 5>&-
 
 # Run Tailscale
 # If exists, resolv.dnsmasq.conf pointing to the dummy dnsmasq will be mounted in place of the real resolv.conf only for tailscaled

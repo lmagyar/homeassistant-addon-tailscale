@@ -9,6 +9,9 @@ export LOG_FD
 readonly TAILSCALE_INTERFACE="tailscale0"
 readonly CLAMPING_IPTABLES_OPTIONS="-p tcp -m tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu"
 
+# Add timestamp to plain stdout and stderr messages
+exec &> >(ts "${__BASHIO_LOG_TIMESTAMP} service $(basename ${PWD}):")
+
 # In case of non userspace networking, clamp the MSS to the MTU for tailscale's interface
 # If user later enables subnet routing for site-to-site networking, this config is already there
 # Source: https://tailscale.com/kb/1214/site-to-site/

@@ -8,6 +8,9 @@ export LOG_FD
 
 declare from_address_ipv4 from_address_ipv6
 
+# Add timestamp to plain stdout and stderr messages
+exec &> >(ts "${__BASHIO_LOG_TIMESTAMP} service $(basename ${PWD}):")
+
 # In case of non userspace networking, remove the forwarding from tailnet to host
 function remove_forwarding() {
   local cmd="${1}"

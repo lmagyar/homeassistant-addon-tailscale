@@ -7,6 +7,9 @@ export LOG_FD
 # ==============================================================================
 declare -a options
 
+# Add timestamp to plain stdout and stderr messages
+exec &> >(ts "${__BASHIO_LOG_TIMESTAMP} service $(basename ${PWD}):")
+
 bashio::log.info 'Starting Tailscale web...'
 
 # Get random port

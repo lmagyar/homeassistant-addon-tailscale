@@ -25,6 +25,9 @@ declare message
 declare -a messages=()
 declare attributes
 
+# Add timestamp to plain stdout and stderr messages
+exec &> >(ts "${__BASHIO_LOG_TIMESTAMP} $(basename $0 .sh):" > /proc/1/fd/1)
+
 # This is to execute potentially failing supervisor api functions within conditions,
 # where set -e is not propagated inside the function and bashio relies on set -e for api error handling
 function try {
