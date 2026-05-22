@@ -12,7 +12,7 @@ ARG HA_CLI_VERSION="5.1.0"
 RUN \
     apk add --no-cache \
         bash-completion=2.17.0-r1 \
-        bind-tools=9.20.22-r0 \
+        bind-tools=9.20.23-r0 \
         dnsmasq=2.91-r1 \
         ethtool=6.15-r0 \
         ipcalc=1.0.3-r1 \
