@@ -14,7 +14,7 @@ RUN \
         bash-completion=2.17.0-r1 \
         bind-tools=9.20.23-r0 \
         dnsmasq=2.92_p2-r0 \
-        ethtool=6.15-r0 \
+        ethtool=7.0-r0 \
         ipcalc=1.0.3-r1 \
         iproute2=6.17.0-r0 \
         iptables=1.8.13-r0 \
