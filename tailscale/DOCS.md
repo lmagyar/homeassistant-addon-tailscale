@@ -66,7 +66,6 @@ log_level: info
 login_server: "https://controlplane.tailscale.com"
 share_homeassistant: disabled
 share_on_port: 443
-share_service_name: "svc:homeassistant"
 snat_subnet_routes: true
 stateful_filtering: false
 taildrive:
@@ -97,12 +96,6 @@ admin console are applied.
 For more information, see the "DNS" section of this documentation.
 
 This option is enabled by default.
-
-**Note:** If you disable this option, there will be DNS-related warnings in
-Tailscale's log messages, repeating hourly: "no upstream resolvers set,
-returning SERVFAIL", and Tailscale's health also will warn about "Tailscale
-can't reach the configured DNS servers". It's true, this is not a problem,
-Tailscale's DNS will not use any upstream server.
 
 ### Option: `accept_routes`
 
@@ -333,20 +326,6 @@ Only ports 443, 8443, and 10000 are allowed by Tailscale.
 
 Port 443 is used by default.
 
-### Option: `share_service_name`
-
-This option lets you specify the service name the Tailscale Serve feature will
-use to present your Home Assistant instance on the tailnet. It needs to start
-with `svc:`.
-
-**Note:** The Tailscale Funnel feature will ignore this option.
-
-More information: [Services][tailscale_info_services]
-
-This option is unused by default. To make it visible on the configuration
-editor, click "Show unused optional configuration options" at the bottom of the
-page.
-
 ### Option: `snat_subnet_routes`
 
 This option allows subnet devices to see the traffic originating from the subnet
@@ -536,7 +515,7 @@ SOFTWARE.
 [app-badge]: https://my.home-assistant.io/badges/supervisor_addon.svg
 [app]: https://my.home-assistant.io/redirect/supervisor_addon/?addon=a0d7b954_tailscale&repository_url=https%3A%2F%2Fgithub.com%2Fhassio-addons%2Frepository
 [contributors]: https://github.com/hassio-addons/app-tailscale/graphs/contributors
-[discord-ha]: https://discord.gg/c5DvZ4e
+[discord-ha]: https://www.home-assistant.io/join-chat
 [discord]: https://discord.me/hassioaddons
 [forum]: https://community.home-assistant.io/?u=frenck
 [frenck]: https://github.com/frenck
@@ -548,22 +527,21 @@ SOFTWARE.
 [semver]: https://semver.org/spec/v2.0.0.html
 [tailscale_acls]: https://login.tailscale.com/admin/acls
 [tailscale_dns]: https://login.tailscale.com/admin/dns
-[tailscale_info_dns]: https://tailscale.com/kb/1054/dns
-[tailscale_info_exit_nodes]: https://tailscale.com/kb/1103/exit-nodes
-[tailscale_info_app_connectors]: https://tailscale.com/kb/1281/app-connectors
-[tailscale_info_funnel]: https://tailscale.com/kb/1223/funnel
-[tailscale_info_funnel_policy_requirement]: https://tailscale.com/kb/1223/funnel#requirements-and-limitations
-[tailscale_info_https]: https://tailscale.com/kb/1153/enabling-https
-[tailscale_info_key_expiry]: https://tailscale.com/kb/1028/key-expiry
-[tailscale_info_magicdns]: https://tailscale.com/kb/1081/magicdns
-[tailscale_info_pi_hole]: https://tailscale.com/kb/1114/pi-hole
-[tailscale_info_quad100]: https://tailscale.com/kb/1381/what-is-quad100
-[tailscale_info_serve]: https://tailscale.com/kb/1312/serve
-[tailscale_info_site_to_site]: https://tailscale.com/kb/1214/site-to-site
-[tailscale_info_subnets]: https://tailscale.com/kb/1019/subnets
-[tailscale_info_tags]: https://tailscale.com/kb/1068/tags
-[tailscale_info_taildrive]: https://tailscale.com/kb/1369/taildrive
-[tailscale_info_taildrop]: https://tailscale.com/kb/1106/taildrop
-[tailscale_info_userspace_networking]: https://tailscale.com/kb/1112/userspace-networking
-[tailscale_info_services]: https://tailscale.com/docs/features/tailscale-services
+[tailscale_info_app_connectors]: https://tailscale.com/docs/features/app-connectors
+[tailscale_info_dns]: https://tailscale.com/docs/reference/dns-in-tailscale
+[tailscale_info_exit_nodes]: https://tailscale.com/docs/features/exit-nodes
+[tailscale_info_funnel]: https://tailscale.com/docs/features/tailscale-funnel
+[tailscale_info_funnel_policy_requirement]: https://tailscale.com/docs/features/tailscale-funnel#requirements-and-limitations
+[tailscale_info_https]: https://tailscale.com/docs/how-to/set-up-https-certificates
+[tailscale_info_key_expiry]: https://tailscale.com/docs/features/access-control/key-expiry
+[tailscale_info_magicdns]: https://tailscale.com/docs/features/magicdns
+[tailscale_info_pi_hole]: https://tailscale.com/docs/solutions/block-ads-all-devices-anywhere-using-raspberry-pi
+[tailscale_info_quad100]: https://tailscale.com/docs/reference/quad100
+[tailscale_info_serve]: https://tailscale.com/docs/features/tailscale-serve
+[tailscale_info_site_to_site]: https://tailscale.com/docs/features/site-to-site
+[tailscale_info_subnets]: https://tailscale.com/docs/features/subnet-routers
+[tailscale_info_tags]: https://tailscale.com/docs/features/tags
+[tailscale_info_taildrive]: https://tailscale.com/docs/features/taildrive
+[tailscale_info_taildrop]: https://tailscale.com/docs/features/taildrop
+[tailscale_info_userspace_networking]: https://tailscale.com/docs/concepts/userspace-networking
 [tailscale_machines]: https://login.tailscale.com/admin/machines

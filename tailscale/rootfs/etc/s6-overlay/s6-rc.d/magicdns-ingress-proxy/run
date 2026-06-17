@@ -84,6 +84,7 @@ magicdns-ingress-proxy-forwarding remove drop
 
 # We need to delay the starting of the dependent services until iptables are configured
 echo "" >&3
+exec 3>&-
 
 # This DNS replies NXDOMAIN for the black_list, otherwise forwards everything to MagicDNS
 exec dnsmasq "${options[@]}"
