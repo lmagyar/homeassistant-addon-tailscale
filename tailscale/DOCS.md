@@ -291,7 +291,7 @@ More information: [Enabling HTTPS][tailscale_info_https],
 1. Optionally, if you want to use Tailscale Funnel, navigate to the [Access
    controls page][tailscale_acls] of the admin console:
    - Add the required `funnel` node attribute to the tailnet policy file. See
-     [Tailnet policy file requirement][tailscale_info_funnel_policy_requirement]
+     [Funnel node attribute][tailscale_info_funnel_node_attribute]
      for more information.
 
 1. Restart the app.
@@ -538,7 +538,7 @@ SOFTWARE.
 [tailscale_info_dns]: https://tailscale.com/docs/reference/dns-in-tailscale
 [tailscale_info_exit_nodes]: https://tailscale.com/docs/features/exit-nodes
 [tailscale_info_funnel]: https://tailscale.com/docs/features/tailscale-funnel
-[tailscale_info_funnel_policy_requirement]: https://tailscale.com/docs/features/tailscale-funnel#requirements-and-limitations
+[tailscale_info_funnel_node_attribute]: https://tailscale.com/docs/features/tailscale-funnel#funnel-node-attribute
 [tailscale_info_https]: https://tailscale.com/docs/how-to/set-up-https-certificates
 [tailscale_info_key_expiry]: https://tailscale.com/docs/features/access-control/key-expiry
 [tailscale_info_magicdns]: https://tailscale.com/docs/features/magicdns
