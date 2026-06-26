@@ -137,6 +137,16 @@ This option is disabled by default.
 specify an exit node to use. See also the "Option: `exit_node`" section of this
 documentation.
 
+**Note:** After you enable this option, you also have to enable it on Tailscale's
+admin console.
+
+1. Navigate to the [Machines page][tailscale_machines] of the admin console, and
+   find your Home Assistant instance.
+
+1. Click on the **&hellip;** icon at the right side and select the "Edit route
+   settings..." option. The "Exit node" and "Subnet routes" functions can be
+   enabled here.
+
 ### Option: `advertise_routes`
 
 This option allows you to advertise routes to subnets (accessible on the network
@@ -201,16 +211,6 @@ section of this documentation.
 
 **Note:** The `exit-node-allow-lan-access` option is always enabled when an exit
 node is specified. This is required by the Home Assistant environment.
-
-**Note:** After you enable this option, you also have to enable it on Tailscale's
-admin console.
-
-1. Navigate to the [Machines page][tailscale_machines] of the admin console, and
-   find your Home Assistant instance.
-
-1. Click on the **&hellip;** icon at the right side and select the "Edit route
-   settings..." option. The "Exit node" and "Subnet routes" functions can be
-   enabled here.
 
 ### Option: `log_level`
 
