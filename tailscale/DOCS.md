@@ -206,8 +206,10 @@ node is specified. This is required by the Home Assistant environment.
 
 ### Option: `log_level`
 
-Optionally enable tailscaled debug messages in the app's log. Turn it on only
-in case you are troubleshooting, because Tailscale's daemon is quite chatty.
+Optionally enable all tailscaled debug messages in the app's log. Turn it on only
+in case you are troubleshooting, because Tailscale's daemon is quite chatty. If
+`log_level` is set to `info` or less severe level, tailscaled logs will be
+suppressed after 200 lines.
 
 The `log_level` option controls the level of log output by the app and can
 be changed to be more or less verbose, which might be useful when you are
