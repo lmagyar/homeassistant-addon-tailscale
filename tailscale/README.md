@@ -34,7 +34,7 @@ Zero config VPN for building secure networks.
 > - From the cli execute: `curl -s -o /tmp/migrate_from_community_app https://raw.githubusercontent.com/lmagyar/homeassistant-addon-tailscale/refs/heads/main/scripts/migrate_from_community_app && bashio /tmp/migrate_from_community_app`
 >
 > **Note:**
-> - This will install the forked version (if not alredy installed), backup and
+> - This will install the forked version (if not already installed), backup and
 >   stop the community version, copy and update the configuration, and (this is
 >   the big thing) will also copy the internal state of the app, then start
 >   the forked version.
