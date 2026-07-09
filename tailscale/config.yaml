@@ -25,10 +25,12 @@ privileged:
 devices:
   - /dev/net/tun
 map:
-  - type: addons
+  - type: apps
     read_only: false
-  - type: all_addon_configs
+    path: /addons
+  - type: all_app_configs
     read_only: false
+    path: /addon_configs
   - type: backup
     read_only: false
   - type: homeassistant_config
