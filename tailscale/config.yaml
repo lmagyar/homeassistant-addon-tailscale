@@ -106,4 +106,4 @@ schema:
     packages: [str]
     init_commands: [str]
   userspace_networking: bool
-image: ghcr.io/lmagyar/{arch}-addon-tailscale
+image: ghcr.io/lmagyar/addon-tailscale
