@@ -8,7 +8,7 @@ Zero config VPN for building secure networks.
 
 > ## Changes
 > - Release unreleased changes from community app
->   - Update tailscale/tailscale to v1.98.8
+>   - Update tailscale/tailscale to v1.98.9
 >   - In case of invalid networking DNS settings disable MagicDNS to enable the app to start up
 >   - Refactor MagicDNS support to properly handle appconnectors
 >   - Refactor slow activities from nm-dispatcher script into separate listener service
