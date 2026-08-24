@@ -7,6 +7,8 @@
 
 declare options
 declare proxy funnel proxy_and_funnel_port
+declare advertise_routes
+declare -a routes=()
 declare tags
 declare taildrive_addons taildrive_config
 declare share_service_name
@@ -86,6 +88,29 @@ share_service_name=$(bashio::jq "${options}" '.share_service_name | select(.!=nu
 if bashio::var.has_value "${share_service_name}"; then
     bashio::log.info 'Removing deprecated share_service_name option'
     bashio::app.option 'share_service_name'
+fi
+
+# Migrate advertise_routes option, replace "subnet_routes" with the actual values
+advertise_routes=$(bashio::jq "${options}" '.advertise_routes | select(.!=null)')
+if bashio::var.has_value "${advertise_routes}" && \
+    bashio::jq.has_value "${advertise_routes}" '.[] | select(.|test("^local_subnets$"))'
+then
+    bashio::log.info "Migrating advertise_routes option, replacing \"subnet_routes\" with the actual values"
+    # Read local subnets
+    readarray -t routes < <(subnet-routes local)
+    if (( 0 == ${#routes[@]} )); then
+        bashio::log.warning "There are no local subnets to add in place of \"subnet_routes\"!"
+    fi
+    # Add user defined other subnets
+    readarray -t -O "${#routes[@]}" routes < <(bashio::jq "${advertise_routes}" '.[] | select(.|test("^local_subnets$")|not)')
+    # Save it
+    advertise_routes=$(bashio::var.json_array "${routes[@]}")
+    bashio::app.option 'advertise_routes' "^${advertise_routes}"
+    # Reread to sanitize values, remove duplicates
+    readarray -t routes < <(subnet-routes advertised)
+    # Save it again
+    advertise_routes=$(bashio::var.json_array "${routes[@]}")
+    bashio::app.option 'advertise_routes' "^${advertise_routes}"
 fi
 
 # Check DNS configuration
