@@ -226,11 +226,11 @@ node is specified. This is required by the Home Assistant environment.
 
 ### Option: `log_suppression`
 
-This option allows you to suppress Tailscale's daemon debug log messages in the
-app's log after 200 lines.
+This option allows you to suppress Tailscale's log messages in the app's log
+after 200 lines.
 
-Turn it off only in case you are troubleshooting, because Tailscale's daemon is
-quite chatty.
+Turn it off only in case you are troubleshooting, because Tailscale is quite
+chatty.
 
 This option is enabled by default.
 
