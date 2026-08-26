@@ -42,7 +42,10 @@ if bashio::config.true 'log_suppression'; then
     "Tailscale's log messages will be suppressed after 200 lines, set app's configuration option \"log_suppression\" to \"false\" to see further logs"
   awk_program='
     NR<=200 {print}
-    NR==201 {system("bash -c \". /usr/lib/bashio/bashio.sh; bashio::log.notice \\\"Further Tailscale log messages are suppressed, set apps configuration option \\\\\\\"log_suppression\\\\\\\" to \\\\\\\"false\\\\\\\" to see further logs\\\" \" ")}'
+    NR==201 {system("bash -c \"
+      source /usr/lib/bashio/bashio.sh;
+      bashio::log.notice \\\"Further Tailscale log messages are suppressed, set apps configuration option \\\\\\\"log_suppression\\\\\\\" to \\\\\\\"false\\\\\\\" to see further logs\\\" \" ")}'
+  awk_program="${awk_program//$'\n'/}"
 fi
 
 # Run Tailscale
