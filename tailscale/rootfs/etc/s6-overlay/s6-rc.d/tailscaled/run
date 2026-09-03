@@ -56,7 +56,7 @@ if ! bashio::fs.file_exists "/etc/resolv.for-tailscaled.conf"; then
   if bashio::config.false 'log_suppression' ; then
     exec /opt/tailscaled "${options[@]}"
   else
-    /opt/tailscaled "${options[@]}" \
+    exec /opt/tailscaled "${options[@]}" \
       2> >(stdbuf -i0 -oL -eL awk -F $'\n' -e "${awk_program}")
   fi
 else
@@ -66,7 +66,7 @@ else
   if bashio::config.false 'log_suppression' ; then
     exec unshare -m bash -c "mount --bind /etc/resolv.for-tailscaled.conf /etc/resolv.conf; exec /opt/tailscaled $(printf "\"%s\" " "${options[@]}")"
   else
-    unshare -m bash -c "mount --bind /etc/resolv.for-tailscaled.conf /etc/resolv.conf; exec /opt/tailscaled $(printf "\"%s\" " "${options[@]}")" \
+    exec unshare -m bash -c "mount --bind /etc/resolv.for-tailscaled.conf /etc/resolv.conf; exec /opt/tailscaled $(printf "\"%s\" " "${options[@]}")" \
       2> >(stdbuf -i0 -oL -eL awk -F $'\n' -e "${awk_program}")
   fi
 fi
