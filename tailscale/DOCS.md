@@ -53,6 +53,7 @@ https://console.tailscale.com/
 **Note:** _This is just an example, not even the default, don't copy and paste
 it! Create your own!_
 
+<!-- prettier-ignore -->
 ```yaml
 accept_dns: true
 accept_routes: false
