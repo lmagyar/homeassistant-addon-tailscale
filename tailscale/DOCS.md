@@ -7,7 +7,7 @@
 > ## Changes
 > - Use custom built TS with merged PR https://github.com/tailscale/tailscale/pull/20618
 > - Release pending changes from community app
->   - Migrate advertise_routes option, replace "subnet_routes" with the actual values
+>   - Migrate advertise_routes option, replace "local_subnets" with the actual values
 >   - Migrate log_level to log_suppression
 > - Release unmerged changes from community app
 >   - Make Tailscale SSH configurable

@@ -3,7 +3,7 @@
 ## 0.29.0.2 (forked)
 
 - Release pending changes from community app
-  - Migrate advertise_routes option, replace "subnet_routes" with the actual values
+  - Migrate advertise_routes option, replace "local_subnets" with the actual values
   - Migrate log_level to log_suppression
 
 ## 0.29.0.1 (forked)
