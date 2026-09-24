@@ -2,7 +2,7 @@
 
 ## 0.30.1.0 (forked)
 
-- Release pending changes from community app
+- Merge released changes from community app
   - Accept https+insecure as target for services option
 
 ## 0.29.0.3 (forked)
