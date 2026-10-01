@@ -5,6 +5,8 @@
 > This is a **fork** of the [community app][community_app]!
 
 > ## Changes
+> - Merge unreleased changes from community app
+>   - Update App base image to v21.0.7
 > - Release unmerged changes from community app
 >   - Make Tailscale SSH configurable
 >   - Make ha cli available in Tailscale SSH sessions (within bash shell with banner and completion)
