@@ -2,8 +2,9 @@
 
 ## vNext (forked)
 
-- Merge unreleased changes from community app
-  - Update App base image to v21.0.7
+- Merge released changes from community app
+  - Update tailscale/tailscale to v1.104.1
+  - Update App base image to v21.0.8
 
 ## 0.30.1.0 (forked)
 
