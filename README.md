@@ -7,7 +7,7 @@ Zero config VPN for building secure networks.
 
 > This is a **fork** of the [community app][community_app]!
 
-> ## Changes
+> ## Changes compared to the community app
 > - Release unmerged changes from community app
 >   - Make Tailscale SSH configurable
 >   - Make ha cli available in Tailscale SSH sessions (within bash shell with banner and completion)

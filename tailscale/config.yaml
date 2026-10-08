@@ -1,6 +1,6 @@
 ---
 name: Tailscale with features
-version: 0.30.1.0
+version: 0.30.2.0
 slug: tailscale
 description: Zero config VPN for building secure networks
 url: https://github.com/lmagyar/homeassistant-addon-tailscale
