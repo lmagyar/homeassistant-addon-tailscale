@@ -1,5 +1,11 @@
 # Changelog
 
+## vNext (forked)
+
+- Merge released changes from community app
+  - Update tailscale/tailscale to v1.104.4
+  - Update App base image to v21.0.10
+
 ## 0.30.3.0 (forked)
 
 - Merge released changes from community app
