@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.30.5.0 (forked)
+
+- Merge released changes from community app
+  - Update tailscale/tailscale to v1.104.4
+  - Let Supervisor wait 2 minutes for the app to stop before it kills the container
+  - Update App base image to v21.0.10
+
 ## 0.30.3.0 (forked)
 
 - Merge released changes from community app
