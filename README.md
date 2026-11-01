@@ -8,6 +8,9 @@ Zero config VPN for building secure networks.
 > This is a **fork** of the [community app][community_app]!
 
 > ## Changes compared to the community app
+> - Release unreleased changes from community app
+>   - Remove hardcoded service names, use argument value from s6
+>   - Increase s6 finish script timeout to 30s from 5s
 > - Release unmerged changes from community app
 >   - Make Tailscale SSH configurable
 >   - Make ha cli available in Tailscale SSH sessions (within bash shell with banner and completion)
