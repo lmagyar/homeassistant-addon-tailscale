@@ -7,7 +7,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Setup base
 ARG BUILD_ARCH=amd64
-ARG TAILSCALE_VERSION="v1.104.4"
+ARG TAILSCALE_VERSION="v1.104.5"
 ARG HA_CLI_VERSION="5.6.0"
 RUN \
     apk add --no-cache \
@@ -51,7 +51,7 @@ RUN \
 # Copy root filesystem
 COPY rootfs /
 
-HEALTHCHECK \
+HEALTHCHECK --start-period=30s --start-interval=5s --interval=30s \
     CMD healthcheck
 
 # Environment variables
