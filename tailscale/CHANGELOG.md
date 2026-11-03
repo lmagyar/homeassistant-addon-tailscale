@@ -2,9 +2,7 @@
 
 ## vNext (forked)
 
-- Release unreleased changes from community app
-  - Remove hardcoded service names, use argument value from s6
-  - Increase s6 finish script timeout to 30s from 5s
+- Release pending changes from community app
   - Use a 5s startup healthcheck interval
 
 ## 0.30.5.0 (forked)
