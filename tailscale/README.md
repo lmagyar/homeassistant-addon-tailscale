@@ -10,6 +10,7 @@ Zero config VPN for building secure networks.
 > - Release unreleased changes from community app
 >   - Remove hardcoded service names, use argument value from s6
 >   - Increase s6 finish script timeout to 30s from 5s
+>   - Use a 5s startup healthcheck interval
 > - Release unmerged changes from community app
 >   - Make Tailscale SSH configurable
 >   - Make ha cli available in Tailscale SSH sessions (within bash shell with banner and completion)
