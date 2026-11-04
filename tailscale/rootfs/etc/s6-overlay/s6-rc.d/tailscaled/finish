@@ -32,12 +32,12 @@ function remove_dscp() {
   done
 }
 
-remove_dscp "iptables" "IPv4"
-remove_dscp "ip6tables" "IPv6"
-
 bashio::log.info \
   "Service ${service} exited with code ${exit_code_service}" \
   "(by signal ${exit_code_signal})"
+
+remove_dscp "iptables" "IPv4"
+remove_dscp "ip6tables" "IPv6"
 
 if [[ "${exit_code_service}" -eq 256 ]]; then
   if [[ "${exit_code_signal}" -ne 15 && "${exit_code_container}" -eq 0 ]]; then
