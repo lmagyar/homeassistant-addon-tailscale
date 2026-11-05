@@ -6,6 +6,7 @@
 
 > ## Changes compared to the community app
 > - Release pending changes from community app
+>   - Handle IPv6-only tailnets
 >   - Use a 5s startup healthcheck interval
 > - Release unmerged changes from community app
 >   - Make Tailscale SSH configurable

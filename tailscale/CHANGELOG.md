@@ -1,5 +1,12 @@
 # Changelog
 
+## vNext (forked)
+
+- Merge released changes from community app
+  - Refactor logging in finish scripts
+- Release pending changes from community app
+  - Handle IPv6-only tailnets
+
 ## 0.30.6.0 (forked)
 
 - Merge released changes from community app
