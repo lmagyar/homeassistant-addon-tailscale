@@ -3,9 +3,13 @@
 ## vNext (forked)
 
 - Merge released changes from community app
+  - Update tailscale/tailscale to v1.104.6
+  - Update App base image to v21.0.11
   - Refactor logging in finish scripts
+  - Fix line ending in finish script timeout config files
 - Release pending changes from community app
   - Handle IPv6-only tailnets
+  - Properly handle S6 service readiness notifications
 
 ## 0.30.6.0 (forked)
 
