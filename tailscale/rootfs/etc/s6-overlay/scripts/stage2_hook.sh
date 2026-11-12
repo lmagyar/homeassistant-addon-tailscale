@@ -224,15 +224,15 @@ fi
 #   |  magicdns-proxies-reconfigurator
 #   ˅  ˅
 #   magicdns-ingress-proxy
-#   |  ˅
-#   |  magicdns-proxies-configurator
-#   |  ˅
-#   |  post-tailscaled
-#   |  ˅
-#   |  tailscaled
-#   |  ˅
-#   |  magicdns-egress-proxy
-#   ˅  ˅
+#   ˅
+#   magicdns-proxies-configurator
+#   ˅
+#   post-tailscaled
+#   ˅
+#   tailscaled
+#   ˅
+#   magicdns-egress-proxy
+#   ˅
 #   init-magicdns-proxies
 #
 if bashio::config.true "userspace_networking"; then
