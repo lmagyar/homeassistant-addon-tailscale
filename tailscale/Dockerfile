@@ -13,6 +13,7 @@ RUN \
     apk add --no-cache \
         bash-completion=2.17.0-r1 \
         bind-tools=9.20.30-r0 \
+        busctl=255.24-r0 \
         dnsmasq=2.92_p2-r0 \
         ethtool=7.0-r0 \
         ipcalc=1.0.3-r1 \
@@ -20,14 +21,10 @@ RUN \
         iptables=1.8.13-r0 \
         nginx=1.30.6-r0 \
         coreutils=9.11-r0 \
-        networkmanager=1.52.2-r0 \
         inotify-tools=4.23.9.0-r0 \
     \
     && ln -sf /sbin/xtables-nft-multi /sbin/ip6tables \
     && ln -sf /sbin/xtables-nft-multi /sbin/iptables \
-    \
-    && rm -f -r \
-        /usr/lib/NetworkManager/dispatcher.d \
     \
     && if [ "${BUILD_ARCH}" = "aarch64" ]; then ARCH="arm64"; fi \
     && if [ "${BUILD_ARCH}" = "amd64" ]; then ARCH="amd64"; fi \
