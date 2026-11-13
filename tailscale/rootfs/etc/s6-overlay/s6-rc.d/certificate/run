@@ -41,7 +41,10 @@ fi
 #   printed on stderr triggers an initial update of the files,
 #   and it updates the files on the first usage of the service also
 inotifywait --monitor "${CERTS_FOLDER}" --include='^.*?\.(crt|key)$' --event='close_write,moved_to' --format '%f' \
-  2> >(tee /dev/fd/2 | awk -F $'\n' -e 'NR==2 && index($0,"Watches established.")==1 { print "[WATCHES_ESTABLISHED]" }') \
+  2> >(
+    awk -F $'\n' -e '{print > "/dev/fd/2"} NR==2 && index($0,"Watches established.")==1 { print "[WATCHES_ESTABLISHED]" } NR==2 { exit 0 }'
+    exec 1>&2
+    exec cat) \
 | while IFS= read -r changed
 do
   # Currently if the machine name is changed, tailscale changes the json status,
