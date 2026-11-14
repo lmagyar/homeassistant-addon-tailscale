@@ -33,7 +33,7 @@ do
         bashio::exit.nok "Failed to protect subnet routes. Halting app to prevent network loss."
       fi
       ;;
-    dhcp4-change|dhcp6-change)
+    dhcp4-change|dhcp6-change|reapply)
       # Do anything only when the addresses are really changed
       subnet_routes_to_unprotect="$(unprotect-subnet-routes test)"
       subnet_routes_to_protect="$(protect-subnet-routes test)"
