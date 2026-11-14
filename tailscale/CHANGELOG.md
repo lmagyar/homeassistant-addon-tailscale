@@ -10,6 +10,7 @@
 - Release pending changes from community app
   - Handle IPv6-only tailnets
   - Properly handle S6 service readiness notifications
+  - Recalculate subnet protection on the reapply nm-dispatcher action also
 - Fork specific changes
   - Update home-assistant/cli to v5.7.0
 
