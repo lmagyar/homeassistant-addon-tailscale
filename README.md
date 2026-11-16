@@ -12,6 +12,7 @@ Zero config VPN for building secure networks.
 >   - Handle IPv6-only tailnets
 >   - Properly handle S6 service readiness notifications
 >   - Recalculate subnet protection on the reapply nm-dispatcher action also
+>   - Clean up S6 service dependency graph
 >   - Use a 5s startup healthcheck interval
 > - Release unmerged changes from community app
 >   - Make Tailscale SSH configurable
