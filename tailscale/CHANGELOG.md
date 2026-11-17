@@ -11,6 +11,7 @@
   - Handle IPv6-only tailnets
   - Properly handle S6 service readiness notifications
   - Recalculate subnet protection on the reapply nm-dispatcher action also
+  - Recalculate forward to host on nm-dispatcher actions
   - Clean up S6 service dependency graph
 - Fork specific changes
   - Update home-assistant/cli to v5.7.0
