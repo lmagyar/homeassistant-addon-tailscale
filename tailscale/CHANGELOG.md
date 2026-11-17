@@ -14,7 +14,7 @@
   - Recalculate forward to host on nm-dispatcher actions
   - Clean up S6 service dependency graph
 - Fork specific changes
-  - Update home-assistant/cli to v5.7.0
+  - Update home-assistant/cli to v6
 
 ## 0.30.6.0 (forked)
 
