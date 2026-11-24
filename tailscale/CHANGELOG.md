@@ -4,7 +4,7 @@
 
 - Merge released changes from community app
   - Update tailscale/tailscale to v1.104.7
-  - Update App base image to v21.0.11
+  - Update App base image to v21.0.12
   - Refactor logging in finish scripts
   - Fix line ending in finish script timeout config files
 - Release pending changes from community app
