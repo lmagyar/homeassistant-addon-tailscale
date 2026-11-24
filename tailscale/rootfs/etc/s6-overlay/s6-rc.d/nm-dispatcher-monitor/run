@@ -92,10 +92,9 @@ do
 
       # Notify subscribed services
       for fifo in "${NM_DISPATCHER_MONITOR_FIFODIR:?}/"*; do
-        if [[ -p "$fifo" ]] && ! echo "${nm_dispatcher_action}" > "${fifo}"; then
-          # To abort the pipeline from a subshell, we need to abort the leftmost command also
-          kill $(pgrep -f "^busctl.*?app.tailscale.nm_dispatcher.readiness'$") || true
-          bashio::exit.nok "Failed to send nm-dispatcher action '${nm_dispatcher_action}' to listener '${fifo}'. Halting app to prevent network loss."
+        if [[ -p "$fifo" ]] && ! echo "${nm_dispatcher_action}" | dd conv=nocreat of="${fifo}"; then
+          # It's only a warning, the main cause can be a finish script removing the fifo after iterating the folder here
+          bashio::log.warning "Failed to send nm-dispatcher action '${nm_dispatcher_action}' to listener '${fifo}'."
         fi
       done
       ;;
