@@ -73,6 +73,7 @@ options:
     init_commands: []
   tweaks:
     always_use_derp: false
+    force_noise_443: false
   userspace_networking: false
 schema:
   accept_dns: bool
@@ -115,5 +116,6 @@ schema:
     init_commands: [str]
   tweaks:
     always_use_derp: bool
+    force_noise_443: bool
   userspace_networking: bool
 image: ghcr.io/lmagyar/{arch}-addon-tailscale

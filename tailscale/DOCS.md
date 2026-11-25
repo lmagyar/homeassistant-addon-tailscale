@@ -134,6 +134,7 @@ tailscale_ssh:
     - mkdir -p /data/npm/bin
 tweaks:
   always_use_derp: false
+  force_noise_443: false
 userspace_networking: false
 ```
 
@@ -622,6 +623,22 @@ you experience that connections to your Home Assistant device regularly freeze
 unresponsive), and you have to reload the web page or force stop the Home
 Assistant app to make them work again. The root cause can be that your ISP
 erroneously drops UDP packets on certain conditions.
+
+### Option: `tweaks.force_noise_443`
+
+When enabled forces the controlclient noise dialer to always use port 443 HTTPS
+connections to the controlplane and do not try the port 80 HTTP fast path.
+
+This option is disabled by default.
+
+Try to enable it only, when you experience temporary connection dropouts,
+usually within few minutes after app start that exists for approx. 15 minutes.
+During the dropout you can see repeating `map response long-poll timed out!` log
+entries and the device is shown as disconnected on the [Machines
+page][tailscale_machines] of the admin console. After the dropup you see
+`forcing port 443 dial due to recent noise dial` log entry, the app reconnects
+and remains connected. The root cause is unknown. In this case enabling this
+option can eliminate the temporary dropout.
 
 ### Option: `userspace_networking`
 
