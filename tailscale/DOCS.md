@@ -11,6 +11,7 @@
 >   - Recalculate subnet protection on the reapply nm-dispatcher action also
 >   - Recalculate forward to host on nm-dispatcher actions
 >   - Clean up S6 service dependency graph
+>   - Rename always_use_derp option to tweaks.always_use_derp - ***config is automatically updated***
 >   - Use a 5s startup healthcheck interval
 > - Release unmerged changes from community app
 >   - Make Tailscale SSH configurable
