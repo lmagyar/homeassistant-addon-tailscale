@@ -4,9 +4,10 @@
 
 - Merge released changes from community app
   - Update tailscale/tailscale to v1.104.7
-  - Update App base image to v21.0.12
   - Refactor logging in finish scripts
   - Fix line ending in finish script timeout config files
+- Release unreleased changes from community app
+  - Update App base image to v21.0.12
 - Release pending changes from community app
   - Handle IPv6-only tailnets
   - Properly handle S6 service readiness notifications
