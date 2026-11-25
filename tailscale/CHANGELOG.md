@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.30.7.1 (forked)
+
+- Merge released changes from community app
+  - Update tailscale/tailscale to v1.104.7
+  - Refactor logging in finish scripts
+  - Fix line ending in finish script timeout config files
+- Release unreleased changes from community app
+  - Update App base image to v21.0.12
+- Release pending changes from community app
+  - Handle IPv6-only tailnets
+  - Properly handle S6 service readiness notifications
+  - Recalculate subnet protection on the reapply nm-dispatcher action also
+  - Recalculate forward to host on nm-dispatcher actions
+  - Clean up S6 service dependency graph
+  - Rename always_use_derp option to tweaks.always_use_derp - ***config is automatically updated***
+  - Make force noise 443 option configurable
+- Fork specific changes
+  - Update home-assistant/cli to v6
+
 ## 0.30.6.0 (forked)
 
 - Merge released changes from community app

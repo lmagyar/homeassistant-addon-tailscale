@@ -1,6 +1,6 @@
 ---
 name: Tailscale with features
-version: 0.30.6.0
+version: 0.30.7.1
 slug: tailscale
 description: Zero config VPN for building secure networks
 url: https://github.com/lmagyar/homeassistant-addon-tailscale
@@ -50,7 +50,6 @@ options:
   advertise_exit_node: false
   advertise_routes: []
   advertise_tags: []
-  always_use_derp: false
   log_suppression: true
   log_upload: false
   login_server: "https://controlplane.tailscale.com"
@@ -72,6 +71,9 @@ options:
     enabled: false
     packages: []
     init_commands: []
+  tweaks:
+    always_use_derp: false
+    force_noise_443: false
   userspace_networking: false
 schema:
   accept_dns: bool
@@ -82,7 +84,6 @@ schema:
     - "match(^(?:local_subnets|(?:(?:25[0-5]|(?:2[0-4]|1\\d|[1-9]?)\\d)\\.){3}(?:25[0-5]|(?:2[0-4]|1\\d|[1-9]?)\\d)\\/(?:3[0-2]|[12]?\\d)|[a-fA-F\\d.:]+:[a-fA-F\\d.:]+\\/(?:12[0-8]|(?:1[01]|[1-9]?)\\d))$)"
   advertise_tags:
     - "match(^tag:[a-zA-Z][a-zA-Z0-9-]*$)"
-  always_use_derp: bool
   dscp: int(0,63)?
   exit_node: "match(^(?:(?:(?:25[0-5]|(?:2[0-4]|1\\d|[1-9]?)\\d)\\.){3}(?:25[0-5]|(?:2[0-4]|1\\d|[1-9]?)\\d)|[a-fA-F\\d.:]+:[a-fA-F\\d.:]+|[a-fA-F\\d]{8}(?:-[a-fA-F\\d]{4}){3}-[a-fA-F\\d]{12}|auto:any)$)?"
   lets_encrypt_certfile: str?
@@ -113,5 +114,8 @@ schema:
     enabled: bool
     packages: [str]
     init_commands: [str]
+  tweaks:
+    always_use_derp: bool
+    force_noise_443: bool
   userspace_networking: bool
 image: ghcr.io/lmagyar/{arch}-addon-tailscale

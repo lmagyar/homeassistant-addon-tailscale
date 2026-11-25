@@ -37,12 +37,6 @@ configuration:
     description: >-
       This option allows you to specify specific ACL tags for this
       Tailscale instance. They need to start with `tag:`.
-  always_use_derp:
-    name: Always use DERP connection
-    description: >-
-      When enabled forces all peer communication over DERP by disabling the use of
-      UDP.
-      This option is disabled by default.
   dscp:
     name: DSCP
     description: >-
@@ -192,6 +186,23 @@ configuration:
         description: >-
           Custom commands to run on app startup to preconfigure your Tailscale SSH shell.
           Only applies when SSH is enabled.
+  tweaks:
+    name: Tweaks
+    description: >-
+      Tweakable settings to eliminate specific issues.
+    fields:
+      always_use_derp:
+        name: Always use DERP connection
+        description: >-
+          When enabled forces all peer communication over DERP by disabling the use of
+          UDP.
+          This option is disabled by default.
+      force_noise_443:
+        name: Force noise control traffic over port 443
+        description: >-
+          When enabled forces the controlclient noise dialer to always use port 443 HTTPS
+          connections to the controlplane and do not try the port 80 HTTP fast path.
+          This option is disabled by default.
   userspace_networking:
     name: Userspace networking mode
     description: >-

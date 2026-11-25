@@ -18,6 +18,7 @@ declare taildrive_addons taildrive_config
 declare ssh
 declare share_service_name
 declare log_level log_suppression
+declare always_use_derp
 
 readonly MAGIC_DNS_IPV4="100.100.100.100"
 readonly MAGIC_DNS_IPV6="fd7a:115c:a1e0::53"
@@ -178,6 +179,18 @@ if bashio::var.has_value "${log_level}"; then
     bashio::app.option 'log_level'
 fi
 
+# Migrate always_use_derp to tweaks.always_use_derp
+always_use_derp=$(bashio::jq "${options}" '.always_use_derp | select(.!=null)')
+if bashio::var.has_value "${always_use_derp}"; then
+    bashio::try bashio::app.option 'tweaks.always_use_derp' "^${always_use_derp}"
+    if bashio::try.failed; then
+        bashio::log.warning "The always_use_derp option migration failed, always_use_derp option '${always_use_derp}' is dropped, using default disabled."
+    else
+        bashio::log.info "Successfully migrated always_use_derp option to tweaks.always_use_derp"
+    fi
+    bashio::app.option 'always_use_derp'
+fi
+
 # Check DNS configuration
 # This is identical with the check in init-magicdns-proxies/run
 # This check is to modify the configuration to prevent the check in init-magicdns-proxies/run from stopping the app startup
@@ -224,15 +237,15 @@ fi
 #   |  magicdns-proxies-reconfigurator
 #   ˅  ˅
 #   magicdns-ingress-proxy
-#   |  ˅
-#   |  magicdns-proxies-configurator
-#   |  ˅
-#   |  post-tailscaled
-#   |  ˅
-#   |  tailscaled
-#   |  ˅
-#   |  magicdns-egress-proxy
-#   ˅  ˅
+#   ˅
+#   magicdns-proxies-configurator
+#   ˅
+#   post-tailscaled
+#   ˅
+#   tailscaled
+#   ˅
+#   magicdns-egress-proxy
+#   ˅
 #   init-magicdns-proxies
 #
 if bashio::config.true "userspace_networking"; then
@@ -250,11 +263,6 @@ if bashio::config.true "userspace_networking" || \
     bashio::config.false "accept_routes";
 then
     rm /etc/s6-overlay/s6-rc.d/post-tailscaled/dependencies.d/protect-subnets
-fi
-
-# If local subnets are not configured in advertise_routes, do not wait for the local network to be ready to collect subnet information
-if ! bashio::config "advertise_routes" | grep -Fxq "local_subnets"; then
-    rm /etc/s6-overlay/s6-rc.d/post-tailscaled/dependencies.d/local-network
 fi
 
 # Disable forwarding service when userspace-networking is enabled

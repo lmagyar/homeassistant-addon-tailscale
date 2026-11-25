@@ -71,9 +71,15 @@ else
 fi
 
 # If always_use_derp enabled, set TS_DEBUG_ALWAYS_USE_DERP=true
-if bashio::config.true "always_use_derp"; then
+if bashio::config.true "tweaks.always_use_derp"; then
   export TS_DEBUG_ALWAYS_USE_DERP=true
   bashio::log.notice "You have enabled always_use_derp, all traffic will be routed via DERP servers"
+fi
+
+# If force_noise_443 enabled, set TS_FORCE_NOISE_443=true
+if bashio::config.true "tweaks.force_noise_443"; then
+  export TS_FORCE_NOISE_443=true
+  bashio::log.notice "You have enabled force_noise_443, forcing Tailscale Noise control traffic over port 443"
 fi
 
 # Configure awk for log supression
@@ -94,19 +100,22 @@ fi
 if ! bashio::fs.file_exists "/etc/resolv.for-tailscaled.conf"; then
   # Running the regular way, no resolv.conf replacement
   if bashio::config.false 'log_suppression' ; then
-    exec s6-setuidgid 0:${tailscaled_gid} /opt/tailscaled "${options[@]}"
+    exec s6-notifyoncheck -d -s 500 -w 500 -n 0 \
+      s6-setuidgid 0:${tailscaled_gid} /opt/tailscaled "${options[@]}"
   else
-    exec s6-setuidgid 0:${tailscaled_gid} /opt/tailscaled "${options[@]}" \
-      2> >(stdbuf -i0 -oL -eL awk -F $'\n' -e "${awk_program}")
+    exec s6-notifyoncheck -d -s 500 -w 500 -n 0 \
+      s6-setuidgid 0:${tailscaled_gid} /opt/tailscaled "${options[@]}" \
+        2> >(awk -F $'\n' -e "${awk_program}")
   fi
 else
   # Using fake resolv.conf
   bashio::log.info "Using dnsmasq as upstream DNS server for tailscaled"
-  bashio::net.wait_for 53 "$(awk '{ print $2 }' < /etc/resolv.for-tailscaled.conf)"
   if bashio::config.false 'log_suppression' ; then
-    exec unshare -m bash -c "mount --bind /etc/resolv.for-tailscaled.conf /etc/resolv.conf; exec s6-setuidgid 0:${tailscaled_gid} /opt/tailscaled $(printf "\"%s\" " "${options[@]}")"
+    exec s6-notifyoncheck -d -s 500 -w 500 -n 0 \
+      unshare -m bash -c "mount --bind /etc/resolv.for-tailscaled.conf /etc/resolv.conf; exec s6-setuidgid 0:${tailscaled_gid} /opt/tailscaled $(printf "\"%s\" " "${options[@]}")"
   else
-    exec unshare -m bash -c "mount --bind /etc/resolv.for-tailscaled.conf /etc/resolv.conf; exec s6-setuidgid 0:${tailscaled_gid} /opt/tailscaled $(printf "\"%s\" " "${options[@]}")" \
-      2> >(stdbuf -i0 -oL -eL awk -F $'\n' -e "${awk_program}")
+    exec s6-notifyoncheck -d -s 500 -w 500 -n 0 \
+      unshare -m bash -c "mount --bind /etc/resolv.for-tailscaled.conf /etc/resolv.conf; exec s6-setuidgid 0:${tailscaled_gid} /opt/tailscaled $(printf "\"%s\" " "${options[@]}")" \
+        2> >(awk -F $'\n' -e "${awk_program}")
   fi
 fi
