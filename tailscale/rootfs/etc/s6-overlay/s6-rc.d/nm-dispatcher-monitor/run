@@ -7,22 +7,6 @@
 
 # Note: do not use S6 fifodir-s, they are for one-time, not for continuous event listeners
 
-# Fix race condition in bashio
-bashio::cache.flush_all() {
-    bashio::log.trace "${FUNCNAME[0]}"
-
-    if ! bashio::fs.directory_exists "${__BASHIO_CACHE_DIR}"; then
-        return "${__BASHIO_EXIT_OK}"
-    fi
-
-    if ! rm -f -r "${__BASHIO_CACHE_DIR:?}/"{*,.*}; then
-        bashio::exit.nok "Could not flush cache"
-        return "${__BASHIO_EXIT_NOK}"
-    fi
-
-    return "${__BASHIO_EXIT_OK}"
-}
-
 readonly NM_DISPATCHER_MONITOR_FIFODIR=/run/nm-dispatcher-monitor-fifodir
 
 readonly WAIT_DELAY=5   # 5s
