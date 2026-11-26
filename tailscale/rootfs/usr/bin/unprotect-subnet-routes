@@ -9,7 +9,7 @@ readonly PROTECTION_RULE_PRIORITY=5000
 declare -a routes=()
 declare route family
 
-if ! [[ "${1-}" =~ ^(|test)$ ]]; then
+if ! [[ "${1-}" =~ ^(test)?$ ]]; then
   echo "Usage: $(basename "$0") [test]" 1>&2
   exit 1
 fi

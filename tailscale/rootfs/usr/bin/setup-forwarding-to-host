@@ -77,7 +77,7 @@ function setup_forwarding() {
   fi
 }
 
-if ! [[ "${1-}" =~ ^(|test)$ ]]; then
+if ! [[ "${1-}" =~ ^(test)?$ ]]; then
   echo "Usage: $(basename "$0") [test]" 1>&2
   exit 1
 fi
