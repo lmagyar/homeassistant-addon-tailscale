@@ -2,6 +2,8 @@
 
 ## vNext (forked)
 
+- Release unreleased changes from community app
+  - Update App base image to v21.1.0
 - Release pending changes from community app
   - Show timestamps in app logs by default
 
