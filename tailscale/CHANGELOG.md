@@ -1,5 +1,10 @@
 # Changelog
 
+## vNext (forked)
+
+- Release pending changes from community app
+  - Show timestamps in app logs by default
+
 ## 0.30.7.1 (forked)
 
 - Merge released changes from community app
