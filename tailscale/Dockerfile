@@ -53,11 +53,8 @@ HEALTHCHECK --start-period=30s --start-interval=5s --interval=30s \
 
 # Environment variables
 ENV \
-    # S6 Overlay stage 2 hook
     S6_STAGE2_HOOK=/etc/s6-overlay/scripts/stage2_hook.sh \
-    # App log format
-    LOG_FORMAT="{TIMESTAMP} {LEVEL}: {MESSAGE}" \
-    LOG_TIMESTAMP="%Y/%m/%d %H:%M:%S"
+    LOG_FORMAT="{LEVEL}: {MESSAGE}"
 
 # Build arguments
 ARG BUILD_ARCH

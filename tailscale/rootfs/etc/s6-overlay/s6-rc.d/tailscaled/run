@@ -87,35 +87,28 @@ if bashio::config.true 'log_suppression'; then
   bashio::log.notice \
     "Tailscale's log messages will be suppressed after 200 lines, set the app's configuration option \"log_suppression\" to \"false\" to see further logs"
   awk_program='
-    NR<=200 {print}
+    NR<=200 {sub(/^[0-9]{4}\/[0-9]{2}\/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} /, ""); print}
     NR==201 {system("bash -c \"
       source /usr/lib/bashio/bashio.sh;
       bashio::log.notice \\\"Further Tailscale log messages are suppressed, set the app'"'"'s configuration option \\\\\\\"log_suppression\\\\\\\" to \\\\\\\"false\\\\\\\" to see further logs\\\" \" ")}'
-  awk_program="${awk_program//$'\n'/}"
+else
+  awk_program='
+    {sub(/^[0-9]{4}\/[0-9]{2}\/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} /, ""); print}'
 fi
+awk_program="${awk_program//$'\n'/}"
 
 # Run Tailscale
 # If exists, resolv.dnsmasq.conf pointing to the dummy dnsmasq will be mounted in place of the real resolv.conf only for tailscaled
 # This will prevent the DNS at 100.100.100.100 to call back to hassio_dns causing a loop
 if ! bashio::fs.file_exists "/etc/resolv.for-tailscaled.conf"; then
   # Running the regular way, no resolv.conf replacement
-  if bashio::config.false 'log_suppression' ; then
-    exec s6-notifyoncheck -d -s 500 -w 500 -n 0 \
-      s6-setuidgid 0:${tailscaled_gid} /opt/tailscaled "${options[@]}"
-  else
-    exec s6-notifyoncheck -d -s 500 -w 500 -n 0 \
-      s6-setuidgid 0:${tailscaled_gid} /opt/tailscaled "${options[@]}" \
-        2> >(awk -F $'\n' -e "${awk_program}")
-  fi
+  exec s6-notifyoncheck -d -s 500 -w 500 -n 0 \
+    s6-setuidgid 0:${tailscaled_gid} /opt/tailscaled "${options[@]}" \
+      2> >(awk -F $'\n' -e "${awk_program}")
 else
   # Using fake resolv.conf
   bashio::log.info "Using dnsmasq as upstream DNS server for tailscaled"
-  if bashio::config.false 'log_suppression' ; then
-    exec s6-notifyoncheck -d -s 500 -w 500 -n 0 \
-      unshare -m bash -c "mount --bind /etc/resolv.for-tailscaled.conf /etc/resolv.conf; exec s6-setuidgid 0:${tailscaled_gid} /opt/tailscaled $(printf "\"%s\" " "${options[@]}")"
-  else
-    exec s6-notifyoncheck -d -s 500 -w 500 -n 0 \
-      unshare -m bash -c "mount --bind /etc/resolv.for-tailscaled.conf /etc/resolv.conf; exec s6-setuidgid 0:${tailscaled_gid} /opt/tailscaled $(printf "\"%s\" " "${options[@]}")" \
-        2> >(awk -F $'\n' -e "${awk_program}")
-  fi
+  exec s6-notifyoncheck -d -s 500 -w 500 -n 0 \
+    unshare -m bash -c "mount --bind /etc/resolv.for-tailscaled.conf /etc/resolv.conf; exec s6-setuidgid 0:${tailscaled_gid} /opt/tailscaled $(printf "\"%s\" " "${options[@]}")" \
+      2> >(awk -F $'\n' -e "${awk_program}")
 fi
